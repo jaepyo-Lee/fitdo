@@ -2,6 +2,7 @@ package com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.user.core.Account;
+import com.jaejoo.fitdo.domain.user.core.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +34,10 @@ public class UserJpaEntity {
     }
 
     public Account toAccountModel() {
-        return new Account(authId, newFlag);
+        return new Account(authId, newFlag, id);
+    }
+
+    public User toUserModel() {
+        return new User(new Account(authId, newFlag, id), height, weight);
     }
 }

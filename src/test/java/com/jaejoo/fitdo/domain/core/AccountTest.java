@@ -15,7 +15,7 @@ class AccountTest {
         @Test
         void isTrue() {
             // given
-            Account account = new Account("#12313", true);
+            Account account = new Account("#12313", true, 1L);
             // when
             // then
             assertThat(account.isNewUser()).isTrue();
@@ -24,10 +24,30 @@ class AccountTest {
         @Test
         void isFail() {
             // given
-            Account account = new Account("#12313", false);
+            Account account = new Account("#12313", false,  1L);
             // when
             // then
             assertThat(account.isNewUser()).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자의 회원가입 완료기능 테스트")
+    class completeSignupTest {
+        @Test
+        void success() {
+            // given
+            String authId = "#12313";
+            Account account = new Account(authId, false,  1L);
+
+            // when
+            System.out.println("=====Logic Start=====");
+
+            Account actual = account.complete();
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertThat(actual).isEqualTo(new Account(authId, true,  1L));
         }
     }
 }

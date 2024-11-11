@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.security.Key;
 
@@ -28,7 +27,7 @@ class JwtProviderTest {
     private String account = "123";
     private AuthType loginType = AuthType.KAKAO;
 
-    private Account mockAccount = new Account(account, true); // Mock user
+    private Account mockAccount = new Account(account, true, 1L); // Mock user
 
 
     @BeforeEach
