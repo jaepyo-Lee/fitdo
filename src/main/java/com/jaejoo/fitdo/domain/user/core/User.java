@@ -1,11 +1,15 @@
 package com.jaejoo.fitdo.domain.user.core;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class User {
     private final Account account;
     private int height;
     private int weight;
+    private String  name;
 
     public User(Account account) {
         this.account = account;

@@ -3,6 +3,7 @@ package com.jaejoo.fitdo.domain.auth.service.domain;
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.auth.service.domain.dto.TokenSet;
 import com.jaejoo.fitdo.domain.user.core.Account;
+import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.global.exception.auth.TokenValidFailedException;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ class JwtProviderTest {
     private String account = "123";
     private AuthType loginType = AuthType.KAKAO;
 
-    private Account mockAccount = new Account(account, true, 1L); // Mock user
+    private Account mockAccount = new Account(account, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO ); // Mock user
 
 
     @BeforeEach

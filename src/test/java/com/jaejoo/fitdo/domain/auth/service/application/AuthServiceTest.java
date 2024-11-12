@@ -7,6 +7,7 @@ import com.jaejoo.fitdo.domain.auth.service.domain.ImportManager;
 import com.jaejoo.fitdo.domain.auth.service.domain.JwtProvider;
 import com.jaejoo.fitdo.domain.auth.service.domain.dto.TokenSet;
 import com.jaejoo.fitdo.domain.user.core.Account;
+import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.AccountRepository;
 import com.jaejoo.fitdo.global.client.res.OAuthUserDate;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +47,7 @@ class AuthServiceTest {
             boolean isNewFlag = true;
             String refreshToken = "refreshToken";
             String accessToken = "accessToken";
-            Account account = new Account(authId, isNewFlag, userId);
+            Account account = new Account(authId, isNewFlag, userId, GrantRole.ROLE_USER, AuthType.KAKAO);
 
             when(importManager.importData(authorizationToken, kakao))
                     .thenReturn(new OAuthUserDate(authId, name));

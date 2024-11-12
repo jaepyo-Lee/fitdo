@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.user.core;
 
+import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class UserTest {
             int weight = 75;
             int height = 180;
             boolean isNewFlag = false;
-            User user = new User(new Account(authId, isNewFlag,  1L));
+            User user = new User(new Account(authId, isNewFlag,  1L, GrantRole.ROLE_USER, AuthType.KAKAO));
 
             // when
             System.out.println("=====Logic Start=====");
@@ -27,7 +28,7 @@ class UserTest {
             System.out.println("=====Logic End=====");
 
             // then
-            assertEquals(new User(new Account(authId, true,  1L), height, weight), actual);
+            assertEquals(new User(new Account(authId, true,  1L, GrantRole.ROLE_USER, AuthType.KAKAO), height, weight), actual);
         }
     }
 }

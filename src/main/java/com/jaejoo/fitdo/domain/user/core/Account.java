@@ -1,19 +1,24 @@
 package com.jaejoo.fitdo.domain.user.core;
 
+import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import lombok.Getter;
 
 import java.util.Objects;
 
+@Getter
 public class Account {
-    @Getter
     private final String authId;
     private final Boolean newFlag;
     private final Long userId;
+    private final GrantRole role;
+    private final AuthType authType;
 
-    public Account(String authId, Boolean isNewFlag, Long userId) {
+    public Account(String authId, Boolean isNewFlag, Long userId, GrantRole role, AuthType authType) {
         this.authId = authId;
         this.newFlag = isNewFlag;
         this.userId = userId;
+        this.role = role;
+        this.authType = authType;
     }
 
     public Boolean isNewUser() {
@@ -21,7 +26,7 @@ public class Account {
     }
 
     public Account complete() {
-        return new Account(authId, true, userId);
+        return new Account(authId, true, userId, role, authType);
     }
 
     @Override
