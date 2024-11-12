@@ -1,8 +1,11 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
+import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.user.core.Account;
+import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
+import com.jaejoo.fitdo.domain.user.service.application.req.CompleteSignUpCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,16 +37,21 @@ class UserServiceTest {
             String authId = "authId";
             boolean isNewFlag = false;
 
-            when(userRepository.findById(id)).thenReturn(new User(new Account(authId, isNewFlag, id), height, weight));
+            GrantRole roleUser = GrantRole.ROLE_USER;
+            User mockuser = new User(new Account(authId, isNewFlag, id, roleUser, AuthType.KAKAO));
+            User registerUser = mockuser.register(height, weight);
+
+            when(userRepository.findById(id)).thenReturn(mockuser);
+            when(userRepository.save(any())).thenReturn(registerUser);
 
             // when
             System.out.println("=====Logic Start=====");
 
-            User user = userService.completeSignUp(id, height, weight);
+            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight));
 
             System.out.println("=====Logic End=====");
             // then
-            assertThat(user).isEqualTo(new User(new Account(authId, true, id), height, weight));
+            assertThat(user).isEqualTo(registerUser);
         }
     }
 }
