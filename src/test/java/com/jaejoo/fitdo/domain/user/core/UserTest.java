@@ -1,0 +1,33 @@
+package com.jaejoo.fitdo.domain.user.core;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class UserTest {
+    @Nested
+    @DisplayName("사용자등록테스트")
+    class registerTest {
+        @Test
+        void success() {
+            // given
+            String authId = "authId";
+            int weight = 75;
+            int height = 180;
+            boolean isNewFlag = false;
+            User user = new User(new Account(authId, isNewFlag,  1L));
+
+            // when
+            System.out.println("=====Logic Start=====");
+
+            User actual = user.register(height, weight);
+
+            System.out.println("=====Logic End=====");
+
+            // then
+            assertEquals(new User(new Account(authId, true,  1L), height, weight), actual);
+        }
+    }
+}
