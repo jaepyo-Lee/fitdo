@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.global.client.impl;
 
+import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.global.client.OAuthDateImporter;
 import com.jaejoo.fitdo.global.client.res.OAuthUserDate;
 import org.springframework.http.MediaType;
@@ -28,5 +29,13 @@ public class KakaoImporter implements OAuthDateImporter {
                 .retrieve()
                 .bodyToMono(KakaoUserResponseDto.class)
                 .block().toCommonDto();
+    }
+
+    @Override
+    public Boolean isSupport(AuthType authType) {
+        if (authType.equals(AuthType.KAKAO)) {
+            return true;
+        }
+        return false;
     }
 }
