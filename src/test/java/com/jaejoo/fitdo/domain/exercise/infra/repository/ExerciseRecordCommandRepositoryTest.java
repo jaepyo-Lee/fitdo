@@ -1,8 +1,8 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
-import com.jaejoo.fitdo.domain.exercise.core.Record;
-import com.jaejoo.fitdo.domain.exercise.core.Records;
+import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
+import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.DailyRecordCommandRepositoryImpl;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(DailyRecordCommandRepositoryImpl.class)
 @DataJpaTest
-class RecordCommandRepositoryTest {
+class ExerciseRecordCommandRepositoryTest {
     @Autowired
     private RecordCommandRepository recordCommandRepository;
     @Autowired
@@ -126,11 +126,11 @@ class RecordCommandRepositoryTest {
         // when
         System.out.println("=====Logic Start=====");
 
-        Record record1 = new Record(20, 5, 1, true);
-        Record record2 = new Record(20, 5, 2, false);
-        Records records = new Records(List.of(record1, record2));
+        ExerciseRecord exerciseRecord1 = new ExerciseRecord(20, 5, 1, true);
+        ExerciseRecord exerciseRecord2 = new ExerciseRecord(20, 5, 2, false);
+        ExerciseRecords exerciseRecords = new ExerciseRecords(List.of(exerciseRecord1, exerciseRecord2));
 
-        recordCommandRepository.saveAll(saveUser.getId(),exercise.getId(),todayDate,records);
+        recordCommandRepository.saveAll(saveUser.getId(),exercise.getId(),todayDate, exerciseRecords);
 
         System.out.println("=====Logic End=====");
         // then

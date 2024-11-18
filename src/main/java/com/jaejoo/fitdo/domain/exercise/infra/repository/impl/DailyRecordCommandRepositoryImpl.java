@@ -1,7 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.impl;
 
-import com.jaejoo.fitdo.domain.exercise.core.Record;
-import com.jaejoo.fitdo.domain.exercise.core.Records;
+import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
+import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -27,15 +27,15 @@ public class DailyRecordCommandRepositoryImpl implements RecordCommandRepository
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public void saveAll(Long userId, Long exerciseId, LocalDate dailyDate, Records records) {
+    public void saveAll(Long userId, Long exerciseId, LocalDate dailyDate, ExerciseRecords exerciseRecords) {
         UserJpaEntity user = userJpaRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("user not found"));
         DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordJpaRepository.findByUserIdAndDate(userId, dailyDate)
                 .orElseGet(() -> dailyRecordJpaRepository.save(new DailyRecordJpaEntity(dailyDate, user)));
         ExerciseJpaEntity exercise = exerciseJpaRepository.findById(exerciseId)
                 .orElseThrow(() -> new IllegalArgumentException("exercise not found"));
         List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = new ArrayList<>();
-        for (Record record : records.getRecords()) {
-            exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(record, dailyRecordJpaEntity, exercise));
+        for (ExerciseRecord exerciseRecord : exerciseRecords.getExerciseRecords()) {
+            exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(exerciseRecord, dailyRecordJpaEntity, exercise));
         }
         dailyExerciseRecordJpaRepository.saveAll(exerciseRecordJpaEntities);
     }

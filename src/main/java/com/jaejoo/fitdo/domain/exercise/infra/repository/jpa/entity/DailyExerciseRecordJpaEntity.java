@@ -1,6 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
-import com.jaejoo.fitdo.domain.exercise.core.Record;
+import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -38,14 +38,14 @@ public class DailyExerciseRecordJpaEntity {
         this.exercise = exercise;
     }
 
-    public static DailyExerciseRecordJpaEntity from(Record record, DailyRecordJpaEntity dailyRecordJpaEntity, ExerciseJpaEntity exerciseJpaEntity) {
+    public static DailyExerciseRecordJpaEntity from(ExerciseRecord exerciseRecord, DailyRecordJpaEntity dailyRecordJpaEntity, ExerciseJpaEntity exerciseJpaEntity) {
         return DailyExerciseRecordJpaEntity.builder()
                 .dailyRecord(dailyRecordJpaEntity)
                 .exercise(exerciseJpaEntity)
-                .weight(record.weight())
-                .exerciseSet(record.set())
-                .isProgress(record.isProgress())
-                .volume(record.count())
+                .weight(exerciseRecord.weight())
+                .exerciseSet(exerciseRecord.set())
+                .isProgress(exerciseRecord.isProgress())
+                .volume(exerciseRecord.count())
                 .build();
     }
 }
