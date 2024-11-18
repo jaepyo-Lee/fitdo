@@ -6,24 +6,22 @@ import com.jaejoo.fitdo.global.client.res.OAuthUserDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.jaejoo.fitdo.domain.auth.service.application.req.AuthType.KAKAO;
 
 @Component
 @RequiredArgsConstructor
 public class ImportManager {
-    private final OAuthDateImporter kakaoImporter;
+    private final List<OAuthDateImporter> importers;
 
     public OAuthUserDate importData(String authorizationToken, AuthType platform) {
-        OAuthUserDate oAuthUserDate = null;
-        if (isKAKAO(platform)) {
-            oAuthUserDate = kakaoImporter.getData(authorizationToken);
-        } else {
-            throw new IllegalArgumentException("지원하지 않는 플랫폼입니다.");
+        for (OAuthDateImporter importer : importers) {
+            if (!importer.isSupport(platform)) {
+                continue;
+            }
+            return importer.getData(authorizationToken);
         }
-        return oAuthUserDate;
-    }
-
-    private static boolean isKAKAO(AuthType platform) {
-        return platform.equals(KAKAO);
+        throw new IllegalArgumentException("지원하지 않는 플랫폼입니다.");
     }
 }
