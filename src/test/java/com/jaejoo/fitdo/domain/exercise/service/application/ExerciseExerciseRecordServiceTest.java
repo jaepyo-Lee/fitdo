@@ -26,7 +26,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class ExerciseRecordServiceTest {
+class ExerciseExerciseRecordServiceTest {
 
     @Autowired
     private ExerciseJpaRepository exerciseJpaRepository;
@@ -39,7 +39,7 @@ class ExerciseRecordServiceTest {
     @Autowired
     private DailyRecordJpaRepository dailyRecordJpaRepository;
     @Autowired
-    private RecordService recordService;
+    private ExerciseRecordService exerciseRecordService;
 
     @BeforeEach
     void init() {
@@ -73,7 +73,7 @@ class ExerciseRecordServiceTest {
 
             DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
 
-            recordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
 
 
             // when
@@ -85,7 +85,7 @@ class ExerciseRecordServiceTest {
 
             DailyRecordCreateCommand newCommand = new DailyRecordCreateCommand(today, saveExercise.getId(), newDailyExerciseRecordDtos);
 
-            recordService.writeDailyExerciseFrom(saveUser2.getId(), List.of(newCommand));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser2.getId(), List.of(newCommand));
 
             System.out.println("=====Logic End=====");
             // then
@@ -113,7 +113,7 @@ class ExerciseRecordServiceTest {
 
             DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
 
-            recordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
 
 
             // when
@@ -124,7 +124,7 @@ class ExerciseRecordServiceTest {
 
             DailyRecordCreateCommand newCommand = new DailyRecordCreateCommand(today, saveExercise.getId(), newDailyExerciseRecordDtos);
 
-            recordService.writeDailyExerciseFrom(saveUser.getId(), List.of(newCommand));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(newCommand));
 
             System.out.println("=====Logic End=====");
             // then
@@ -154,7 +154,7 @@ class ExerciseRecordServiceTest {
 
             DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
 
-            recordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
 
             System.out.println("=====Logic End=====");
             // then

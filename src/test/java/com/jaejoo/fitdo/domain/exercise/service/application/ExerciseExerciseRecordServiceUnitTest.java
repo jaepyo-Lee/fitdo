@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,9 +21,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ExerciseRecordServiceUnitTest {
+class ExerciseExerciseRecordServiceUnitTest {
     @InjectMocks
-    private RecordService recordService;
+    private ExerciseRecordService exerciseRecordService;
     @Mock
     private RecordCommandRepository recordCommandRepository;
 
@@ -38,7 +37,7 @@ class ExerciseRecordServiceUnitTest {
             DailyRecordCreateCommand command2 = new DailyRecordCreateCommand(LocalDate.now(), 2L, List.of(new DailyExerciseRecordDto(1, 10, 10, false)));
 
             // when
-            boolean actual = recordService.writeDailyExerciseFrom(1L, List.of(command1, command2));
+            boolean actual = exerciseRecordService.writeDailyExerciseFrom(1L, List.of(command1, command2));
 
             // then
             System.out.println("=====Logic Start=====");

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class RecordService {
+public class ExerciseRecordService {
     private final RecordCommandRepository recordCommandRepository;
 
     @Transactional
