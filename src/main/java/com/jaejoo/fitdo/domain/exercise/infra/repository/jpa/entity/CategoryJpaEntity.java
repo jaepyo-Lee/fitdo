@@ -2,7 +2,10 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 public class CategoryJpaEntity {
     @Id
@@ -13,4 +16,10 @@ public class CategoryJpaEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserJpaEntity user;
+
+    @Builder
+    public CategoryJpaEntity(String categoryName, UserJpaEntity user) {
+        this.categoryName = categoryName;
+        this.user = user;
+    }
 }
