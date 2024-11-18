@@ -5,6 +5,8 @@ import com.jaejoo.fitdo.domain.user.core.Account;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.core.User;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class UserJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
     private String username;
     private String authId;
@@ -42,6 +45,17 @@ public class UserJpaEntity {
 
     public UserJpaEntity(Long id, String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role) {
         this.id = id;
+        this.username = username;
+        this.authId = authId;
+        this.newFlag = newFlag;
+        this.height = height;
+        this.weight = weight;
+        this.authType = authType;
+        this.role = role;
+    }
+
+    @Builder
+    public UserJpaEntity(String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role) {
         this.username = username;
         this.authId = authId;
         this.newFlag = newFlag;
