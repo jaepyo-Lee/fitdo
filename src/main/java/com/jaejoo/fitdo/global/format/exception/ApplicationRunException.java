@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.global.exception;
+package com.jaejoo.fitdo.global.format.exception;
 
 import lombok.Getter;
 

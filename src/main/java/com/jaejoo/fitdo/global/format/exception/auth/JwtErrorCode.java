@@ -1,6 +1,6 @@
-package com.jaejoo.fitdo.global.exception.auth;
+package com.jaejoo.fitdo.global.format.exception.auth;
 
-import com.jaejoo.fitdo.global.exception.ErrorEnumCode;
+import com.jaejoo.fitdo.global.format.exception.ErrorEnumCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

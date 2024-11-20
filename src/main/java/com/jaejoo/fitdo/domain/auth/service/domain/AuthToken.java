@@ -1,8 +1,7 @@
 package com.jaejoo.fitdo.domain.auth.service.domain;
 
-import com.jaejoo.fitdo.global.exception.auth.ExpiredJwtTokenException;
+import com.jaejoo.fitdo.global.format.exception.auth.ExpiredJwtTokenException;
 import io.jsonwebtoken.*;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;

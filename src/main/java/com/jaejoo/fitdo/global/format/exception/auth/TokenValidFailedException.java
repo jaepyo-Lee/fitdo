@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.global.exception.auth;
+package com.jaejoo.fitdo.global.format.exception.auth;
 
 public class TokenValidFailedException extends RuntimeException{
     public TokenValidFailedException(){

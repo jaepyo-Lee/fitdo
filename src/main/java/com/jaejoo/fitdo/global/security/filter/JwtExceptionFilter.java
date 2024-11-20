@@ -1,8 +1,8 @@
 package com.jaejoo.fitdo.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jaejoo.fitdo.global.exception.ApplicationRunException;
-import com.jaejoo.fitdo.global.exception.auth.ExpiredJwtTokenException;
+import com.jaejoo.fitdo.global.format.exception.ApplicationRunException;
+import com.jaejoo.fitdo.global.format.exception.auth.ExpiredJwtTokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
