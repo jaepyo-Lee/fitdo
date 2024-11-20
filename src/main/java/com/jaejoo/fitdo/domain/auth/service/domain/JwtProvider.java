@@ -4,7 +4,7 @@ import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.auth.service.domain.dto.TokenSet;
 import com.jaejoo.fitdo.domain.user.core.Account;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
-import com.jaejoo.fitdo.global.exception.auth.TokenValidFailedException;
+import com.jaejoo.fitdo.global.format.exception.auth.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Component
