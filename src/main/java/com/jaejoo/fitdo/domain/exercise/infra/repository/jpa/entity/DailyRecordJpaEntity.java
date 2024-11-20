@@ -2,6 +2,8 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
@@ -14,6 +16,7 @@ public class DailyRecordJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     private LocalDate date;
     @ManyToOne
     @JoinColumn(name = "user_id")

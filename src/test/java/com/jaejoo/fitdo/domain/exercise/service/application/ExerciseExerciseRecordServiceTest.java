@@ -7,9 +7,11 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepos
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordDto;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
@@ -21,9 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 class ExerciseExerciseRecordServiceTest {
@@ -164,4 +169,88 @@ class ExerciseExerciseRecordServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("특정월의 운동기록 조회")
+    class findSpecificMonthExerciseRecordsTest {
+        /**
+         * Todo
+         * Work) 테스트 상태검증 자세하게하기. 현재 단순 크기로만 판단중. DTO만들어서 값검증
+         * Write-Date)
+         */
+        @Test
+        void 특정월의_운동기록_조회() {
+            // given
+            UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
+            UserJpaEntity saveUser = userJpaRepository.save(userJpaEntity);
+
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(categoryJpaEntity);
+
+            ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exerciseJpaEntity);
+
+            ExerciseJpaEntity exerciseJpaEntity2 = ExerciseJpaEntity.builder().name("플라이").category(saveCategory).build();
+            ExerciseJpaEntity saveExercise2 = exerciseJpaRepository.save(exerciseJpaEntity2);
+
+
+            //오늘날짜
+            LocalDate today = LocalDate.of(2024, 2, 1);
+            DailyRecordJpaEntity dailyRecordJpaEntity = new DailyRecordJpaEntity(today, saveUser);
+            DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(dailyRecordJpaEntity);
+            DailyExerciseRecordJpaEntity dailyExerciseRecordJpaEntity = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(saveDailyRecord).exerciseSet(1).volume(10).isProgress(true).exercise(saveExercise)
+                    .build();
+            DailyExerciseRecordJpaEntity dailyExerciseRecordJpaEntity2 = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(saveDailyRecord).exerciseSet(1).volume(10).isProgress(true).exercise(saveExercise)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(dailyExerciseRecordJpaEntity);
+            dailyExerciseRecordJpaRepository.save(dailyExerciseRecordJpaEntity2);
+
+
+            //어제날짜
+            LocalDate yesterday = LocalDate.of(2024, 1, 31);
+            DailyRecordJpaEntity yesterdayDailyRecordJpaEntity = new DailyRecordJpaEntity(yesterday, saveUser);
+            DailyRecordJpaEntity saveYesterdayDailyRecord = dailyRecordJpaRepository.save(yesterdayDailyRecordJpaEntity);
+            DailyExerciseRecordJpaEntity yesterdayDailyExerciseRecordJpaEntity = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(saveYesterdayDailyRecord).exerciseSet(3).volume(10).isProgress(true).exercise(saveExercise)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(yesterdayDailyExerciseRecordJpaEntity);
+
+            DailyExerciseRecordJpaEntity yesterdayDailyExerciseRecordJpaEntity2 = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(saveYesterdayDailyRecord).exerciseSet(4).volume(10).isProgress(true).exercise(saveExercise)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(yesterdayDailyExerciseRecordJpaEntity2);
+            DailyExerciseRecordJpaEntity yesterdayDailyExerciseRecordJpaEntity3 = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(saveYesterdayDailyRecord).exerciseSet(5).volume(10).isProgress(true).exercise(saveExercise2)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(yesterdayDailyExerciseRecordJpaEntity3);
+
+            //그저께날짜
+            LocalDate twodayago = LocalDate.of(2024, 1, 30);
+            DailyRecordJpaEntity twodayagoDailyRecordJpaEntity = new DailyRecordJpaEntity(twodayago, saveUser);
+            DailyRecordJpaEntity savetwodayagoDailyRecord = dailyRecordJpaRepository.save(twodayagoDailyRecordJpaEntity);
+            DailyExerciseRecordJpaEntity twodayagoDailyExerciseRecordJpaEntity = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(savetwodayagoDailyRecord).exerciseSet(1).volume(10).isProgress(true).exercise(saveExercise)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(twodayagoDailyExerciseRecordJpaEntity);
+
+            DailyExerciseRecordJpaEntity twodayagoDailyExerciseRecordJpaEntity2 = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(savetwodayagoDailyRecord).exerciseSet(2).volume(20).isProgress(true).exercise(saveExercise)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(twodayagoDailyExerciseRecordJpaEntity2);
+            DailyExerciseRecordJpaEntity twodayagoDailyExerciseRecordJpaEntity3 = DailyExerciseRecordJpaEntity.builder()
+                    .dailyRecord(savetwodayagoDailyRecord).exerciseSet(1).volume(10).isProgress(true).exercise(saveExercise2)
+                    .build();
+            dailyExerciseRecordJpaRepository.save(twodayagoDailyExerciseRecordJpaEntity3);
+
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<FindMonthExerciseRecords> exerciseRecordsOfUserInMonth = exerciseRecordService.findExerciseRecordsOfUserInMonth(saveUser.getId(), YearMonth.of(2024, 1));
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.size()).isEqualTo(2));
+        }
+    }
 }

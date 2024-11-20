@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.global.security.config;
+package com.jaejoo.fitdo.global.config;
 
 import com.jaejoo.fitdo.domain.auth.service.domain.JwtProvider;
 import com.jaejoo.fitdo.global.security.filter.JwtAuthenticationFilter;
