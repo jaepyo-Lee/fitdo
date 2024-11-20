@@ -20,7 +20,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DailyRecordCommandRepositoryImpl implements RecordCommandRepository {
+public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandRepository {
     private final DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
     private final DailyRecordJpaRepository dailyRecordJpaRepository;
     private final ExerciseJpaRepository exerciseJpaRepository;

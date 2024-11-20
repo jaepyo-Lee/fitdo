@@ -3,7 +3,7 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository;
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
 import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.DailyRecordCommandRepositoryImpl;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.DailyRecordCommandJpaRepositoryImpl;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -26,7 +26,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import(DailyRecordCommandRepositoryImpl.class)
+@Import(DailyRecordCommandJpaRepositoryImpl.class)
 @DataJpaTest
 class ExerciseRecordCommandRepositoryTest {
     @Autowired

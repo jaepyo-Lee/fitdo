@@ -3,12 +3,14 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 /**
  * 특정 운동 기록
 */
+@Getter
 @NoArgsConstructor
 @Entity
 public class DailyExerciseRecordJpaEntity {
@@ -24,6 +26,7 @@ public class DailyExerciseRecordJpaEntity {
     @JoinColumn(name = "daily_record_id")
     private DailyRecordJpaEntity dailyRecord;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private ExerciseJpaEntity exercise;
