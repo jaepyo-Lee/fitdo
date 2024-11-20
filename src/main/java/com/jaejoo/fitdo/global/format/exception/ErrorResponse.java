@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.global.exception;
+package com.jaejoo.fitdo.global.format.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.global.exception;
+package com.jaejoo.fitdo.global.format.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
