@@ -96,3 +96,21 @@ include::{snippets}/read-exercise/response-fields-result.adoc[]
 
 Response HTTP Example
 include::{snippets}/read-exercise/http-response.adoc[]
+
+== 운동목록 삭제
+=== Request
+Request Fields
+include::{snippets}/delete-exercise/request-headers.adoc[]
+
+Path Parameters
+include::{snippets}/delete-exercise/path-parameters.adoc[]
+
+Request Http Example
+include::{snippets}/delete-exercise/http-request.adoc[]
+
+=== Response
+Response Data Fields
+include::{snippets}/delete-exercise/response-body.adoc[]
+
+Response HTTP Example
+include::{snippets}/delete-exercise/http-response.adoc[]

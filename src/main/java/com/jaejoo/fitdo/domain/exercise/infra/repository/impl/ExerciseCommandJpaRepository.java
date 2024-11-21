@@ -15,4 +15,9 @@ public class ExerciseCommandJpaRepository implements ExerciseCommandRepository {
     public ExerciseJpaEntity save(ExerciseJpaEntity exerciseJpaEntity) {
         return exerciseJpaRepository.save(exerciseJpaEntity);
     }
+
+    @Override
+    public void deleteById(Long exerciseId) {
+        exerciseJpaRepository.deleteById(exerciseId);
+    }
 }

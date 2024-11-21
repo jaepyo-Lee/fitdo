@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -105,5 +106,37 @@ class ExerciseServiceTest {
         System.out.println("=====Logic End=====");
         // then
         assertThat(exercisesWithCategoryOf.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 운동삭제() {
+        // given
+        UserJpaEntity user = UserJpaEntity.builder().build();
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+        CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
+
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("등").build();
+        CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
+
+        ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
+        ExerciseJpaEntity flymachine1 = ExerciseJpaEntity.builder().name("플라이머신").category(saveChestCategory).build();
+        ExerciseJpaEntity deadlift1 = ExerciseJpaEntity.builder().name("데드리프트").category(saveBackCategory).build();
+
+        ExerciseJpaEntity exercise1 = exerciseJpaRepository.save(benchpress1);
+        ExerciseJpaEntity exercise2 = exerciseJpaRepository.save(flymachine1);
+        ExerciseJpaEntity exercise3 = exerciseJpaRepository.save(deadlift1);
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        exerciseService.removeExercises(exercise1.getId());
+
+        System.out.println("=====Logic End=====");
+        // then
+        List<ExerciseJpaEntity> all = exerciseJpaRepository.findAll();
+        assertThat(all.size()).isEqualTo(2);
     }
 }

@@ -33,4 +33,11 @@ public class ExerciseController {
         List<ExerciseReadResponse> exerciseReadResponse = ToResponseMapper.INSTANCE.toExerciseReadResponse(exercisesWithCategoryOf);
         return new SuccessResponse<>(HttpStatus.OK.value(), exerciseReadResponse);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/api/v1/exercises/{exerciseId}")
+    public SuccessResponse delete(@PathVariable("exerciseId") Long exerciseId) {
+        service.removeExercises(exerciseId);
+        return SuccessResponse.ok();
+    }
 }

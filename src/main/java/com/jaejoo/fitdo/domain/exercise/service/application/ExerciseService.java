@@ -47,4 +47,8 @@ public class ExerciseService {
         }
         return exercisesWithCategory;
     }
+
+    public void removeExercises(Long exerciseId){
+        exerciseCommandRepository.deleteById(exerciseId);
+    }
 }

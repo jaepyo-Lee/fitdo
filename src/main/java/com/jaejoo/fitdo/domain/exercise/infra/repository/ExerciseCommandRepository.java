@@ -4,4 +4,6 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaE
 
 public interface ExerciseCommandRepository {
     ExerciseJpaEntity save(ExerciseJpaEntity exerciseJpaEntity);
+
+    void deleteById(Long exerciseId);
 }
