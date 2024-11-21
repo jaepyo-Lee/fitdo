@@ -1,4 +1,4 @@
-package com.jaejoo.fitdo.domain.core;
+package com.jaejoo.fitdo.domain.auth.core;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.user.core.Account;
