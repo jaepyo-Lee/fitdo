@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -28,6 +29,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Transactional
 @Import({QuerydslTestConfig.class})
 @DataJpaTest
 class RecordQueryRepositoryTest {
@@ -46,14 +48,14 @@ class RecordQueryRepositoryTest {
     DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
 
 
-    @BeforeEach
+/*    @BeforeEach
     void init() {
         dailyExerciseRecordJpaRepository.deleteAll();
         dailyRecordRepository.deleteAll();
         exerciseRepository.deleteAll();
         categoryRepository.deleteAll();
         userRepository.deleteAll();
-    }
+    }*/
 
     @Nested
     @DisplayName("사용자가 특정년월에 진행한 운동일자 조회")

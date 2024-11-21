@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +20,7 @@ public class SuccessResponse<T> {
 
     @JsonProperty("status")
     private int status;
-    private LocalDateTime time;
+    private String time;
     private String code;
     private String message;
 
@@ -29,7 +30,7 @@ public class SuccessResponse<T> {
     @Builder
     public SuccessResponse(int status, LocalDateTime time, String code, String message) {
         this.status = status;
-        this.time = time;
+        this.time = time.toString();
         this.code = code;
         this.message = message;
     }
@@ -37,27 +38,25 @@ public class SuccessResponse<T> {
     //성공의 경우
     public SuccessResponse(T result) {
         this.status = HttpStatus.OK.value();
-        this.time = now();
+        this.time = now().toString();
         this.code = SuccessResponseStatus.SUCCESS.getCode();
         this.message = SuccessResponseStatus.SUCCESS.getMessage();
         this.result = result;
     }
 
     public static SuccessResponse ok(String message) {
-        return SuccessResponse.builder()
-                .status(HttpStatus.OK.value())
-                .time(now())
-                .code(SuccessResponseStatus.SUCCESS.getCode())
-                .message(message)
-                .build();
+        return new SuccessResponse(message);
     }
 
     public static SuccessResponse ok() {
-        return SuccessResponse.builder()
-                .status(HttpStatus.OK.value())
-                .time(now())
-                .code(SuccessResponseStatus.SUCCESS.getCode())
-                .message("SUCCESS")
-                .build();
+        return SuccessResponse.ok("SUCCESS");
+    }
+
+    public SuccessResponse(int status, T result) {
+        this.status = status;
+        this.time = now().toString();
+        this.code = SuccessResponseStatus.SUCCESS.getCode();
+        this.message = SuccessResponseStatus.SUCCESS.getMessage();
+        this.result = result;
     }
 }

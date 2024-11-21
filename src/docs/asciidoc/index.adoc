@@ -10,28 +10,74 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
-= Common
+= 공통 사항
 
-== 공통 API 응답 포맷
+API에 관계없이 아래 사항을 지켜주셔야 합니다.
 
-== 응답 상태 코드 및 메세지
+== Domain
+ㄴㅇㄴㅇ
 
-= API
+== Common Response
+공통응답
 
-[[Auth-API]]
-== Authentication API
+[[API]]
+= 인증/인가
 
-This section covers authentication-related endpoints.
+== Login
+=== Request
+Request Fields
+include::{snippets}/user-login/request-fields.adoc[]
 
-[[User-Login]]
-=== User Login
-
-This endpoint allows a user to log in with their credentials.
-
-=== HTTP Request
-
+Request Http Example
 include::{snippets}/user-login/http-request.adoc[]
 
-=== HTTP Response
-
+=== Response
+Response Data Fields
+include::{snippets}/user-login/response-fields.adoc[]
+Response HTTP Example
 include::{snippets}/user-login/http-response.adoc[]
+
+= 기록
+== 기록조회
+=== Request
+Request Fields
+include::{snippets}/read-exercise-records/query-parameters.adoc[]
+
+Request Http Example
+include::{snippets}/read-exercise-records/http-request.adoc[]
+
+=== Response
+Response Data Fields
+include::{snippets}/read-exercise-records/response-fields.adoc[]
+Response HTTP Example
+include::{snippets}/read-exercise-records/http-response.adoc[]
+
+== 운동 기록
+=== Request
+Request Fields
+include::{snippets}/create-exercise-records/request-fields.adoc[]
+
+Request Http Example
+include::{snippets}/create-exercise-records/http-request.adoc[]
+
+=== Response
+Response Data Fields
+include::{snippets}/create-exercise-records/response-fields.adoc[]
+Response HTTP Example
+include::{snippets}/create-exercise-records/http-response.adoc[]
+
+= 운동
+== 운동목록 생성
+=== Request
+Request Fields
+include::{snippets}/create-exercise/request-fields.adoc[]
+
+Request Http Example
+include::{snippets}/create-exercise/http-request.adoc[]
+
+=== Response
+Response Data Fields
+include::{snippets}/create-exercise/response-fields.adoc[]
+
+Response HTTP Example
+include::{snippets}/create-exercise/http-response.adoc[]

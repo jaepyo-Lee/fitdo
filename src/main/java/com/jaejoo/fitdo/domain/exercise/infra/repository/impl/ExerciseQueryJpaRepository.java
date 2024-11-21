@@ -1,0 +1,21 @@
+package com.jaejoo.fitdo.domain.exercise.infra.repository.impl;
+
+import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseQueryRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class ExerciseQueryJpaRepository implements ExerciseQueryRepository {
+    private final ExerciseJpaRepository repository;
+
+    @Override
+    public List<ExerciseJpaEntity> findExercisesByCategory(CategoryJpaEntity category) {
+        return List.of();
+    }
+}
