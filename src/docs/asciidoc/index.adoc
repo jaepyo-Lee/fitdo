@@ -77,7 +77,22 @@ include::{snippets}/create-exercise/http-request.adoc[]
 
 === Response
 Response Data Fields
-include::{snippets}/create-exercise/response-fields.adoc[]
+include::{snippets}/create-exercise/response-fields-result.adoc[]
 
 Response HTTP Example
 include::{snippets}/create-exercise/http-response.adoc[]
+
+== 운동목록 조회
+=== Request
+Request Fields
+include::{snippets}/read-exercise/request-headers.adoc[]
+
+Request Http Example
+include::{snippets}/read-exercise/http-request.adoc[]
+
+=== Response
+Response Data Fields
+include::{snippets}/read-exercise/response-fields-result.adoc[]
+
+Response HTTP Example
+include::{snippets}/read-exercise/http-response.adoc[]

@@ -8,4 +8,6 @@ import java.util.List;
 @Component
 public interface CategoryQueryRepository {
     CategoryJpaEntity findById(Long id);
+
+    List<CategoryJpaEntity> findAllByUserId(Long userId);
 }
