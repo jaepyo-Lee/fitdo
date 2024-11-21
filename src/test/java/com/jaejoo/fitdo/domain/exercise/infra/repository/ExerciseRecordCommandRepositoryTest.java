@@ -20,12 +20,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @Import(DailyRecordCommandJpaRepositoryImpl.class)
 @DataJpaTest
 class ExerciseRecordCommandRepositoryTest {
@@ -42,7 +44,7 @@ class ExerciseRecordCommandRepositoryTest {
     @Autowired
     private CategoryJpaRepository categoryJpaRepository;
 
-    @BeforeEach
+ /*   @BeforeEach
     void init(){
         dailyExerciseRecordJpaRepository.deleteAll();
         dailyRecordJpaRepository.deleteAll();
@@ -50,7 +52,7 @@ class ExerciseRecordCommandRepositoryTest {
         categoryJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
-
+*/
     @Test
     void 사용자의특정날의운동기록정보삭제() {
         // given

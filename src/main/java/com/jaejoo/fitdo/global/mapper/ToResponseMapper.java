@@ -1,11 +1,7 @@
 package com.jaejoo.fitdo.global.mapper;
 
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.web.res.FindDateExerciseRecordsResponseDto;
-import com.jaejoo.fitdo.domain.exercise.web.res.FindExerciseRecordsResponseDto;
-import com.jaejoo.fitdo.domain.exercise.web.res.FindMonthExerciseRecordsResponse;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.*;
+import com.jaejoo.fitdo.domain.exercise.web.res.*;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -16,6 +12,19 @@ import java.util.List;
 @Mapper
 public interface ToResponseMapper {
     ToResponseMapper INSTANCE = Mappers.getMapper(ToResponseMapper.class);
+
+    @IterableMapping(qualifiedByName = "toExerciseReadResponse")
+    List<ExerciseReadResponse> toExerciseReadResponse(List<FindExercisesWithCategory> findExercisesWithCategories);
+
+    @Named("toExerciseReadResponse")
+    ExerciseReadResponse toExerciseReadResponse(FindExercisesWithCategory findExercisesWithCategory);
+
+
+    @IterableMapping(qualifiedByName = "toExerciseWithinCategoryDto")
+    List<ExercisesWithinCategoryDto> toExerciseWithinCategoryDto(List<ExercisesWithinCategory> exercisesWithinCategory);
+
+    @Named("toExerciseWithinCategoryDto")
+    ExercisesWithinCategoryDto toExercisesWithinCategoryDto(ExercisesWithinCategory exercisesWithinCategory);
 
     @IterableMapping(qualifiedByName = "toResponse")
     List<FindMonthExerciseRecordsResponse> toFindMonthExerciseRecordsResponse(List<FindMonthExerciseRecords> findMonthExerciseRecords);

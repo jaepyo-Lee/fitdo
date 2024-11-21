@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class CategoryJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Getter

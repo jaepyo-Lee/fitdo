@@ -1,174 +1,152 @@
 package com.jaejoo.fitdo.docs.exercise;
 
 import com.jaejoo.fitdo.docs.RestDocsSupport;
-import com.jaejoo.fitdo.domain.exercise.service.application.ExerciseRecordService;
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
-import com.jaejoo.fitdo.domain.exercise.web.ExerciseRecordController;
-import com.jaejoo.fitdo.domain.exercise.web.req.DailyRecordCreateRequest;
-import com.jaejoo.fitdo.domain.exercise.web.req.dto.ExerciseRecordRequestDto;
+import com.jaejoo.fitdo.domain.exercise.service.application.ExerciseService;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.ExercisesWithinCategory;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExercisesWithCategory;
+import com.jaejoo.fitdo.domain.exercise.web.ExerciseController;
+import com.jaejoo.fitdo.domain.exercise.web.req.ExerciseCreateRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ExerciseControllerDocsTest extends RestDocsSupport {
+class ExerciseControllerDocsTest extends RestDocsSupport {
     @Mock
-    private ExerciseRecordService service;
+    private ExerciseService service;
 
     @Override
     protected Object initController() {
-        return new ExerciseRecordController(service);
+        return new ExerciseController(service);
     }
+
 
     @Test
     void createExerciseRecords() throws Exception {
         // given
-        DailyRecordCreateRequest request1 = new DailyRecordCreateRequest(LocalDate.now(),
-                1L,
-                List.of(new ExerciseRecordRequestDto(1, 60, 10, true),
-                        new ExerciseRecordRequestDto(2, 70, 10, false)));
-        DailyRecordCreateRequest request2 = new DailyRecordCreateRequest(LocalDate.now(),
-                2L,
-                List.of(new ExerciseRecordRequestDto(1, 30, 15, false),
-                        new ExerciseRecordRequestDto(2, 100, 10, false)));
-        List<DailyRecordCreateRequest> createRequests = new ArrayList<>(List.of(request1, request2));
+        String exerciseName = "벤치프레스";
+        ExerciseCreateRequest request = ExerciseCreateRequest.builder().exerciseName(exerciseName).categoryId(1L).build();
 
         // mock the service method
-        when(service.writeDailyExerciseFrom(any(), any())).thenReturn(true);
+        when(service.createExercise(any())).thenReturn(exerciseName);
 
         // when
-        mvc.perform(
-                        post("/api/v1/exercise-record")
+        MvcResult mvcResult = mvc.perform(
+                        post("/api/v1/exercises")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(createRequests))
+                                .content(objectMapper.writeValueAsString(request))
                 )
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("create-exercise-records",
+                .andExpect(status().isCreated())
+                .andDo(document("create-exercise",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
                                 requestFields(
-                                        fieldWithPath("[].todayDate").type(JsonFieldType.STRING).description("기록된 날짜"),
-                                        fieldWithPath("[].exerciseId").type(JsonFieldType.NUMBER).description("기록하려는 운동의 아이디"),
-                                        fieldWithPath("[].records").type(JsonFieldType.ARRAY).description("기록목록"),
-                                        fieldWithPath("[].records[].set").type(JsonFieldType.NUMBER).description("해당 운동의 세트번호"),
-                                        fieldWithPath("[].records[].weight").type(JsonFieldType.NUMBER).description("해당 세트의 무게"),
-                                        fieldWithPath("[].records[].count").type(JsonFieldType.NUMBER).description("해당 세트의 반복수"),
-                                        fieldWithPath("[].records[].progress").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
+                                        fieldWithPath("categoryId").type(NUMBER).description("저장할 운동의 부위Id"),
+                                        fieldWithPath("exerciseName").type(STRING).description("저장할 운동이름")
                                 ),
                                 responseFields(
-                                        fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("운동 기록이 성공적으로 생성되었는지 여부. `true`이면 성공, `false`이면 실패")
+                                        beneathPath("result").withSubsectionId("result"),
+                                        fieldWithPath("exerciseName").type(STRING).description("저장된 운동")
                                 )
                         )
-                );
+                ).andReturn();
 
-        // verify
-        verify(service, times(1)).writeDailyExerciseFrom(any(), any());
+/*        // verify
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        SuccessResponse responseDto = objectMapper.readValue(contentAsString, SuccessResponse.class);
+        assertThat(responseDto.getResult()).isEqualTo(exerciseName);*/
     }
 
-
     @Test
-    void getExerciseRecordsInMonthTest() throws Exception {
+    void readExerciseRecords() throws Exception {
         // given
-        FindExerciseRecords exerciseRecords1 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(true).build();
-        FindExerciseRecords exerciseRecords2 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
-        FindExerciseRecords exerciseRecords3 = FindExerciseRecords.builder().exerciseSet(3).weight(60).volume(8).isProgress(true).build();
+        String exerciseName = "벤치프레스";
 
-        FindExerciseRecords exerciseRecords4 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(false).build();
-        FindExerciseRecords exerciseRecords5 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
+        List<FindExercisesWithCategory> response = new ArrayList<>();
 
-        List<FindExerciseRecords> records1 = List.of(exerciseRecords1, exerciseRecords2, exerciseRecords3);
-        List<FindExerciseRecords> records2 = List.of(exerciseRecords4, exerciseRecords5);
-
-        FindDateExerciseRecords dateExerciseRecord = FindDateExerciseRecords.builder().exerciseId(1L).exerciseName("벤치프레스").records(records1).categoryName("가슴").build();
-
-        FindDateExerciseRecords dateExerciseRecord1 = FindDateExerciseRecords.builder().exerciseId(2L).exerciseName("플라이머신").records(records2).categoryName("가슴").build();
-        List<FindDateExerciseRecords> dateExerciseRecords = List.of(dateExerciseRecord, dateExerciseRecord1);
-
-        FindMonthExerciseRecords findMonthExerciseRecords = FindMonthExerciseRecords.builder().exerciseDate(LocalDate.of(2024, 11, 20)).dateRecords(dateExerciseRecords).build();
-
-        //---//
-
-        FindExerciseRecords backexerciseRecords1 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(true).build();
-        FindExerciseRecords backexerciseRecords2 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
-
-        FindExerciseRecords backexerciseRecords4 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(false).build();
-        FindExerciseRecords backexerciseRecords5 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
-
-        List<FindExerciseRecords> backrecords1 = List.of(backexerciseRecords1, backexerciseRecords2);
-        List<FindExerciseRecords> backrecords2 = List.of(backexerciseRecords4, backexerciseRecords5);
-
-        FindDateExerciseRecords backdateExerciseRecord = FindDateExerciseRecords.builder().exerciseId(1L).exerciseName("데드리프트").records(backrecords1).categoryName("등").build();
-
-        FindDateExerciseRecords backdateExerciseRecord1 = FindDateExerciseRecords.builder().exerciseId(2L).exerciseName("시티드로우").records(backrecords2).categoryName("등").build();
-        List<FindDateExerciseRecords> backdateExerciseRecords = List.of(backdateExerciseRecord, backdateExerciseRecord1);
-
-        FindMonthExerciseRecords backfindMonthExerciseRecords = FindMonthExerciseRecords.builder().exerciseDate(LocalDate.of(2024, 11, 21)).dateRecords(backdateExerciseRecords).build();
-
-        //--//
-        List<FindMonthExerciseRecords> monthAllExerciseRecords = new ArrayList<>(List.of(findMonthExerciseRecords, backfindMonthExerciseRecords));
+        ExercisesWithinCategory bench = ExercisesWithinCategory.builder().exerciseId(1L).exerciseName("벤치프레스").build();
+        ExercisesWithinCategory pressmachine = ExercisesWithinCategory.builder().exerciseId(2L).exerciseName("프레스머신").build();
+        List<ExercisesWithinCategory> exercisesWithinCategories = new ArrayList<>(List.of(bench, pressmachine));
+        FindExercisesWithCategory exercises = FindExercisesWithCategory.builder().categoryId(1l).categoryName("가슴").exercises(exercisesWithinCategories).build();
+        response.add(exercises);
 
         // mock the service method
-        when(service.findExerciseRecordsOfUserInMonth(any(), any())).thenReturn(monthAllExerciseRecords);
+        when(service.findExercisesWithCategoryOf(any())).thenReturn(response);
 
         // when
-        mvc.perform(
-                        get("/api/v1/exercise")
+        MvcResult mvcResult = mvc.perform(
+                        get("/api/v1/exercises")
                                 .header("Authorization", "Bearer Token")
-                                .param("yearMonth", "2024-11")
+                                .contentType(MediaType.APPLICATION_JSON)
+
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("read-exercise-records",
+                .andDo(document("read-exercise",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
-
                                 requestHeaders(
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
-                                queryParameters(
-                                        parameterWithName("yearMonth").description("운동 기록을 구하고자하는 연도와 월\n").description("[연도,월,일] 베열형식으로 반환")
-                                ),
                                 responseFields(
-                                        fieldWithPath("[].exerciseDate").type(JsonFieldType.ARRAY).description("운동한 날짜. yyyy-MM-dd 형식"),
-                                        fieldWithPath("[].dateRecords").type(JsonFieldType.ARRAY).description("운동 기록"),
-                                        fieldWithPath("[].dateRecords[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
-                                        fieldWithPath("[].dateRecords[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),
-                                        fieldWithPath("[].dateRecords[].records").type(JsonFieldType.ARRAY).description("진행한 운동의 기록"),
-                                        fieldWithPath("[].dateRecords[].records[].weight").type(JsonFieldType.NUMBER).description("운동 중량"),
-                                        fieldWithPath("[].dateRecords[].records[].volume").type(JsonFieldType.NUMBER).description("운동 횟수"),
-                                        fieldWithPath("[].dateRecords[].records[].exerciseSet").type(JsonFieldType.NUMBER).description("세트번호"),
-                                        fieldWithPath("[].dateRecords[].records[].progress").type(JsonFieldType.BOOLEAN).description("운동 진행 여부")
+                                        beneathPath("result").withSubsectionId("result"),
+                                        fieldWithPath("categoryId").type(NUMBER).description("운동부위id"),
+                                        fieldWithPath("categoryName").type(STRING).description("운동부위명"),
+                                        fieldWithPath("exercises").type(ARRAY).description("부위에 속한 운동리스트"),
+                                        fieldWithPath("exercises[].exerciseName").type(STRING).description("운동명"),
+                                        fieldWithPath("exercises[].exerciseId").type(NUMBER).description("운동Id")
                                 )
                         )
-                );
-
-        // verify
-        verify(service, times(1)).findExerciseRecordsOfUserInMonth(any(), any());
+                ).andReturn();
     }
+
+    @Test
+    void deleteExerciseRecords() throws Exception {
+        // given
+        doNothing().when(service).removeExercises(any());
+
+        // when
+        mvc.perform(
+                        RestDocumentationRequestBuilders.delete("/api/v1/exercises/{exerciseId}", 1) // 경로 변수 전달
+                                .header("Authorization", "Bearer Token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isNoContent()) // 204 상태 코드 기대
+                .andDo(document("delete-exercise",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("exerciseId").description("삭제할 운동의 Id") // 경로 변수 문서화
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("로그인 후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code} 형식으로 요청")
+                        )
+                ));
+    }
+
 }
