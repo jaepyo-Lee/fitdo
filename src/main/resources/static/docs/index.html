@@ -446,16 +446,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel0">
-<li><a href="#_공통_사항">공통 사항</a>
 <ul class="sectlevel1">
-<li><a href="#_domain">Domain</a></li>
-<li><a href="#_common_response">Common Response</a></li>
+<li><a href="#_공통_사항">공통 사항</a>
+<ul class="sectlevel2">
+<li><a href="#_1_domain">1. Domain</a></li>
+<li><a href="#_2_common_response">2. Common Response</a></li>
 </ul>
 </li>
-<li><a href="#API">인증/인가</a>
+<li><a href="#API">1. 인증/인가</a>
 <ul class="sectlevel1">
-<li><a href="#_login">Login</a>
+<li><a href="#_1_1_login">1.1 Login</a>
 <ul class="sectlevel2">
 <li><a href="#_request">Request</a></li>
 <li><a href="#_response">Response</a></li>
@@ -463,15 +463,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#_기록">기록</a>
+<li><a href="#_2_기록">2. 기록</a>
 <ul class="sectlevel1">
-<li><a href="#_기록조회">기록조회</a>
+<li><a href="#_2_1_기록_조회">2.1 기록 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_request_2">Request</a></li>
 <li><a href="#_response_2">Response</a></li>
 </ul>
 </li>
-<li><a href="#_운동_기록">운동 기록</a>
+<li><a href="#_2_2_운동_기록">2.2 운동 기록</a>
 <ul class="sectlevel2">
 <li><a href="#_request_3">Request</a></li>
 <li><a href="#_response_3">Response</a></li>
@@ -479,21 +479,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#_운동">운동</a>
+<li><a href="#_3_운동">3. 운동</a>
 <ul class="sectlevel1">
-<li><a href="#_운동목록_생성">운동목록 생성</a>
+<li><a href="#_3_1_운동_목록_생성">3.1 운동 목록 생성</a>
 <ul class="sectlevel2">
 <li><a href="#_request_4">Request</a></li>
 <li><a href="#_response_4">Response</a></li>
 </ul>
 </li>
-<li><a href="#_운동목록_조회">운동목록 조회</a>
+<li><a href="#_3_2_운동_목록_조회">3.2 운동 목록 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_request_5">Request</a></li>
 <li><a href="#_response_5">Response</a></li>
 </ul>
 </li>
-<li><a href="#_운동목록_삭제">운동목록 삭제</a>
+<li><a href="#_3_3_운동_목록_삭제">3.3 운동 목록 삭제</a>
 <ul class="sectlevel2">
 <li><a href="#_request_6">Request</a></li>
 <li><a href="#_response_6">Response</a></li>
@@ -505,36 +505,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<h1 id="_공통_사항" class="sect0"><a class="link" href="#_공통_사항">공통 사항</a></h1>
-<div class="openblock partintro">
-<div class="content">
-API에 관계없이 아래 사항을 지켜주셔야 합니다.
-</div>
-</div>
 <div class="sect1">
-<h2 id="_domain"><a class="link" href="#_domain">Domain</a></h2>
+<h2 id="_공통_사항"><a class="link" href="#_공통_사항">공통 사항</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ㄴㅇㄴㅇ</p>
+<p>API에 관계없이 아래 사항을 지켜주셔야 합니다.</p>
+</div>
+<div class="sect2">
+<h3 id="_1_domain"><a class="link" href="#_1_domain">1. Domain</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>도메인에 대한 구체적인 설명</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_common_response"><a class="link" href="#_2_common_response">2. Common Response</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>공통 응답에 대한 설명</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
+</div>
+<h1 id="API" class="sect0"><a class="link" href="#API">1. 인증/인가</a></h1>
 <div class="sect1">
-<h2 id="_common_response"><a class="link" href="#_common_response">Common Response</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>공통응답</p>
-</div>
-</div>
-</div>
-<h1 id="API" class="sect0"><a class="link" href="#API">인증/인가</a></h1>
-<div class="sect1">
-<h2 id="_login"><a class="link" href="#_login">Login</a></h2>
+<h2 id="_1_1_login"><a class="link" href="#_1_1_login">1.1 Login</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request"><a class="link" href="#_request">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -558,7 +564,7 @@ API에 관계없이 아래 사항을 지켜주셔야 합니다.
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -577,7 +583,7 @@ Host: localhost:8080
 <div class="sect2">
 <h3 id="_response"><a class="link" href="#_response">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -611,7 +617,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -629,14 +635,14 @@ Content-Length: 96
 </div>
 </div>
 </div>
-<h1 id="_기록" class="sect0"><a class="link" href="#_기록">기록</a></h1>
+<h1 id="_2_기록" class="sect0"><a class="link" href="#_2_기록">2. 기록</a></h1>
 <div class="sect1">
-<h2 id="_기록조회"><a class="link" href="#_기록조회">기록조회</a></h2>
+<h2 id="_2_1_기록_조회"><a class="link" href="#_2_1_기록_조회">2.1 기록 조회</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_2"><a class="link" href="#_request_2">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -657,7 +663,7 @@ Content-Length: 96
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -670,7 +676,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="_response_2"><a class="link" href="#_response_2">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -734,7 +740,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -816,12 +822,12 @@ Content-Length: 1406
 </div>
 </div>
 <div class="sect1">
-<h2 id="_운동_기록"><a class="link" href="#_운동_기록">운동 기록</a></h2>
+<h2 id="_2_2_운동_기록"><a class="link" href="#_2_2_운동_기록">2.2 운동 기록</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_3"><a class="link" href="#_request_3">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -875,7 +881,7 @@ Content-Length: 1406
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -920,7 +926,7 @@ Host: localhost:8080
 <div class="sect2">
 <h3 id="_response_3"><a class="link" href="#_response_3">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -944,7 +950,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -960,14 +966,14 @@ Content-Length: 23
 </div>
 </div>
 </div>
-<h1 id="_운동" class="sect0"><a class="link" href="#_운동">운동</a></h1>
+<h1 id="_3_운동" class="sect0"><a class="link" href="#_3_운동">3. 운동</a></h1>
 <div class="sect1">
-<h2 id="_운동목록_생성"><a class="link" href="#_운동목록_생성">운동목록 생성</a></h2>
+<h2 id="_3_1_운동_목록_생성"><a class="link" href="#_3_1_운동_목록_생성">3.1 운동 목록 생성</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_4"><a class="link" href="#_request_4">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -996,7 +1002,7 @@ Content-Length: 23
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1016,7 +1022,7 @@ Host: localhost:8080
 <div class="sect2">
 <h3 id="_response_4"><a class="link" href="#_response_4">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1040,7 +1046,7 @@ Host: localhost:8080
 </tbody>
 </table>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1049,7 +1055,7 @@ Content-Type: application/json
 Content-Length: 203
 
 {
-  "time" : "2024-11-22T09:45:15.456029700",
+  "time" : "2024-11-22T15:30:21.349304400",
   "status" : 201,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1063,12 +1069,12 @@ Content-Length: 203
 </div>
 </div>
 <div class="sect1">
-<h2 id="_운동목록_조회"><a class="link" href="#_운동목록_조회">운동목록 조회</a></h2>
+<h2 id="_3_2_운동_목록_조회"><a class="link" href="#_3_2_운동_목록_조회">3.2 운동 목록 조회</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_5"><a class="link" href="#_request_5">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1090,7 +1096,7 @@ Content-Length: 203
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1104,7 +1110,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="_response_5"><a class="link" href="#_response_5">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1148,7 +1154,7 @@ Host: localhost:8080</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1157,7 +1163,7 @@ Content-Type: application/json
 Content-Length: 398
 
 {
-  "time" : "2024-11-22T09:45:15.523936700",
+  "time" : "2024-11-22T15:30:21.439747300",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1179,12 +1185,12 @@ Content-Length: 398
 </div>
 </div>
 <div class="sect1">
-<h2 id="_운동목록_삭제"><a class="link" href="#_운동목록_삭제">운동목록 삭제</a></h2>
+<h2 id="_3_3_운동_목록_삭제"><a class="link" href="#_3_3_운동_목록_삭제">3.3 운동 목록 삭제</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_6"><a class="link" href="#_request_6">Request</a></h3>
 <div class="paragraph">
-<p>Request Fields</p>
+<p>Request Fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1206,7 +1212,7 @@ Content-Length: 398
 </tbody>
 </table>
 <div class="paragraph">
-<p>Path Parameters
+<p>Path Parameters:
 ./api/v1/exercises/{exerciseId}</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1228,7 +1234,7 @@ Content-Length: 398
 </tbody>
 </table>
 <div class="paragraph">
-<p>Request Http Example</p>
+<p>Request HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1242,12 +1248,12 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="_response_6"><a class="link" href="#_response_6">Response</a></h3>
 <div class="paragraph">
-<p>Response Data Fields</p>
+<p>Response Data Fields:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
-  "time" : "2024-11-22T09:45:15.401475300",
+  "time" : "2024-11-22T15:30:21.268728900",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1256,7 +1262,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Response HTTP Example</p>
+<p>Response HTTP Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1265,7 +1271,7 @@ Content-Type: application/json
 Content-Length: 166
 
 {
-  "time" : "2024-11-22T09:45:15.401475300",
+  "time" : "2024-11-22T15:30:21.268728900",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1280,7 +1286,7 @@ Content-Length: 166
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2024-11-22 01:19:12 +0900
+Last updated 2024-11-22 15:24:05 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
