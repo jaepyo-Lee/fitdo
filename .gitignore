@@ -40,4 +40,3 @@ out/
 .vscode/
 /src/main/resources/application-local.yml
 /src/main/generated/
-/src/main/resources/application-default.yml
