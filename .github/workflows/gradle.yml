@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.AWS_PEM_KEY }}
           port: 22
           source: ./infra/docker/docker-compose.yml
-          target: "/home/ubuntu/"
+          target: "./home/ubuntu/"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -76,15 +76,15 @@ jobs:
           username: ${{ env.AWS_USERNAME }}
           key: ${{ secrets.AWS_PEM_KEY }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}
+            cd /home/ubuntu/
 
-            cd /home/ubuntu/infra/docker
             
             sudo touch .env
             echo "${{ secrets.ENV_VARS }}" | sudo tee .env > /dev/null
             
             sudo chmod 666 /var/run/docker.sock
             
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}
             docker-compose -f docker-compose.yml --env-file ./.env up -d dev
             
             
