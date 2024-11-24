@@ -81,7 +81,6 @@ jobs:
             sudo chmod 666 /var/run/docker.sock
             
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo
-            docker-compose -f docker-compose.yml --env-file ./.env up -d dev
-            
+            docker compose -f docker-compose.yml --env-file ./.env up -d dev
             
             docker image prune -f
