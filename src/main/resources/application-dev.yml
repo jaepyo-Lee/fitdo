@@ -5,7 +5,7 @@ app:
     refreshExpired: ${REFRESHTOKEN_EXPIRED_TIME}
 
 server:
-  port: ${PORT}
+  port: 8080
 
 spring:
   application:
@@ -17,13 +17,12 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  # JPA 설정
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: ${DB_DDL_TYPE}        # DB 초기화 전략 (none, create, create-drop, update, validate)
+      ddl-auto: ${DB_DDL_TYPE}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true      # 쿼리 로그 포맷 (정렬)
-        show_sql: true        # 쿼리 로그 출력
+        format_sql: true
+        show_sql: true
