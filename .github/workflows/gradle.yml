@@ -78,7 +78,7 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}
 
-            cd /home/ubuntu/
+            cd /home/ubuntu/infra/docker
             
             sudo touch .env
             echo "${{ secrets.ENV_VARS }}" | sudo tee .env > /dev/null
