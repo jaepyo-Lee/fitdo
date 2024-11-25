@@ -1,6 +1,8 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.CategoryCommandRepository;
+import com.jaejoo.fitdo.domain.exercise.service.domain.CategoryInitializer;
 import com.jaejoo.fitdo.domain.user.core.Account;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.core.User;
@@ -15,17 +17,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceUnitTest {
     @InjectMocks
     private UserService userService;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private CategoryInitializer categoryInitializer;
+    @Mock
+    private CategoryCommandRepository categoryCommandRepository;
 
     @Nested
     @DisplayName("사용자의 회원가입완료기능")
@@ -45,6 +55,9 @@ class UserServiceTest {
 
             when(userRepository.findById(id)).thenReturn(mockuser);
             when(userRepository.save(any())).thenReturn(registerUser);
+            when(categoryInitializer.init(any())).thenReturn(List.of());
+            doNothing().when(categoryCommandRepository).saveAll(anyList());
+
 
             // when
             System.out.println("=====Logic Start=====");

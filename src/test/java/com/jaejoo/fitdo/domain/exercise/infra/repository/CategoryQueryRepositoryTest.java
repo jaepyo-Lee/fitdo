@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository;
 
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.CategoryQueryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
@@ -43,11 +44,11 @@ class CategoryQueryRepositoryTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
         UserJpaEntity saveUser2 = userJpaRepository.save(user2);
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build();
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().categoryName("등1").user(saveUser).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).user(saveUser).build();
 
-        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().categoryName("가슴").user(saveUser2).build();
-        CategoryJpaEntity backCategory2 = CategoryJpaEntity.builder().categoryName("등").user(saveUser2).build();
+        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser2).build();
+        CategoryJpaEntity backCategory2 = CategoryJpaEntity.builder().part(BodyPart.BACK).user(saveUser2).build();
 
         CategoryJpaEntity save = categoryJpaRepository.save(chestCategory);
         CategoryJpaEntity save1 = categoryJpaRepository.save(backCategory);
@@ -62,6 +63,6 @@ class CategoryQueryRepositoryTest {
 
         System.out.println("=====Logic End=====");
         // then
-        assertThat(categoryByUser.getCategoryName()).isEqualTo("등1");
+        assertThat(categoryByUser.getPartName()).isEqualTo("등");
     }
 }

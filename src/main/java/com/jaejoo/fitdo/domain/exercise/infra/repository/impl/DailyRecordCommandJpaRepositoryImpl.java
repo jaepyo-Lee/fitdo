@@ -1,7 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.impl;
 
 import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
-import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecords;
+import com.jaejoo.fitdo.domain.exercise.core.Exercise;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -27,7 +27,7 @@ public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandReposit
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public void saveAll(Long userId, Long exerciseId, LocalDate dailyDate, ExerciseRecords exerciseRecords) {
+    public void saveAll(Long userId, Long exerciseId, LocalDate dailyDate, Exercise exerciseRecords) {
         UserJpaEntity user = userJpaRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("user not found"));
         DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordJpaRepository.findByUserIdAndDate(userId, dailyDate)
                 .orElseGet(() -> dailyRecordJpaRepository.save(new DailyRecordJpaEntity(dailyDate, user)));

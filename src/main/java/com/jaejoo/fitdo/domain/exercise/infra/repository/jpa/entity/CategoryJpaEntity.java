@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -14,16 +15,20 @@ public class CategoryJpaEntity {
     @Getter
     private Long id;
 
-    @Getter
-    private String categoryName;
+    @Enumerated(EnumType.STRING)
+    private BodyPart part;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserJpaEntity user;
 
     @Builder
-    public CategoryJpaEntity(String categoryName, UserJpaEntity user) {
-        this.categoryName = categoryName;
+    public CategoryJpaEntity(BodyPart part, UserJpaEntity user) {
+        this.part = part;
         this.user = user;
+    }
+
+    public String getPartName(){
+        return part.getKr();
     }
 }

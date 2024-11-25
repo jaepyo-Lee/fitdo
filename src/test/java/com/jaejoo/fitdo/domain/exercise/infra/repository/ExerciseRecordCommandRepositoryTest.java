@@ -1,8 +1,9 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecord;
-import com.jaejoo.fitdo.domain.exercise.core.ExerciseRecords;
+import com.jaejoo.fitdo.domain.exercise.core.Exercise;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.DailyRecordCommandJpaRepositoryImpl;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
@@ -15,7 +16,6 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaE
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -70,7 +70,7 @@ class ExerciseRecordCommandRepositoryTest {
         DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(dailyRecord);
 
 
-        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build());
+        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build());
 
 
         ExerciseJpaEntity exercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder()
@@ -116,7 +116,7 @@ class ExerciseRecordCommandRepositoryTest {
         DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(dailyRecord);
 
 
-        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build());
+        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build());
 
 
         ExerciseJpaEntity exercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder()
@@ -130,7 +130,7 @@ class ExerciseRecordCommandRepositoryTest {
 
         ExerciseRecord exerciseRecord1 = new ExerciseRecord(20, 5, 1, true);
         ExerciseRecord exerciseRecord2 = new ExerciseRecord(20, 5, 2, false);
-        ExerciseRecords exerciseRecords = new ExerciseRecords(List.of(exerciseRecord1, exerciseRecord2));
+        Exercise exerciseRecords = new Exercise(List.of(exerciseRecord1, exerciseRecord2));
 
         recordCommandRepository.saveAll(saveUser.getId(),exercise.getId(),todayDate, exerciseRecords);
 

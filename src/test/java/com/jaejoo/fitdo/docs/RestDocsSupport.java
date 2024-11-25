@@ -14,6 +14,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+@Import(JacksonConfig.class)
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest

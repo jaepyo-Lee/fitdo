@@ -658,7 +658,7 @@ Content-Length: 96
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>yearMonth</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">[연도,월,일] 베열형식으로 반환</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yyyy-MM 베열형식으로 반환</p></td>
 </tr>
 </tbody>
 </table>
@@ -694,7 +694,7 @@ Host: localhost:8080</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].exerciseDate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">운동한 날짜. yyyy-MM-dd 형식</p></td>
 </tr>
 <tr>
@@ -746,10 +746,10 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1406
+Content-Length: 1398
 
 [ {
-  "exerciseDate" : [ 2024, 11, 20 ],
+  "exerciseDate" : "2024-11-20",
   "dateRecords" : [ {
     "exerciseId" : 1,
     "categoryName" : "가슴",
@@ -785,7 +785,7 @@ Content-Length: 1406
     } ]
   } ]
 }, {
-  "exerciseDate" : [ 2024, 11, 21 ],
+  "exerciseDate" : "2024-11-21",
   "dateRecords" : [ {
     "exerciseId" : 1,
     "categoryName" : "등",
@@ -892,7 +892,7 @@ Content-Length: 502
 Host: localhost:8080
 
 [ {
-  "todayDate" : "2024-11-22",
+  "todayDate" : "2024-11-25",
   "exerciseId" : 1,
   "records" : [ {
     "set" : 1,
@@ -906,7 +906,7 @@ Host: localhost:8080
     "progress" : false
   } ]
 }, {
-  "todayDate" : "2024-11-22",
+  "todayDate" : "2024-11-25",
   "exerciseId" : 2,
   "records" : [ {
     "set" : 1,
@@ -1055,7 +1055,7 @@ Content-Type: application/json
 Content-Length: 203
 
 {
-  "time" : "2024-11-22T15:30:21.349304400",
+  "time" : "2024-11-25T22:24:11.645156600",
   "status" : 201,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1163,7 +1163,7 @@ Content-Type: application/json
 Content-Length: 398
 
 {
-  "time" : "2024-11-22T15:30:21.439747300",
+  "time" : "2024-11-25T22:24:11.724195400",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1253,7 +1253,7 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
-  "time" : "2024-11-22T15:30:21.268728900",
+  "time" : "2024-11-25T22:24:11.567440800",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1271,7 +1271,7 @@ Content-Type: application/json
 Content-Length: 166
 
 {
-  "time" : "2024-11-22T15:30:21.268728900",
+  "time" : "2024-11-25T22:24:11.567440800",
   "status" : 200,
   "code" : "Success",
   "message" : "요청에 성공하였습니다.",
@@ -1286,7 +1286,7 @@ Content-Length: 166
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2024-11-22 15:24:05 +0900
+Last updated 2024-11-25 15:13:57 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
