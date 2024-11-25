@@ -4,6 +4,7 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.CategoryQueryRepository
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseQueryRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DeleteDelimiter;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.ExerciseCreateCommand;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.ExercisesWithinCategory;
@@ -23,9 +24,7 @@ public class ExerciseService {
 
     public String createExercise(ExerciseCreateCommand command) {
         CategoryJpaEntity categories = categoryQueryRepository.findById(command.getCategoryId());
-        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name(command.getExerciseName())
-                .category(categories)
-                .build();
+        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.create(command.getExerciseName(), categories);
         ExerciseJpaEntity save = exerciseCommandRepository.save(exerciseJpaEntity);
         return save.getName();
     }
@@ -48,7 +47,14 @@ public class ExerciseService {
         return exercisesWithCategory;
     }
 
-    public void removeExercises(Long exerciseId){
-        exerciseCommandRepository.deleteById(exerciseId);
+    public void removeExercises(Long exerciseId) {
+        ExerciseJpaEntity willRemoveEntity = exerciseQueryRepository.findById(exerciseId);
+        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder()
+                .category(willRemoveEntity.getCategory())
+                .name(willRemoveEntity.getName())
+                .id(willRemoveEntity.getId())
+                .deleteDelimiter(DeleteDelimiter.DELETE)
+                .build();
+        exerciseCommandRepository.save(exerciseJpaEntity);
     }
 }

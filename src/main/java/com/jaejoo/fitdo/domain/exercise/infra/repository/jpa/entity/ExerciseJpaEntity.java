@@ -14,13 +14,28 @@ public class ExerciseJpaEntity {
     private Long id;
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private DeleteDelimiter deleteDelimiter;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryJpaEntity category;
 
     @Builder
-    public ExerciseJpaEntity(String name, CategoryJpaEntity category) {
+    public ExerciseJpaEntity(Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
+        this.id = id;
         this.name = name;
+        this.deleteDelimiter = deleteDelimiter;
         this.category = category;
+    }
+
+    public ExerciseJpaEntity(String name, CategoryJpaEntity category, DeleteDelimiter deleteDelimiter) {
+        this.name = name;
+        this.deleteDelimiter = deleteDelimiter;
+        this.category = category;
+    }
+
+    public static ExerciseJpaEntity create(String name, CategoryJpaEntity category) {
+        return new ExerciseJpaEntity(name, category, DeleteDelimiter.IN_USER);
     }
 }
