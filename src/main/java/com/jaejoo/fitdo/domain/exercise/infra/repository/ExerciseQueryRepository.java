@@ -10,4 +10,6 @@ public interface ExerciseQueryRepository {
     List<ExerciseJpaEntity> findExercisesByCategory(CategoryJpaEntity category);
 
     ExerciseJpaEntity findById(Long exerciseId);
+
+    List<ExerciseJpaEntity>findAllByIds(List<Long> exerciseIds);
 }

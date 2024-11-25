@@ -24,4 +24,9 @@ public class ExerciseQueryJpaRepository implements ExerciseQueryRepository {
     public ExerciseJpaEntity findById(Long exerciseId) {
         return repository.findById(exerciseId).orElseThrow(()->new IllegalArgumentException("not found entity"));
     }
+
+    @Override
+    public List<ExerciseJpaEntity> findAllByIds(List<Long> exerciseIds) {
+        return repository.findAllById(exerciseIds);
+    }
 }
