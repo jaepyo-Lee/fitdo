@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.service.application;
 
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
@@ -47,13 +48,13 @@ class ExerciseServiceTest {
         UserJpaEntity user2 = UserJpaEntity.builder().build();
         UserJpaEntity saveUser2 = userJpaRepository.save(user2);
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory2 = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("등").build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(chestCategory);
 
         // when
@@ -76,13 +77,13 @@ class ExerciseServiceTest {
         UserJpaEntity user2 = UserJpaEntity.builder().build();
         UserJpaEntity saveUser2 = userJpaRepository.save(user2);
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory2 = categoryJpaRepository.save(chestCategory2);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("등").build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
@@ -115,10 +116,10 @@ class ExerciseServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("등").build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();

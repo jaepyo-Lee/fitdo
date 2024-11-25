@@ -2,6 +2,7 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository;
 
 import com.jaejoo.fitdo.config.QuerydslTestConfig;
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -66,7 +67,7 @@ class RecordQueryRepositoryTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -128,7 +129,7 @@ class RecordQueryRepositoryTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -180,7 +181,7 @@ class RecordQueryRepositoryTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -215,7 +216,7 @@ class RecordQueryRepositoryTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();

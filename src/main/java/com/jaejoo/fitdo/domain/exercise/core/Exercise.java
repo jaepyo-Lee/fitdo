@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ExerciseRecords {
+public class Exercise {
     List<ExerciseRecord> exerciseRecords;
 
-    public ExerciseRecords(List<ExerciseRecord> exerciseRecords) {
+    public Exercise(List<ExerciseRecord> exerciseRecords) {
         this.exerciseRecords = exerciseRecords;
     }
 
-    public ExerciseRecords() {
+    public Exercise() {
         this.exerciseRecords = new ArrayList<ExerciseRecord>();
     }
 

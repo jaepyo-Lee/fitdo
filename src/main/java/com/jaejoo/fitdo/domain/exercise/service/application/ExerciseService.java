@@ -42,7 +42,7 @@ public class ExerciseService {
                         .build());
             }
             exercisesWithCategory.add(FindExercisesWithCategory.builder()
-                    .categoryId(category.getId()).categoryName(category.getCategoryName()).exercises(exercises)
+                    .categoryId(category.getId()).categoryName(category.getPartName()).exercises(exercises)
                     .build());
         }
         return exercisesWithCategory;

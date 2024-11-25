@@ -1,6 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.service.application;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -65,7 +66,7 @@ class ExerciseExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -106,7 +107,7 @@ class ExerciseExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -146,7 +147,7 @@ class ExerciseExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().categoryName("가슴").user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -173,7 +174,7 @@ class ExerciseExerciseRecordServiceTest {
 
     @Nested
     @DisplayName("특정월의 운동기록 조회")
-    class findSpecificMonthExerciseRecordsTest {
+    class findSpecificMonthExerciseTest {
         /**
          * Todo
          * Work) 테스트 상태검증 자세하게하기. 현재 단순 크기로만 판단중. DTO만들어서 값검증
@@ -185,7 +186,7 @@ class ExerciseExerciseRecordServiceTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userJpaRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();

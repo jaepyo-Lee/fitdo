@@ -151,10 +151,10 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
                                 queryParameters(
-                                        parameterWithName("yearMonth").description("운동 기록을 구하고자하는 연도와 월\n").description("[연도,월,일] 베열형식으로 반환")
+                                        parameterWithName("yearMonth").description("운동 기록을 구하고자하는 연도와 월\n").description("yyyy-MM 베열형식으로 반환")
                                 ),
                                 responseFields(
-                                        fieldWithPath("[].exerciseDate").type(JsonFieldType.ARRAY).description("운동한 날짜. yyyy-MM-dd 형식"),
+                                        fieldWithPath("[].exerciseDate").type(JsonFieldType.STRING) .description("운동한 날짜. yyyy-MM-dd 형식"),
                                         fieldWithPath("[].dateRecords").type(JsonFieldType.ARRAY).description("운동 기록"),
                                         fieldWithPath("[].dateRecords[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
                                         fieldWithPath("[].dateRecords[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),

@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.service.application.res;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
