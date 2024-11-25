@@ -2,11 +2,7 @@
   ex) [Feat(#17)]: pull request template 작성
   (확인 후 지워주세요)
 
-## 🔘Part
-
-- [x] FE
-
-  <br/>
+<br/>
 
 ## 🔎 작업 내용
 

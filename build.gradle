@@ -35,6 +35,9 @@ dependencies {
     //h2
     runtimeOnly 'com.h2database:h2'
 
+    //mysql
+    implementation 'mysql:mysql-connector-java:8.0.32'
+
     //lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -91,7 +94,7 @@ asciidoctor {
 tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
 
-    from file("${asciidoctor.outputDir}/html5")
+    from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
 }
 

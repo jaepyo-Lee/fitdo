@@ -27,9 +27,7 @@ import java.util.Collections;
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private static final String[] DOC_URLS = {
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/v3/api-docs/**",
+            "/docs/**",
             "/h2-console/**",
             "/actuator/**",
             "/health-check"
@@ -46,7 +44,7 @@ public class SecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "https://yakgwa.site", "http://yakgwa.site"));
+            config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080"));
             config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "AccessToken", "RefreshToken"));
             config.setAllowCredentials(true);
             return config;
@@ -66,6 +64,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(new MvcRequestMatcher[]{
+                                        new MvcRequestMatcher(introspector, "/docs/**"),
                                         new MvcRequestMatcher(introspector, "/auth/**"),
                                         new MvcRequestMatcher(introspector, "/actuator/**"),
                                         new MvcRequestMatcher(introspector, "/test/**")})
