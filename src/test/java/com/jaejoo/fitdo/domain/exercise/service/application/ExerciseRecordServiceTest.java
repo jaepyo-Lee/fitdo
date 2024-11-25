@@ -16,7 +16,6 @@ import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExercis
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,13 +27,12 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
 @SpringBootTest
-class ExerciseExerciseRecordServiceTest {
+class ExerciseRecordServiceTest {
 
     @Autowired
     private ExerciseJpaRepository exerciseJpaRepository;

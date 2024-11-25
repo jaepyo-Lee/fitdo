@@ -1,10 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.service.application;
 
-<<<<<<< HEAD
 import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
-=======
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordQueryRepository;
->>>>>>> ed7cee016d2384d22a863c101f37d6ed3c91eee5
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
@@ -17,7 +14,6 @@ import com.jaejoo.fitdo.domain.exercise.service.application.req.ExerciseCreateCo
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExercisesWithCategory;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -163,10 +158,10 @@ class ExerciseServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("가슴").build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).categoryName("등").build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
@@ -177,7 +172,7 @@ class ExerciseServiceTest {
         ExerciseJpaEntity exercise2 = exerciseJpaRepository.save(flymachine1);
         ExerciseJpaEntity exercise3 = exerciseJpaRepository.save(deadlift1);
 
-        LocalDate saveDate = LocalDate.of(2024,11,25);
+        LocalDate saveDate = LocalDate.of(2024, 11, 25);
         DailyRecordJpaEntity dailyRecordJpaEntity = new DailyRecordJpaEntity(saveDate, saveUser);
         DailyRecordJpaEntity saveDailyRecordJpaEntity = dailyRecordJpaRepository.save(dailyRecordJpaEntity);
 
