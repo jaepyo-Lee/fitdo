@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -17,5 +18,10 @@ public class ExerciseQueryJpaRepository implements ExerciseQueryRepository {
     @Override
     public List<ExerciseJpaEntity> findExercisesByCategory(CategoryJpaEntity category) {
         return List.of();
+    }
+
+    @Override
+    public ExerciseJpaEntity findById(Long exerciseId) {
+        return repository.findById(exerciseId).orElseThrow(()->new IllegalArgumentException("not found entity"));
     }
 }
