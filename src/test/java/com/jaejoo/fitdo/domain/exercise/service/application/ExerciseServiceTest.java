@@ -78,6 +78,7 @@ class ExerciseServiceTest {
         assertThat(actual).isEqualTo(name);
     }
 
+    //내부값도 테스트해야함. 현재 테스트 깨짐
     @Test
     void 운동목록조회() {
         // given

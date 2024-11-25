@@ -4,7 +4,7 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.CategoryQueryRepository
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseQueryRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DeleteDelimiter;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.ExerciseCreateCommand;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.ExercisesWithinCategory;

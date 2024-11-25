@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
