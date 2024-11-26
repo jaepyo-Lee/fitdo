@@ -45,4 +45,17 @@ public interface ToResponseMapper {
     // 중첩 객체 매핑
     @Named("toResponseDto2")
     FindExerciseRecordsResponseDto map(FindExerciseRecords exerciseRecord);
+
+
+    @IterableMapping(qualifiedByName = "toReadRoutineOfUserResponse")
+    List<ReadRoutinesOfUserResponse> toReadRoutineOfUserResponse(List<ReadRoutineOfUser> dto);
+
+    @Named("toReadRoutineOfUserResponse")
+    ReadRoutinesOfUserResponse toReadRoutineOfUserResponse(ReadRoutineOfUser dto);
+
+    @Named("toCategoryAndExerciseWithinRoutine")
+    CategoryAndExerciseWithinRoutineDto toCategoryAndExerciseWithinRoutine(CategoryAndExerciseWithinRoutine dto);
+
+    @IterableMapping(qualifiedByName = "toCategoryAndExerciseWithinRoutine")
+    List<CategoryAndExerciseWithinRoutineDto> toCategoryAndExerciseWithinRoutine(List<CategoryAndExerciseWithinRoutine> dto);
 }

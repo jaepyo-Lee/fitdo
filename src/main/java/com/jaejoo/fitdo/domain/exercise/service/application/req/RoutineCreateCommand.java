@@ -5,9 +5,9 @@ import lombok.Getter;
 
 import java.util.List;
 
-public record RoutineCreateCommand(String name, List<Long> exerciseIds) {
+public record RoutineCreateCommand(Long userId, String name, List<Long> exerciseIds) {
 
-    public static RoutineCreateCommand from(RoutineCreateRequest request) {
-        return new RoutineCreateCommand(request.getName(), request.getExerciseIds());
+    public static RoutineCreateCommand from(Long userId, RoutineCreateRequest request) {
+        return new RoutineCreateCommand(userId, request.getName(), request.getExerciseIds());
     }
 }
