@@ -21,9 +21,9 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
 
     public void create(RoutineCreateCommand command) {
-        RoutineJpaEntity routine = new RoutineJpaEntity(command.getName());
+        RoutineJpaEntity routine = new RoutineJpaEntity(command.name());
         RoutineJpaEntity saveRoutine = routineRepository.save(routine);
-        List<ExerciseJpaEntity> exercises = exerciseQueryRepository.findAllByIds(command.getExerciseIds());
+        List<ExerciseJpaEntity> exercises = exerciseQueryRepository.findAllByIds(command.exerciseIds());
         List<ExerciseRoutineJpaEntity> exerciseRoutines = new ArrayList<>();
         for (ExerciseJpaEntity saveExercise : exercises) {
             exerciseRoutines.add(new ExerciseRoutineJpaEntity(saveRoutine, saveExercise));

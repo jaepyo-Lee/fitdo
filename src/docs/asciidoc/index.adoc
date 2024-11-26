@@ -119,3 +119,19 @@ include::{snippets}/delete-exercise/response-body.adoc[]
 
 Response HTTP Example:
 include::{snippets}/delete-exercise/http-response.adoc[]
+
+= 4. 루틴
+== 4.1 루틴 만들기
+=== Request
+Request Fields:
+include::{snippets}/create-routine/request-fields.adoc[]
+
+Request HTTP Example
+include::{snippets}/create-routine/httpie-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/create-routine/response-body.adoc[]
+
+Response HTTP Example:
+include::{snippets}/create-routine/http-response.adoc[]
