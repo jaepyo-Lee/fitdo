@@ -56,4 +56,10 @@ public class RoutineService {
         }
         return routineInfosOfUser;
     }
+
+    public void deleteRoutine(Long routineId){
+        RoutineJpaEntity routine = routineRepository.findById(routineId);
+        exerciseRoutineCommandRepository.deleteAllByRoutine(routine);
+        routineRepository.deleteBy(routine);
+    }
 }

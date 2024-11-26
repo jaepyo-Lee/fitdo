@@ -3,6 +3,7 @@ package com.jaejoo.fitdo.domain.exercise.service.application;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.CategoryQueryRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseQueryRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseRoutineCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
@@ -21,6 +22,7 @@ public class ExerciseService {
     private final CategoryQueryRepository categoryQueryRepository;
     private final ExerciseCommandRepository exerciseCommandRepository;
     private final ExerciseQueryRepository exerciseQueryRepository;
+    private final ExerciseRoutineCommandRepository exerciseRoutineCommandRepository;
 
     public String createExercise(ExerciseCreateCommand command) {
         CategoryJpaEntity categories = categoryQueryRepository.findById(command.getCategoryId());
@@ -55,6 +57,7 @@ public class ExerciseService {
                 .id(willRemoveEntity.getId())
                 .deleteDelimiter(DeleteDelimiter.DELETE)
                 .build();
-        exerciseCommandRepository.save(exerciseJpaEntity);
+        ExerciseJpaEntity updateExerciseEntity = exerciseCommandRepository.save(exerciseJpaEntity);
+        exerciseRoutineCommandRepository.deleteAllByExercise(updateExerciseEntity);
     }
 }

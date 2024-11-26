@@ -9,6 +9,7 @@ import com.jaejoo.fitdo.domain.exercise.web.req.RoutineCreateRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.util.List;
@@ -21,8 +22,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,14 +47,14 @@ class RoutineControllerDocsTest extends RestDocsSupport {
 
         // when
         mvc.perform(
-                        post("/api/v1/routine")
+                        RestDocumentationRequestBuilders.post("/api/v1/routines")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andDo(document("create-routine",
+                .andDo(document("create-routines",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
@@ -85,7 +87,7 @@ class RoutineControllerDocsTest extends RestDocsSupport {
         when(service.readRoutine(any())).thenReturn(response);
 
         mvc.perform(
-                        get("/api/v1/routine")
+                        RestDocumentationRequestBuilders.get("/api/v1/routines")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -106,6 +108,33 @@ class RoutineControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("categoryAndExercise[].categoryName").type(STRING).description("운동카테고리(부위)명"),
                                         fieldWithPath("categoryAndExercise[].exerciseId").type(NUMBER).description("운동ID"),
                                         fieldWithPath("categoryAndExercise[].exerciseName").type(STRING).description("운동명")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    void deleteRoutine() throws Exception {
+        // given
+        // mock the service method
+        doNothing().when(service).deleteRoutine(any());
+
+        // when
+        mvc.perform(
+                        RestDocumentationRequestBuilders.delete("/api/v1/routines/{routineId}", 1L)
+                                .header("Authorization", "Bearer Token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("delete-routines",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("routineId").description("삭제할 루틴의 Id") // 경로 변수 문서화
+                                ),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 )
                         )
                 );

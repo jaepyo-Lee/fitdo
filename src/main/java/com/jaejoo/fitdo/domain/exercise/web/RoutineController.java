@@ -21,17 +21,23 @@ public class RoutineController {
     private final RoutineService routineService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/v1/routine")
+    @PostMapping("/api/v1/routines")
     public SuccessResponse createRoutine(@AuthenticationPrincipal CustomUserDetail userDetail,
                                          @RequestBody RoutineCreateRequest request) {
         routineService.create(RoutineCreateCommand.from(userDetail.userId(), request));
         return SuccessResponse.ok();
     }
 
-    @GetMapping("/api/v1/routine")
+    @GetMapping("/api/v1/routines")
     public SuccessResponse<List<ReadRoutinesOfUserResponse>> readRoutine(@AuthenticationPrincipal CustomUserDetail userDetail) {
         List<ReadRoutineOfUser> readRoutineOfUsers = routineService.readRoutine(userDetail.userId());
         List<ReadRoutinesOfUserResponse> response = ToResponseMapper.INSTANCE.toReadRoutineOfUserResponse(readRoutineOfUsers);
         return new SuccessResponse<>(response);
+    }
+
+    @DeleteMapping("/api/v1/routines/{routineId}")
+    public SuccessResponse deleteRoutine(@PathVariable("routineId")Long routineId){
+        routineService.deleteRoutine(routineId);
+        return SuccessResponse.ok();
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 public interface RoutineRepository {
     RoutineJpaEntity save(RoutineJpaEntity routine);
     List<RoutineJpaEntity> findAllByUserId(Long userId);
+    RoutineJpaEntity findById(Long routineId);
+    void deleteBy(RoutineJpaEntity routine);
 }
