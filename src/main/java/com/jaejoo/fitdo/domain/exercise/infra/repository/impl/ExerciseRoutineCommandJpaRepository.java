@@ -2,7 +2,9 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository.impl;
 
 import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseRoutineCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseRoutineJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseRoutineJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.RoutineJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,5 +23,15 @@ public class ExerciseRoutineCommandJpaRepository implements ExerciseRoutineComma
     @Override
     public ExerciseRoutineJpaEntity save(ExerciseRoutineJpaEntity entity) {
         return exerciseRoutineJpaRepository.save(entity);
+    }
+
+    @Override
+    public void deleteAllByRoutine(RoutineJpaEntity routine) {
+        exerciseRoutineJpaRepository.deleteAllByRoutine(routine);
+    }
+
+    @Override
+    public void deleteAllByExercise(ExerciseJpaEntity exercise) {
+        exerciseRoutineJpaRepository.deleteAllByExercise(exercise);
     }
 }
