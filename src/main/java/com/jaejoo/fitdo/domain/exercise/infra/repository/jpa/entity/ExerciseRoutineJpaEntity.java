@@ -1,6 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -13,6 +14,7 @@ public class ExerciseRoutineJpaEntity {
     @ManyToOne
     private RoutineJpaEntity routine;
 
+    @Getter
     @ManyToOne
     private ExerciseJpaEntity exercise;
 

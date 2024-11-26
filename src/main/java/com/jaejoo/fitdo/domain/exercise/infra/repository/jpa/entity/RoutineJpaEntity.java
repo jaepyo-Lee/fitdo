@@ -1,18 +1,27 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 public class RoutineJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
+
+    @Getter
     private String name;
 
-    public RoutineJpaEntity(String name) {
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private UserJpaEntity user;
+
+    public RoutineJpaEntity(String name, UserJpaEntity user) {
         this.name = name;
+        this.user = user;
     }
 }

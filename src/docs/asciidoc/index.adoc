@@ -74,6 +74,9 @@ include::{snippets}/create-exercise-records/http-response.adoc[]
 
 == 3.1 운동 목록 생성
 === Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
 Request Fields:
 include::{snippets}/create-exercise/request-fields.adoc[]
 
@@ -89,6 +92,9 @@ include::{snippets}/create-exercise/http-response.adoc[]
 
 == 3.2 운동 목록 조회
 === Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
 Request Fields:
 include::{snippets}/read-exercise/request-headers.adoc[]
 
@@ -104,6 +110,9 @@ include::{snippets}/read-exercise/http-response.adoc[]
 
 == 3.3 운동 목록 삭제
 === Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
 Request Fields:
 include::{snippets}/delete-exercise/request-headers.adoc[]
 
@@ -123,6 +132,9 @@ include::{snippets}/delete-exercise/http-response.adoc[]
 = 4. 루틴
 == 4.1 루틴 만들기
 === Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
 Request Fields:
 include::{snippets}/create-routine/request-fields.adoc[]
 
@@ -135,3 +147,18 @@ include::{snippets}/create-routine/response-body.adoc[]
 
 Response HTTP Example:
 include::{snippets}/create-routine/http-response.adoc[]
+
+== 4.2 루틴 조회하기
+=== Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
+Request HTTP Example
+include::{snippets}/read-routine/httpie-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/read-routine/response-body.adoc[]
+
+Response HTTP Example:
+include::{snippets}/read-routine/http-response.adoc[]
