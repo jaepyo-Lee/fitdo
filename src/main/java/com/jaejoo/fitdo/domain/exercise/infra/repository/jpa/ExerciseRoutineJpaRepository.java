@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa;
 
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseRoutineJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.RoutineJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ public interface ExerciseRoutineJpaRepository extends JpaRepository<ExerciseRout
     List<ExerciseRoutineJpaEntity> findAllByRoutine(RoutineJpaEntity routine);
 
     void deleteAllByRoutine(RoutineJpaEntity routine);
+
+    void deleteAllByExercise(ExerciseJpaEntity exerciseJpaEntity);
 }

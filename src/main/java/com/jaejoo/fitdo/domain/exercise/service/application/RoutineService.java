@@ -59,7 +59,7 @@ public class RoutineService {
 
     public void deleteRoutine(Long routineId){
         RoutineJpaEntity routine = routineRepository.findById(routineId);
-        exerciseRoutineCommandRepository.deleteAllBy(routine);
+        exerciseRoutineCommandRepository.deleteAllByRoutine(routine);
         routineRepository.deleteBy(routine);
     }
 }

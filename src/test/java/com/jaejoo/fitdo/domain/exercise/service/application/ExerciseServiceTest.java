@@ -2,14 +2,8 @@ package com.jaejoo.fitdo.domain.exercise.service.application;
 
 import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordQueryRepository;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.*;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.*;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.ExerciseCreateCommand;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExercisesWithCategory;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
@@ -22,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
 @SpringBootTest
@@ -42,6 +38,10 @@ class ExerciseServiceTest {
     private DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
     @Autowired
     private RecordQueryRepository recordQueryRepository;
+    @Autowired
+    private RoutineJpaRepository routineJpaRepository;
+    @Autowired
+    private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
 /*    @AfterEach
     void init(){
         exerciseJpaRepository.deleteAll();
@@ -188,5 +188,52 @@ class ExerciseServiceTest {
         // then
         List<DailyExerciseRecordJpaEntity> exerciseRecordsInDailyRecordDividedBy = recordQueryRepository.findExerciseRecordsInDailyRecordDividedBy(benchpress1, saveDailyRecordJpaEntity);
         assertThat(exerciseRecordsInDailyRecordDividedBy.size()).isOne();
+    }
+
+    @Test
+    void 운동삭제시_같은운동이_여러개_포함된_루틴에_저장된목록은_지워지도록_hard_delete진행() {
+        // given
+        UserJpaEntity user = UserJpaEntity.builder().build();
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
+
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
+
+        ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
+        ExerciseJpaEntity flymachine1 = ExerciseJpaEntity.builder().name("플라이머신").category(saveChestCategory).build();
+        ExerciseJpaEntity deadlift1 = ExerciseJpaEntity.builder().name("데드리프트").category(saveBackCategory).build();
+
+        ExerciseJpaEntity exercise1 = exerciseJpaRepository.save(benchpress1);
+        ExerciseJpaEntity exercise2 = exerciseJpaRepository.save(flymachine1);
+        ExerciseJpaEntity exercise3 = exerciseJpaRepository.save(deadlift1);
+
+        LocalDate saveDate = LocalDate.of(2024, 11, 25);
+        DailyRecordJpaEntity dailyRecordJpaEntity = new DailyRecordJpaEntity(saveDate, saveUser);
+        DailyRecordJpaEntity saveDailyRecordJpaEntity = dailyRecordJpaRepository.save(dailyRecordJpaEntity);
+        RoutineJpaEntity saveRoutine = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
+        RoutineJpaEntity saveRoutine2 = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
+
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, benchpress1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, benchpress1));
+
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, benchpress1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, benchpress1));
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        exerciseService.removeExercises(benchpress1.getId());
+
+        System.out.println("=====Logic End=====");
+        // then
+        List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine);
+        List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine2 = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine2);
+
+        assertAll(()->assertThat(allExerciseWithinRoutine.size()).isZero(),
+                ()-> assertThat(allExerciseWithinRoutine2.size()).isZero());
     }
 }
