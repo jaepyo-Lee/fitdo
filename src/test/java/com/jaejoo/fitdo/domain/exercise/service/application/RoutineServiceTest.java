@@ -114,4 +114,38 @@ class RoutineServiceTest {
         assertThat(readRoutineOfUsers.size()).isEqualTo(1);
 
     }
+
+    @Test
+    void 삭제하기() {
+        // given
+        UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
+        UserJpaEntity saveUser = userRepository.save(userJpaEntity);
+
+        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
+
+        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
+        ExerciseJpaEntity saveExercise = exerciseRepository.save(exerciseJpaEntity);
+
+        ExerciseJpaEntity exerciseJpaEntity2 = ExerciseJpaEntity.builder().name("플라이").category(saveCategory).build();
+        ExerciseJpaEntity saveExercise2 = exerciseRepository.save(exerciseJpaEntity2);
+
+        RoutineJpaEntity routine = routineJpaRepository.save(new RoutineJpaEntity("routine1", saveUser));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(routine, saveExercise));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(routine, saveExercise2));
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        routineService.deleteRoutine(routine.getId());
+
+        System.out.println("=====Logic End=====");
+        // then
+        List<RoutineJpaEntity> routinesOfUser = routineRepository.findAllByUserId(saveUser.getId());
+        List<ExerciseRoutineJpaEntity> exerciseRoutines = exerciseRoutineJpaRepository.findAll();
+        List<ExerciseJpaEntity> exercises = exerciseRepository.findAll();
+        assertAll(()-> assertThat(routinesOfUser.size()).isZero(),
+                ()-> assertThat(exerciseRoutines.size()).isZero(),
+                ()-> assertThat(exercises.size()).isEqualTo(2));
+    }
 }

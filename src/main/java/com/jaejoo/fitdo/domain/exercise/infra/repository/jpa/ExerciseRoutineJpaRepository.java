@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface ExerciseRoutineJpaRepository extends JpaRepository<ExerciseRoutineJpaEntity, Long> {
     List<ExerciseRoutineJpaEntity> findAllByRoutine(RoutineJpaEntity routine);
+
+    void deleteAllByRoutine(RoutineJpaEntity routine);
 }

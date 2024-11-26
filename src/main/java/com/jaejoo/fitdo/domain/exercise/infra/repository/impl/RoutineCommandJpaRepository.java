@@ -22,4 +22,15 @@ public class RoutineCommandJpaRepository implements RoutineRepository {
     public List<RoutineJpaEntity> findAllByUserId(Long userId) {
         return routineJpaRepository.findAllByUserId(userId);
     }
+
+    @Override
+    public void deleteBy(RoutineJpaEntity routine) {
+        routineJpaRepository.delete(routine);
+    }
+
+    @Override
+    public RoutineJpaEntity findById(Long routineId) {
+        return routineJpaRepository.findById(routineId)
+                .orElseThrow(()->new IllegalArgumentException("not found routine"));
+    }
 }
