@@ -16,17 +16,13 @@ public class FriendService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void registerFriend(Long userId, Long friendId) {
+    public void applyFriend(Long userId, Long friendId) {
         User user = userRepository.findById(userId);
         User friend = userRepository.findById(friendId);
-        FriendJpaEntity userToFriend = FriendJpaEntity.builder()
-                .to(UserJpaEntity.from(friend)).from(UserJpaEntity.from(user))
-                .build();
-        FriendJpaEntity friendToUser = FriendJpaEntity.builder()
-                .to(UserJpaEntity.from(user)).from(UserJpaEntity.from(friend))
-                .build();
+        FriendJpaEntity userToFriend = FriendJpaEntity.apply(UserJpaEntity.from(friend), UserJpaEntity.from(user));
+        FriendJpaEntity friendToUser = FriendJpaEntity.apply(UserJpaEntity.from(user), UserJpaEntity.from(friend));
         friendRepository.save(userToFriend);
         friendRepository.save(friendToUser);
+        //sse로 알림 user->friend로
     }
-
 }

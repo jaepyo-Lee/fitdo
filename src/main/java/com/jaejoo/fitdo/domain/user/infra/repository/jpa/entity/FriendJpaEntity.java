@@ -19,9 +19,20 @@ public class FriendJpaEntity {
     @JoinColumn(name = "friend_id")
     private UserJpaEntity to;
 
-    @Builder
-    public FriendJpaEntity(UserJpaEntity from, UserJpaEntity to) {
+    @Enumerated(EnumType.STRING)
+    private FriendStatus friendStatus;
+
+    public FriendJpaEntity(UserJpaEntity from, UserJpaEntity to, FriendStatus friendStatus) {
         this.from = from;
         this.to = to;
+        this.friendStatus = friendStatus;
+    }
+
+    public static FriendJpaEntity apply(UserJpaEntity from, UserJpaEntity to) {
+        return new FriendJpaEntity(from, to, FriendStatus.WAIT);
+    }
+
+    public boolean isSupport(FriendStatus status) {
+        return this.friendStatus == status;
     }
 }
