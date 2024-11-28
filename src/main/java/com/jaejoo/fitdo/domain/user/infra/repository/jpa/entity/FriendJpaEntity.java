@@ -1,7 +1,6 @@
 package com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -29,10 +28,13 @@ public class FriendJpaEntity {
     }
 
     public static FriendJpaEntity apply(UserJpaEntity from, UserJpaEntity to) {
-        return new FriendJpaEntity(from, to, FriendStatus.WAIT);
+        return new FriendJpaEntity(from, to, FriendStatus.APPLY);
     }
 
     public boolean isSupport(FriendStatus status) {
         return this.friendStatus == status;
+    }
+    public void approve(){
+        this.friendStatus = FriendStatus.ACCEPT;
     }
 }

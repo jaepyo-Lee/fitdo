@@ -15,4 +15,15 @@ public class FriendRepositoryImpl implements FriendRepository {
     public FriendJpaEntity save(FriendJpaEntity friend) {
         return friendJpaRepository.save(friend);
     }
+
+    @Override
+    public FriendJpaEntity findBySenderAndReceiver(Long senderId, Long receiverId) {
+        return friendJpaRepository.findBySenderAndReceiver(senderId, receiverId)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+    }
+
+    @Override
+    public void deleteByReceiverToSender(Long receiverId, Long senderId) {
+        friendJpaRepository.deleteByToIdAndFromId(receiverId, senderId);
+    }
 }

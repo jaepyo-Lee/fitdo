@@ -12,13 +12,14 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaE
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandRepository {
     private final DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;

@@ -140,7 +140,7 @@ class JwtProviderTest {
             System.out.println("=====Logic End=====");
             // then
             assertNotNull(authentication);
-            assertEquals(userId, ((CustomUserDetail) authentication.getPrincipal()).userId());
+            assertEquals(senderId, ((CustomUserDetail) authentication.getPrincipal()).senderId());
             assertEquals(username, ((CustomUserDetail) authentication.getPrincipal()).getUsername());
         }
         @Test
@@ -159,7 +159,7 @@ class JwtProviderTest {
 
             // Assert
             assertNotNull(authentication);
-            assertEquals(userId, ((CustomUserDetail) authentication.getPrincipal()).userId());
+            assertEquals(senderId, ((CustomUserDetail) authentication.getPrincipal()).senderId());
             assertEquals(username, ((CustomUserDetail) authentication.getPrincipal()).getUsername());
         }
 

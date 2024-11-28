@@ -17,5 +17,4 @@ public interface DailyExerciseRecordJpaRepository extends JpaRepository<DailyExe
     void deleteAllOfUserExerciseRecordsOnDate(@Param("userId") Long userId,
                                               @Param("exerciseId") Long exerciseId,
                                               @Param("date") LocalDate date);
-
 }
