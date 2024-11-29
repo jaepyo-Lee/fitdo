@@ -6,6 +6,8 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class FriendRepositoryImpl implements FriendRepository {
@@ -23,7 +25,7 @@ public class FriendRepositoryImpl implements FriendRepository {
     }
 
     @Override
-    public void deleteByReceiverToSender(Long receiverId, Long senderId) {
-        friendJpaRepository.deleteByToIdAndFromId(receiverId, senderId);
+    public List<FriendJpaEntity> findAllByReceiverId(Long receiverId) {
+        return friendJpaRepository.findAllByToId(receiverId);
     }
 }

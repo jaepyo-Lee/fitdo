@@ -1,6 +1,7 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
 import com.jaejoo.fitdo.domain.user.core.User;
+import com.jaejoo.fitdo.domain.user.infra.repository.FriendDeleteRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.FriendRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendJpaEntity;
@@ -8,15 +9,20 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final FriendDeleteRepository friendDeleteRepository;
 
     @Transactional
     public void applyFriend(FriendApplyCommand command) {
@@ -33,10 +39,10 @@ public class FriendService {
     @Transactional
     public void manageFriendApply(FriendApplyConfirmCommand command) {
         if (!command.isAccept()) {
-            cancelFriend(command.receiveUserId(), command.receiveUserId());
+            cancelFriend(command.receiveUserId(), command.sendUserId());
             return;
         }
-        approveFriend(command.sendUserId(),command.receiveUserId());
+        approveFriend(command.sendUserId(), command.receiveUserId());
     }
 
     private void approveFriend(Long sendUserId, Long recieveUserId) {
@@ -48,6 +54,16 @@ public class FriendService {
     }
 
     private void cancelFriend(Long receiverId, Long senderId) {
-        friendRepository.deleteByReceiverToSender(receiverId, senderId);
+        friendDeleteRepository.deleteByReceiverToSender(receiverId, senderId);
+    }
+
+    public List<ReadApplierInfo> readFriendApplies(Long receiverId) {
+        List<FriendJpaEntity> receiveApplies = friendRepository.findAllByReceiverId(receiverId);
+        List<ReadApplierInfo> applierInfos = new ArrayList<>();
+        for (FriendJpaEntity receiveApply : receiveApplies) {
+            UserJpaEntity sender = receiveApply.getReceiver();
+            applierInfos.add(new ReadApplierInfo(sender.getUsername(), sender.getId()));
+        }
+        return applierInfos;
     }
 }

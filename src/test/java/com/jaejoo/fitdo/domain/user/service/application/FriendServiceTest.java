@@ -9,6 +9,8 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +40,7 @@ class FriendServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(user);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
 
         // when
         System.out.println("=====Logic Start=====");
@@ -57,7 +59,7 @@ class FriendServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(user);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
 
         // when
         System.out.println("=====Logic Start=====");
@@ -85,7 +87,7 @@ class FriendServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(user);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
 
         FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
 
@@ -105,22 +107,50 @@ class FriendServiceTest {
     @Test
     void 친구신청거절시_목록이_hard_delete됩니다() {
         // given
+        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "sender", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity sender = userJpaRepository.save(user);
+
+        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "receiver", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity receiver = userJpaRepository.save(friend);
+
+        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(sender, receiver, FriendStatus.APPLY));
+
+        // when
+        System.out.println("=====Logic Start=====");
+        System.out.println(sender.getId());
+        System.out.println(receiver.getId());
+        friendService.manageFriendApply(new FriendApplyConfirmCommand(sender.getId(), receiver.getId(), false));
+//        friendService.manageFriendApply(new FriendApplyConfirmCommand( saveFriend.getId(),saveUser.getId(), false));
+
+        System.out.println("=====Logic End=====");
+        // then
+        List<FriendJpaEntity> all = friendJpaRepository.findAll();
+        assertAll(() -> assertThat(all.size()).isEqualTo(0));
+    }
+
+    @Autowired
+    EntityManager em;
+
+    @Test
+    void 친구신청목록조회시_신청을받은사람만_조회된다() {
+        // given
         UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(user);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
 
         FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
 
         // when
         System.out.println("=====Logic Start=====");
 
-        friendService.manageFriendApply(new FriendApplyConfirmCommand(saveUser.getId(), saveFriend.getId(), false));
+        List<ReadApplierInfo> receiverApplies = friendService.readFriendApplies(saveFriend.getId());
+        List<ReadApplierInfo> senderApplies = friendService.readFriendApplies(saveUser.getId());
 
         System.out.println("=====Logic End=====");
         // then
-        List<FriendJpaEntity> all = friendJpaRepository.findAll();
-        assertAll(() -> assertThat(all.size()).isEqualTo(0));
+        assertAll(()-> assertThat(receiverApplies.size()).isEqualTo(1),
+                ()-> assertThat(senderApplies.size()).isEqualTo(0));
     }
 }
