@@ -7,8 +7,9 @@ import lombok.Getter;
 public class UserRegisterRequest {
     private Integer height;
     private Integer weight;
+    private String nickname;
 
-    public CompleteSignUpCommand toCommand(Long userId){
-        return new CompleteSignUpCommand(userId, height, weight);
+    public CompleteSignUpCommand toCommand(Long userId) {
+        return new CompleteSignUpCommand(userId, height, weight,nickname);
     }
 }

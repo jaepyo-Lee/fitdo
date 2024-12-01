@@ -17,6 +17,7 @@ public class UserJpaEntity {
     @Getter
     private Long id;
     private String username;
+    private String nickname;
     private String authId;
     private boolean newFlag;
     private int height;
@@ -70,6 +71,6 @@ public class UserJpaEntity {
     }
 
     public User toUserModel() {
-        return new User(new Account(authId, newFlag, id, role, authType), height, weight);
+        return new User(new Account(authId, newFlag, id, role, authType), height, weight, nickname);
     }
 }

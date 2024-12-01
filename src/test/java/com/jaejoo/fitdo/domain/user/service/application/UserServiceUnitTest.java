@@ -47,11 +47,12 @@ class UserServiceUnitTest {
             int weight = 70;
             Long id = 1L;
             String authId = "authId";
+            String nickname = "nickname";
             boolean isNewFlag = false;
 
             GrantRole roleUser = GrantRole.ROLE_USER;
             User mockuser = new User(new Account(authId, isNewFlag, id, roleUser, AuthType.KAKAO));
-            User registerUser = mockuser.register(height, weight);
+            User registerUser = mockuser.register(height, weight, nickname);
 
             when(userRepository.findById(id)).thenReturn(mockuser);
             when(userRepository.save(any())).thenReturn(registerUser);
@@ -62,7 +63,7 @@ class UserServiceUnitTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight));
+            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight,nickname));
 
             System.out.println("=====Logic End=====");
             // then

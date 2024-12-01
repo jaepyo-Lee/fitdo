@@ -29,12 +29,13 @@ class UserServiceIntegrateTest {
     @Test
     void 사용자_가입완료_기능() {
         // given
+
         UserJpaEntity saveUser = userJpaRepository.save(UserJpaEntity.builder().build());
 
         // when
         System.out.println("=====Logic Start=====");
 
-        CompleteSignUpCommand command = new CompleteSignUpCommand(saveUser.getId(), 180, 80);
+        CompleteSignUpCommand command = new CompleteSignUpCommand(saveUser.getId(), 180, 80,"nickname");
         User user = userService.completeSignUp(command);
 
         System.out.println("=====Logic End=====");

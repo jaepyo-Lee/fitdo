@@ -21,7 +21,7 @@ public class UserService {
 
     public User completeSignUp(CompleteSignUpCommand command) {
         User user = userRepository.findById(command.getUserId());
-        user = user.register(command.getHeight(), command.getWeight());
+        user = user.register(command.getHeight(), command.getWeight(), command.getNickname());
         User saveUser = userRepository.save(user);
         List<CategoryJpaEntity> categories = categoryInitializer.init(UserJpaEntity.from(saveUser));
         categoryCommandRepository.saveAll(categories);

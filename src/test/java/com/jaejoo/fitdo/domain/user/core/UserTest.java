@@ -18,17 +18,18 @@ class UserTest {
             int weight = 75;
             int height = 180;
             boolean isNewFlag = false;
-            User user = new User(new Account(authId, isNewFlag,  1L, GrantRole.ROLE_USER, AuthType.KAKAO));
+            String nickname = "nickname";
+            User user = new User(new Account(authId, isNewFlag, 1L, GrantRole.ROLE_USER, AuthType.KAKAO));
 
             // when
             System.out.println("=====Logic Start=====");
 
-            User actual = user.register(height, weight);
+            User actual = user.register(height, weight, nickname);
 
             System.out.println("=====Logic End=====");
 
             // then
-            assertEquals(new User(new Account(authId, true,  1L, GrantRole.ROLE_USER, AuthType.KAKAO), height, weight), actual);
+            assertEquals(new User(new Account(authId, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO), height, weight, nickname), actual);
         }
     }
 }
