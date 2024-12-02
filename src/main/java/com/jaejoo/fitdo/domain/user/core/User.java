@@ -9,20 +9,22 @@ public class User {
     private final Account account;
     private int height;
     private int weight;
-    private String  name;
+    private String nickname;
+    private String name;
 
     public User(Account account) {
         this.account = account;
     }
 
-    public User(Account account, int height, int weight) {
+    public User(Account account, int height, int weight, String nickname) {
         this.account = account;
         this.height = height;
         this.weight = weight;
+        this.nickname = nickname;
     }
 
-    public User register(Integer height, Integer weight) {
-        return new User(account.complete(), height, weight);
+    public User register(Integer height, Integer weight, String nickname) {
+        return new User(account.complete(), height, weight, nickname);
     }
 
     @Override

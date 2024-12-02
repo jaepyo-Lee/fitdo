@@ -7,4 +7,6 @@ public interface UserRepository {
     User findById(Long id);
 
     User save(User user);
+
+    boolean isExistNickName(String s);
 }

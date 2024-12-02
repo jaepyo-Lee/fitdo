@@ -27,4 +27,9 @@ public class UserRepositoryImpl implements UserRepository {
         UserJpaEntity saveUserJpaEntity = UserJpaEntity.from(user);
         return userJpaRepository.save(saveUserJpaEntity).toUserModel();
     }
+
+    @Override
+    public boolean isExistNickName(String nickname) {
+        return userJpaRepository.existsByNickname(nickname);
+    }
 }
