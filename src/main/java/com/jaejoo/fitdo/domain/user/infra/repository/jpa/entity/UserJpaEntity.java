@@ -41,10 +41,10 @@ public class UserJpaEntity {
 
     public static UserJpaEntity from(User user) {
         Account account = user.getAccount();
-        return new UserJpaEntity(account.getUserId(), user.getName(), account.getAuthId(), account.isNewUser(), user.getHeight(), user.getWeight(), account.getAuthType(), account.getRole());
+        return new UserJpaEntity(account.getUserId(), user.getName(), account.getAuthId(), account.isNewUser(), user.getHeight(), user.getWeight(), account.getAuthType(), account.getRole(), user.getNickname());
     }
 
-    public UserJpaEntity(Long id, String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role) {
+    public UserJpaEntity(Long id, String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role, String nickname) {
         this.id = id;
         this.username = username;
         this.authId = authId;
@@ -53,6 +53,7 @@ public class UserJpaEntity {
         this.weight = weight;
         this.authType = authType;
         this.role = role;
+        this.nickname = nickname;
     }
 
     @Builder

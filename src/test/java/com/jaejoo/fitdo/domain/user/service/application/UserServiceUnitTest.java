@@ -8,6 +8,8 @@ import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
 import com.jaejoo.fitdo.domain.user.service.application.req.CompleteSignUpCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.NickNameIsDuplicateCommand;
+import com.jaejoo.fitdo.domain.user.service.application.res.IsNickNameDuplicateResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -63,7 +66,7 @@ class UserServiceUnitTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight,nickname));
+            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight, nickname));
 
             System.out.println("=====Logic End=====");
             // then

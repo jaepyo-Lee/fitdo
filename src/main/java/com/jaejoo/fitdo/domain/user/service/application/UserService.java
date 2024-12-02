@@ -7,6 +7,8 @@ import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.domain.user.service.application.req.CompleteSignUpCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.NickNameIsDuplicateCommand;
+import com.jaejoo.fitdo.domain.user.service.application.res.IsNickNameDuplicateResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,9 @@ public class UserService {
         List<CategoryJpaEntity> categories = categoryInitializer.init(UserJpaEntity.from(saveUser));
         categoryCommandRepository.saveAll(categories);
         return saveUser;
+    }
+
+    public IsNickNameDuplicateResult isDuplicate(NickNameIsDuplicateCommand command) {
+        return new IsNickNameDuplicateResult(userRepository.isExistNickName(command.nickName()));
     }
 }
