@@ -40,5 +40,4 @@ out/
 .vscode/
 /src/main/resources/application-local.yml
 /src/main/generated/
-/src/docs/asciidoc/**
 /src/main/resources/static/docs/**
