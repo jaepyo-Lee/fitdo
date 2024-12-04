@@ -33,9 +33,9 @@ public class ExerciseService {
 
     public List<FindExercisesWithCategory> findExercisesWithCategoryOf(Long userId) {
         List<FindExercisesWithCategory> exercisesWithCategory = new ArrayList<>();
-        List<CategoryJpaEntity> categories = categoryQueryRepository.findAllByUserId(userId);
+        List<CategoryJpaEntity> categories = categoryQueryRepository.findAll();
         for (CategoryJpaEntity category : categories) {
-            List<ExerciseJpaEntity> exercisesByCategory = exerciseQueryRepository.findExercisesByCategory(category);
+            List<ExerciseJpaEntity> exercisesByCategory = exerciseQueryRepository.findExercisesByCategoryAndUserId(category,userId);
             List<ExercisesWithinCategory> exercises = new ArrayList<>();
             for (ExerciseJpaEntity exerciseJpaEntity : exercisesByCategory) {
                 exercises.add(ExercisesWithinCategory.builder()

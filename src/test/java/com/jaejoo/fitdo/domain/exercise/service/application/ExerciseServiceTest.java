@@ -58,13 +58,13 @@ class ExerciseServiceTest {
         UserJpaEntity user2 = UserJpaEntity.builder().build();
         UserJpaEntity saveUser2 = userJpaRepository.save(user2);
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory2 = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(chestCategory);
 
         // when
@@ -80,7 +80,7 @@ class ExerciseServiceTest {
 
     //내부값도 테스트해야함. 현재 테스트 깨짐
     @Test
-    void 운동목록조회() {
+    void 모든부위의_운동목록_조회() {
         // given
         UserJpaEntity user = UserJpaEntity.builder().build();
         UserJpaEntity saveUser = userJpaRepository.save(user);
@@ -88,21 +88,18 @@ class ExerciseServiceTest {
         UserJpaEntity user2 = UserJpaEntity.builder().build();
         UserJpaEntity saveUser2 = userJpaRepository.save(user2);
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity chestCategory2 = CategoryJpaEntity.builder().user(saveUser2).part(BodyPart.CHEST).build();
-        CategoryJpaEntity saveChestCategory2 = categoryJpaRepository.save(chestCategory2);
-
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
-        ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
-        ExerciseJpaEntity flymachine1 = ExerciseJpaEntity.builder().name("플라이머신").category(saveChestCategory).build();
-        ExerciseJpaEntity deadlift1 = ExerciseJpaEntity.builder().name("데드리프트").category(saveBackCategory).build();
+        ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").user(saveUser).category(saveChestCategory).build();
+        ExerciseJpaEntity flymachine1 = ExerciseJpaEntity.builder().name("플라이머신").user(saveUser).category(saveChestCategory).build();
+        ExerciseJpaEntity deadlift1 = ExerciseJpaEntity.builder().name("데드리프트").user(saveUser).category(saveBackCategory).build();
 
-        ExerciseJpaEntity dumbellpress2 = ExerciseJpaEntity.builder().name("덤벨 프레스").category(saveChestCategory2).build();
-        ExerciseJpaEntity pressmachine2 = ExerciseJpaEntity.builder().name("프레스 머신").category(saveChestCategory2).build();
+        ExerciseJpaEntity dumbellpress2 = ExerciseJpaEntity.builder().name("덤벨 프레스").user(saveUser2).category(saveChestCategory).build();
+        ExerciseJpaEntity pressmachine2 = ExerciseJpaEntity.builder().name("프레스 머신").user(saveUser2).category(saveChestCategory).build();
         exerciseJpaRepository.save(benchpress1);
         exerciseJpaRepository.save(flymachine1);
         exerciseJpaRepository.save(deadlift1);
@@ -127,10 +124,10 @@ class ExerciseServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
@@ -159,10 +156,10 @@ class ExerciseServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
@@ -197,10 +194,10 @@ class ExerciseServiceTest {
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
 
-        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
-        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.BACK).build();
+        CategoryJpaEntity backCategory = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
         CategoryJpaEntity saveBackCategory = categoryJpaRepository.save(backCategory);
 
         ExerciseJpaEntity benchpress1 = ExerciseJpaEntity.builder().name("벤치프레스").category(saveChestCategory).build();
@@ -233,7 +230,7 @@ class ExerciseServiceTest {
         List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine);
         List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine2 = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine2);
 
-        assertAll(()->assertThat(allExerciseWithinRoutine.size()).isZero(),
-                ()-> assertThat(allExerciseWithinRoutine2.size()).isZero());
+        assertAll(() -> assertThat(allExerciseWithinRoutine.size()).isZero(),
+                () -> assertThat(allExerciseWithinRoutine2.size()).isZero());
     }
 }

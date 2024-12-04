@@ -1,6 +1,7 @@
 package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
+import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,15 +20,20 @@ public class ExerciseJpaEntity {
     private DeleteDelimiter deleteDelimiter;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserJpaEntity user;
+
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryJpaEntity category;
 
     @Builder
-    public ExerciseJpaEntity(Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
+    public ExerciseJpaEntity(UserJpaEntity user,Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
         this.id = id;
         this.name = name;
         this.deleteDelimiter = deleteDelimiter;
         this.category = category;
+        this.user = user;
     }
 
     public ExerciseJpaEntity(String name, CategoryJpaEntity category, DeleteDelimiter deleteDelimiter) {

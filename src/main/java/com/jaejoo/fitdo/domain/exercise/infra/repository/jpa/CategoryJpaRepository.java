@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface CategoryJpaRepository extends JpaRepository<CategoryJpaEntity, Long> {
     Optional<CategoryJpaEntity> findById(Long id);
-
-    List<CategoryJpaEntity> findAllByUserId(Long userId);
 }

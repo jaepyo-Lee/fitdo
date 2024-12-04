@@ -17,15 +17,13 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
 @SpringBootTest
@@ -57,7 +55,7 @@ class RoutineServiceTest {
         UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
         UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -71,12 +69,12 @@ class RoutineServiceTest {
 
         List<Long> exerciseIds = List.of(saveExercise.getId(), saveExercise2.getId());
         String name = "name";
-        routineService.create(new RoutineCreateCommand(saveUser.getId(),name, exerciseIds));
+        routineService.create(new RoutineCreateCommand(saveUser.getId(), name, exerciseIds));
 
         System.out.println("=====Logic End=====");
         // then
         List<ExerciseRoutineJpaEntity> allExerciseRoutines = exerciseRoutineJpaRepository.findAll();
-        assertAll(()-> assertThat(allExerciseRoutines.size()).isEqualTo(exerciseIds.size()));
+        assertAll(() -> assertThat(allExerciseRoutines.size()).isEqualTo(exerciseIds.size()));
     }
 
     /**
@@ -91,7 +89,7 @@ class RoutineServiceTest {
         UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
         UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -121,7 +119,7 @@ class RoutineServiceTest {
         UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
         UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
@@ -144,8 +142,8 @@ class RoutineServiceTest {
         List<RoutineJpaEntity> routinesOfUser = routineRepository.findAllByUserId(saveUser.getId());
         List<ExerciseRoutineJpaEntity> exerciseRoutines = exerciseRoutineJpaRepository.findAll();
         List<ExerciseJpaEntity> exercises = exerciseRepository.findAll();
-        assertAll(()-> assertThat(routinesOfUser.size()).isZero(),
-                ()-> assertThat(exerciseRoutines.size()).isZero(),
-                ()-> assertThat(exercises.size()).isEqualTo(2));
+        assertAll(() -> assertThat(routinesOfUser.size()).isZero(),
+                () -> assertThat(exerciseRoutines.size()).isZero(),
+                () -> assertThat(exercises.size()).isEqualTo(2));
     }
 }

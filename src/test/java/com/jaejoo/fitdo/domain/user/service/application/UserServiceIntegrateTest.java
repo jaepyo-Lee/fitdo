@@ -51,10 +51,8 @@ class UserServiceIntegrateTest {
 
         System.out.println("=====Logic End=====");
         // then
-        List<CategoryJpaEntity> allByUserId = categoryJpaRepository.findAllByUserId(saveUser.getId());
         assertAll(() -> assertThat(user.getHeight()).isEqualTo(command.getHeight()),
-                () -> assertThat(user.getWeight()).isEqualTo(command.getWeight()),
-                () -> assertThat(allByUserId.size()).isEqualTo(BodyPart.values().length));
+                () -> assertThat(user.getWeight()).isEqualTo(command.getWeight()));
     }
 
     @Nested

@@ -64,7 +64,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -105,7 +105,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -145,7 +145,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -184,7 +184,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userJpaRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();

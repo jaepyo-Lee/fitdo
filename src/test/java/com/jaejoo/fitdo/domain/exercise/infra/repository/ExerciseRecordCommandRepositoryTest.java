@@ -70,7 +70,7 @@ class ExerciseRecordCommandRepositoryTest {
         DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(dailyRecord);
 
 
-        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build());
+        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).build());
 
 
         ExerciseJpaEntity exercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder()
@@ -116,7 +116,7 @@ class ExerciseRecordCommandRepositoryTest {
         DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(dailyRecord);
 
 
-        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build());
+        CategoryJpaEntity category = categoryJpaRepository.save(CategoryJpaEntity.builder().part(BodyPart.CHEST).build());
 
 
         ExerciseJpaEntity exercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder()
