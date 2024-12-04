@@ -1,0 +1,23 @@
+package com.jaejoo.fitdo.global.batch.mapping.rowmapper;
+
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
+import com.jaejoo.fitdo.global.batch.mapping.CalculateScoreRow;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class UserScoreRowMapper implements RowMapper<CalculateScoreRow> {
+    @Override
+    public CalculateScoreRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new CalculateScoreRow(
+                rs.getLong("userId"),
+                rs.getInt("userWeight"),
+                rs.getInt("userHeight"),
+                rs.getInt("recordWeight"),
+                rs.getInt("recordVolume"),
+                rs.getBoolean("isProgress"),
+                BodyPart.valueOf((String) rs.getObject("bodyPart"))
+        );
+    }
+}

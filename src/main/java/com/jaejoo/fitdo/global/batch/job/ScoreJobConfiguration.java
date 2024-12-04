@@ -1,82 +1,151 @@
 package com.jaejoo.fitdo.global.batch.job;
 
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
+import com.jaejoo.fitdo.global.batch.mapping.CalculateScoreRow;
+import com.jaejoo.fitdo.global.batch.mapping.UserScoreRow;
+import com.jaejoo.fitdo.global.batch.mapping.rowmapper.UserScoreRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Component
+@Configuration
 @RequiredArgsConstructor
 public class ScoreJobConfiguration {
-    /*private final DataSource dataSource;
+    private final DataSource dataSource;
     private static final int CHUNK_SIZE = 100;
 
     @Bean
     public Job job(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         return new JobBuilder("job", jobRepository)
-                .start(calculateScoreStep(jobRepository, transactionManager))//연속 출석일수 계산
-                .next()//오늘의 사용자 점수 생성
-                .next(step2(jobRepository, transactionManager))//redis에 쓰기
-                .next(step3(jobRepository, transactionManager))//db에 쓰기
+                .start(calculateScoreStep(jobRepository, transactionManager)) //점수 계산 및 DB주입
                 .build();
     }
 
-    @Bean
     public Step calculateScoreStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         return new StepBuilder("calculateScore", jobRepository)
-                .<>chunk(100, transactionManager)
+                .<CalculateScoreRow, UserScoreRow>chunk(100, transactionManager)
                 .reader(readUserExerciseRecord())
-                .processor()
-                .writer()
+                .processor(calculateScoreProcessor())
+                .writer(updateUserScore())
                 .build();
     }
 
-    private JdbcPagingItemReader<?> readUserExerciseRecord() throws Exception {
+    private JdbcPagingItemReader<CalculateScoreRow> readUserExerciseRecord() throws Exception {
         HashMap<String, Object> whereParam = new HashMap<>();
         LocalDate yesterday = LocalDate.now().minusDays(1L);
-        whereParam.put("yesterday", yesterday);
-        new JdbcPagingItemReaderBuilder<>()
+        whereParam.put("date", yesterday);  // 수정된 부분
+        JdbcPagingItemReader<CalculateScoreRow> itemReader = new JdbcPagingItemReaderBuilder<CalculateScoreRow>()
                 .dataSource(dataSource)
                 .fetchSize(CHUNK_SIZE)
                 .pageSize(CHUNK_SIZE)
                 .queryProvider(createQueryProvider())
+                .rowMapper(new UserScoreRowMapper())
                 .parameterValues(whereParam)
-                .rowMapper(new BeanPropertyRowMapper<>(User.class))
-
-
+                .name("scoreElementJdbcItemReader")
+                .build();
+        itemReader.afterPropertiesSet();
+        return itemReader;
     }
 
     private PagingQueryProvider createQueryProvider() throws Exception {
         SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
         queryProvider.setDataSource(dataSource);
-        queryProvider.setSelectClause("select u.id,");
-        queryProvider.setFromClause("from daily_exercise_record_jpa_entity as der " +
-                "join daily_record_jpa_entity as dr on der.daily_record_id=dr.id " +
-                "join user_jpa_entity as u on dr.user_id=u.id");
-        queryProvider.setWhereClause("dr.date=:yesterday");
+
+        // SELECT 절
+        queryProvider.setSelectClause("""
+                    SELECT 
+                        u.id AS userId, 
+                        u.weight AS userWeight, 
+                        u.height AS userHeight,
+                        der.weight AS recordWeight, 
+                        der.volume AS recordVolume,
+                        der.is_progress AS isProgress, 
+                        c.part AS bodyPart
+                """);
+
+        // FROM 절
+        queryProvider.setFromClause("""
+                    FROM 
+                        daily_exercise_record_jpa_entity AS der
+                    JOIN 
+                        daily_record_jpa_entity AS dr ON dr.id = der.daily_record_id
+                    JOIN 
+                        user_jpa_entity AS u ON dr.user_id = u.id
+                    JOIN 
+                        exercise_jpa_entity AS e ON der.exercise_id = e.id
+                    JOIN 
+                        category_jpa_entity AS c ON e.category_id = c.id
+                """);
+
+        // WHERE 절
+        queryProvider.setWhereClause("WHERE dr.exercise_date = :date");
+
+        queryProvider.setSortKey("userId");
+
         return queryProvider.getObject();
     }
 
-    *//**
-     select * from daily_exercise_record_jpa_entity as der
-     join daily_record_jpa_entity as dr on dr.id=der.daily_record_id
-     join user_jpa_entity as u on dr.user_id=u.id
-     where dr.date='2024-12-04';
-     */
+
+    public ItemProcessor<CalculateScoreRow, UserScoreRow> calculateScoreProcessor() {
+        Map<BodyPart, Double> bodyPartStrength = Map.of(
+                BodyPart.CHEST, 1.0,
+                BodyPart.LEG, 2.0,
+                BodyPart.ARM, 0.7,
+                BodyPart.SHOULDER, 0.8,
+                BodyPart.BACK, 1.3,
+                BodyPart.ABS, 0.6,
+                BodyPart.HIP, 1.8,
+                BodyPart.FULL_BODY, 2.5
+        );
+
+        Map<BodyPart, Double> bodyPartWeighting = bodyPartStrength.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> 1 / entry.getValue()
+                ));
+
+        return request -> {
+            BodyPart bodyPart = request.getBodyPart();
+            Integer reps = request.getRecordVolume();
+            Integer exerciseWeight = request.getRecordWeight();
+            Double weightingFactor = bodyPartWeighting.getOrDefault(bodyPart, 1.0);
+
+            Double score = exerciseWeight * reps * weightingFactor;
+            Double finalScore = score * 0.00000001;
+
+            return new UserScoreRow(request.getUserId(), finalScore);  // UserScoreRow 객체 반환
+        };
+    }
+
+
+    public ItemWriter<UserScoreRow> updateUserScore() {
+        JdbcBatchItemWriter<UserScoreRow> itemWriter = new JdbcBatchItemWriterBuilder<UserScoreRow>()
+                .dataSource(dataSource)
+                .sql("UPDATE SCORE_JPA_ENTITY SET score = score + :score WHERE id = :userId")
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .build();
+        itemWriter.afterPropertiesSet();
+        return itemWriter;
+    }
 }
