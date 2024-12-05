@@ -10,14 +10,14 @@ import java.util.List;
 
 @Component
 public class CategoryInitializer {
-    private final List<BodyPart> bodyParts = new ArrayList<>(List.of(BodyPart.values()));
+    /*private final List<BodyPart> bodyParts = new ArrayList<>(List.of(BodyPart.values()));
 
-    public List<CategoryJpaEntity> init(UserJpaEntity saveUser) {
+    *//*public List<CategoryJpaEntity> init(UserJpaEntity saveUser) {
         List<CategoryJpaEntity> categories = new ArrayList<>();
         for (BodyPart bodyPart : bodyParts) {
             CategoryJpaEntity category = CategoryJpaEntity.builder().part(bodyPart).user(saveUser).build();
             categories.add(category);
         }
         return categories;
-    }
+    }*/
 }

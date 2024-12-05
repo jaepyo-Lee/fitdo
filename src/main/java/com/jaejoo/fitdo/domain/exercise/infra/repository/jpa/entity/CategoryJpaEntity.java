@@ -18,17 +18,12 @@ public class CategoryJpaEntity {
     @Enumerated(EnumType.STRING)
     private BodyPart part;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserJpaEntity user;
-
     @Builder
-    public CategoryJpaEntity(BodyPart part, UserJpaEntity user) {
+    public CategoryJpaEntity(BodyPart part) {
         this.part = part;
-        this.user = user;
     }
 
-    public String getPartName(){
+    public String getPartName() {
         return part.getKr();
     }
 }

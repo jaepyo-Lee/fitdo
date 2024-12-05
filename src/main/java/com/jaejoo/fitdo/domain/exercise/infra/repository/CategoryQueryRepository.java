@@ -9,5 +9,5 @@ import java.util.List;
 public interface CategoryQueryRepository {
     CategoryJpaEntity findById(Long id);
 
-    List<CategoryJpaEntity> findAllByUserId(Long userId);
+    List<CategoryJpaEntity> findAll();
 }

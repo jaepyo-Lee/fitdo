@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
     Optional<UserJpaEntity> findByAuthId(String authId);
+    boolean existsByNickname(String nickname);
 }

@@ -7,10 +7,11 @@ public class CompleteSignUpCommand {
     private final Long userId;
     private final Integer height;
     private final Integer weight;
-
-    public CompleteSignUpCommand(Long userId, Integer height, Integer weight) {
+    private final String nickname;
+    public CompleteSignUpCommand(Long userId, Integer height, Integer weight,String nickname) {
         this.userId = userId;
         this.height = height;
         this.weight = weight;
+        this.nickname = nickname;
     }
 }

@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -32,37 +30,31 @@ class UserServiceUnitTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private CategoryInitializer categoryInitializer;
-    @Mock
-    private CategoryCommandRepository categoryCommandRepository;
 
     @Nested
     @DisplayName("사용자의 회원가입완료기능")
     class completeRegister {
         @Test
-        void success() {
+        void 키와몸무게추가하면_회원가입완료() {
             // given
             int height = 180;
             int weight = 70;
             Long id = 1L;
             String authId = "authId";
+            String nickname = "nickname";
             boolean isNewFlag = false;
 
             GrantRole roleUser = GrantRole.ROLE_USER;
             User mockuser = new User(new Account(authId, isNewFlag, id, roleUser, AuthType.KAKAO));
-            User registerUser = mockuser.register(height, weight);
+            User registerUser = mockuser.register(height, weight, nickname);
 
             when(userRepository.findById(id)).thenReturn(mockuser);
             when(userRepository.save(any())).thenReturn(registerUser);
-            when(categoryInitializer.init(any())).thenReturn(List.of());
-            doNothing().when(categoryCommandRepository).saveAll(anyList());
-
 
             // when
             System.out.println("=====Logic Start=====");
 
-            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight));
+            User user = userService.completeSignUp(new CompleteSignUpCommand(id, height, weight, nickname));
 
             System.out.println("=====Logic End=====");
             // then

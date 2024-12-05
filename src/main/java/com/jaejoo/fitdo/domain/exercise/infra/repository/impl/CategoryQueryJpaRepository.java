@@ -19,7 +19,7 @@ public class CategoryQueryJpaRepository implements CategoryQueryRepository {
     }
 
     @Override
-    public List<CategoryJpaEntity> findAllByUserId(Long userId) {
-        return repository.findAllByUserId(userId);
+    public List<CategoryJpaEntity> findAll() {
+        return repository.findAll();
     }
 }

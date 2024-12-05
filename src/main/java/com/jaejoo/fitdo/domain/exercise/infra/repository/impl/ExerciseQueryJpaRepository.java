@@ -16,13 +16,13 @@ public class ExerciseQueryJpaRepository implements ExerciseQueryRepository {
     private final ExerciseJpaRepository repository;
 
     @Override
-    public List<ExerciseJpaEntity> findExercisesByCategory(CategoryJpaEntity category) {
-        return List.of();
+    public List<ExerciseJpaEntity> findExercisesByCategoryAndUserId(CategoryJpaEntity category, Long userId) {
+        return repository.findAllByCategoryAndAndUserId(category, userId);
     }
 
     @Override
     public ExerciseJpaEntity findById(Long exerciseId) {
-        return repository.findById(exerciseId).orElseThrow(()->new IllegalArgumentException("not found entity"));
+        return repository.findById(exerciseId).orElseThrow(() -> new IllegalArgumentException("not found entity"));
     }
 
     @Override

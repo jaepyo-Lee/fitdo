@@ -1,0 +1,46 @@
+== 5.1 친구신청하기
+
+=== Request
+Request Header:
+include::{snippets}/apply-friend/request-headers.adoc[]
+Request Fields:
+include::{snippets}/apply-friend/request-fields.adoc[]
+Request HTTP Example:
+include::{snippets}/apply-friend/http-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/apply-friend/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/apply-friend/http-response.adoc[]
+
+== 5.2 친구요청목록
+=== Request
+Request Header:
+include::{snippets}/read-apply-receive/request-headers.adoc[]
+Request HTTP Example:
+include::{snippets}/read-apply-receive/http-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/read-apply-receive/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/read-apply-receive/http-response.adoc[]
+
+== 5.3 친구 신청 요청 수락/거절
+=== Request
+Request Header:
+include::{snippets}/confirm-friend-apply/request-headers.adoc[]
+Request Fields:
+include::{snippets}/confirm-friend-apply/request-fields.adoc[]
+Request HTTP Example:
+include::{snippets}/confirm-friend-apply/http-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/confirm-friend-apply/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/confirm-friend-apply/http-response.adoc[]
+
+
+

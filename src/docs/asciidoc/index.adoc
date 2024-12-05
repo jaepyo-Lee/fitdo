@@ -1,0 +1,38 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+
+= Fitdo API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 공통 사항
+
+API에 관계없이 아래 사항을 지켜주셔야 합니다.
+
+=== 1. Domain
+- 도메인에 대한 구체적인 설명
+
+=== 2. Common Response
+- 공통 응답에 대한 설명
+
+[[API]]
+= 1. 인증/인가
+
+include::{docfile}/../auth.adoc[]
+
+= 2. 기록
+include::{docfile}/../exercise_record.adoc[]
+
+= 3. 운동
+include::{docfile}/../exercise.adoc[]
+
+= 4. 루틴
+include::{docfile}/../routine.adoc[]
+
+= 5.친구
+include::{docfile}/../friend.adoc[]

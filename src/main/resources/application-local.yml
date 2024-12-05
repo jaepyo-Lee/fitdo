@@ -5,18 +5,18 @@ app:
     refreshExpired: 23131231313
 
 server:
-  port: 0
+  port: 8080
 
 spring:
-  application:
-    name: fitdo
   data:
     redis:
       host: localhost
       port: 6379
+  application:
+    name: fitdo
   datasource:
     driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:test'
+    url: 'jdbc:h2:mem:local'
     username: sa
     password:
 
@@ -34,6 +34,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
+    defer-datasource-initialization: true
   sql:
     init:
-      mode: never
+      mode: always

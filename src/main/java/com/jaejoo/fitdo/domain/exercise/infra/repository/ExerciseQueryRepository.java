@@ -4,10 +4,9 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaE
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ExerciseQueryRepository {
-    List<ExerciseJpaEntity> findExercisesByCategory(CategoryJpaEntity category);
+    List<ExerciseJpaEntity> findExercisesByCategoryAndUserId(CategoryJpaEntity category,Long userId);
 
     ExerciseJpaEntity findById(Long exerciseId);
 

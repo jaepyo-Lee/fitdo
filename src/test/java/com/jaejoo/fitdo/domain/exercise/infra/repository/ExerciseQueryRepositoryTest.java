@@ -39,7 +39,7 @@ class ExerciseQueryRepositoryTest {
         UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
         UserJpaEntity saveUser = userRepository.save(userJpaEntity);
 
-        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+        CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveCategory = categoryRepository.save(categoryJpaEntity);
 
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();
