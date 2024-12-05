@@ -1,6 +1,7 @@
 package com.jaejoo.fitdo.global.batch.mapping;
 
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class UserScoreRow {

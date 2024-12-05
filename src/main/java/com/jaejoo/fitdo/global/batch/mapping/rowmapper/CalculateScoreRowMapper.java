@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserScoreRowMapper implements RowMapper<CalculateScoreRow> {
+public class CalculateScoreRowMapper implements RowMapper<CalculateScoreRow> {
     @Override
     public CalculateScoreRow mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new CalculateScoreRow(

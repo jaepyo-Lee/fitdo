@@ -8,9 +8,12 @@ server:
   port: 8080
 
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
   application:
     name: fitdo
-
   datasource:
     driver-class-name: org.h2.Driver
     url: 'jdbc:h2:mem:local'

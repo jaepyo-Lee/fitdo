@@ -1,9 +1,14 @@
 package com.jaejoo.fitdo.global.batch.job;
 
 import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
+import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
+import com.jaejoo.fitdo.global.batch.item.RedisSortedSetItemWriter;
 import com.jaejoo.fitdo.global.batch.mapping.CalculateScoreRow;
 import com.jaejoo.fitdo.global.batch.mapping.UserScoreRow;
-import com.jaejoo.fitdo.global.batch.mapping.rowmapper.UserScoreRowMapper;
+import com.jaejoo.fitdo.global.batch.mapping.rowmapper.CalculateScoreRowMapper;
+import com.jaejoo.fitdo.global.batch.mapping.rowmapper.UserScoreMapper;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -21,6 +26,7 @@ import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuild
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -34,12 +40,65 @@ import java.util.stream.Collectors;
 public class ScoreJobConfiguration {
     private final DataSource dataSource;
     private static final int CHUNK_SIZE = 100;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
     public Job job(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         return new JobBuilder("job", jobRepository)
                 .start(calculateScoreStep(jobRepository, transactionManager)) //점수 계산 및 DB주입
+                .next(loadScoreDataToRedis(jobRepository, transactionManager))//redis 갱신
                 .build();
+    }
+
+    public Step loadScoreDataToRedis(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
+        return new StepBuilder("loadScoreDataToRedis", jobRepository)
+                .<UserScoreRow, UserScoreRow>chunk(100, transactionManager)
+                .reader(userScoreReader())
+                .processor(scoreProcessor())
+                .writer(cachingUpdateScore())
+                .build();
+    }
+
+    public ItemWriter<UserScoreRow> cachingUpdateScore() {
+        return new RedisSortedSetItemWriter(redisTemplate);
+    }
+
+    public ItemProcessor<UserScoreRow, UserScoreRow> scoreProcessor() {
+        return request -> {
+            return request;
+        };
+    }
+
+    public JdbcPagingItemReader<UserScoreRow> userScoreReader() throws Exception {
+        JdbcPagingItemReader<UserScoreRow> itemReader = new JdbcPagingItemReaderBuilder<UserScoreRow>()
+                .dataSource(dataSource)
+                .fetchSize(CHUNK_SIZE)
+                .pageSize(CHUNK_SIZE)
+                .rowMapper(new UserScoreMapper())
+                .queryProvider(createScoreQueryProvider())
+                .name("scoreJdbcItemReader")
+                .build();
+        itemReader.afterPropertiesSet();
+        return itemReader;
+    }
+
+    public PagingQueryProvider createScoreQueryProvider() throws Exception {
+        SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
+        queryProvider.setDataSource(dataSource);
+
+        // SELECT 절
+        queryProvider.setSelectClause("""
+                    SELECT s.user_id as userId, s.score as score
+                """);
+
+        // FROM 절
+        queryProvider.setFromClause("""
+                    FROM score_jpa_entity as s
+                """);
+
+        queryProvider.setSortKey("userId");
+
+        return queryProvider.getObject();
     }
 
     public Step calculateScoreStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
@@ -60,7 +119,7 @@ public class ScoreJobConfiguration {
                 .fetchSize(CHUNK_SIZE)
                 .pageSize(CHUNK_SIZE)
                 .queryProvider(createQueryProvider())
-                .rowMapper(new UserScoreRowMapper())
+                .rowMapper(new CalculateScoreRowMapper())
                 .parameterValues(whereParam)
                 .name("scoreElementJdbcItemReader")
                 .build();
@@ -124,13 +183,11 @@ public class ScoreJobConfiguration {
                         Map.Entry::getKey,
                         entry -> 1 / entry.getValue()
                 ));
-
         return request -> {
             BodyPart bodyPart = request.getBodyPart();
             Integer reps = request.getRecordVolume();
             Integer exerciseWeight = request.getRecordWeight();
             Double weightingFactor = bodyPartWeighting.getOrDefault(bodyPart, 1.0);
-
             Double score = exerciseWeight * reps * weightingFactor;
             Double finalScore = score * 0.00000001;
 
