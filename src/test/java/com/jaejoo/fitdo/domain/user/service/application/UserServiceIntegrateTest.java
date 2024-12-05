@@ -33,8 +33,6 @@ class UserServiceIntegrateTest {
     @Autowired
     private UserJpaRepository userJpaRepository;
     @Autowired
-    private CategoryJpaRepository categoryJpaRepository;
-    @Autowired
     private UserRepository userRepository;
 
     @Test
