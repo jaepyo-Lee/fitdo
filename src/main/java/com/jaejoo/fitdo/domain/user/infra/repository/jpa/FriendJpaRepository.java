@@ -15,4 +15,6 @@ public interface FriendJpaRepository extends JpaRepository<FriendJpaEntity, Long
 
     @Query("select F from FriendJpaEntity as F where F.receiver.id=:receiverId and F.friendStatus='APPLY'")
     List<FriendJpaEntity> findAllByToId(@Param(("receiverId")) Long receiverId);
+
+    List<FriendJpaEntity> findAllBySenderId(Long senderId);
 }

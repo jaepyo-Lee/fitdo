@@ -28,4 +28,9 @@ public class FriendRepositoryImpl implements FriendRepository {
     public List<FriendJpaEntity> findAllByReceiverId(Long receiverId) {
         return friendJpaRepository.findAllByToId(receiverId);
     }
+
+    @Override
+    public List<FriendJpaEntity> findAllBySenderId(Long senderId) {
+        return friendJpaRepository.findAllBySenderId(senderId);
+    }
 }

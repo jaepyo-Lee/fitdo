@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
+import com.jaejoo.fitdo.domain.user.core.Tier;
 import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.FriendDeleteRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.FriendRepository;
@@ -9,9 +10,12 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
 import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +27,27 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
     private final FriendDeleteRepository friendDeleteRepository;
+
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public List<FriendSimpleInfo> readFriendInfos(Long userId) {
+        List<FriendJpaEntity> friends = friendRepository.findAllBySenderId(userId);
+        List<FriendSimpleInfo> friendSimpleInfos = new ArrayList<>();
+        Integer totalUserSize = userRepository.findAllSize();
+        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+        for (FriendJpaEntity friend : friends) {
+            User user = friend.getReceiver().toUserModel();
+            Long rank = zSet.rank("userScore", String.valueOf(user.getUserId()));
+            if (rank == null) {
+                rank = totalUserSize.longValue(); // 기본적으로 최하위로 설정
+            }
+            rank += 1;
+            FriendSimpleInfo friendSimpleInfo = new FriendSimpleInfo(user.getUserId(), user.getNickname(), Tier.calculateTier(totalUserSize, rank));
+            friendSimpleInfos.add(friendSimpleInfo);
+        }
+        return friendSimpleInfos;
+    }
+
 
     @Transactional
     public void applyFriend(FriendApplyCommand command) {

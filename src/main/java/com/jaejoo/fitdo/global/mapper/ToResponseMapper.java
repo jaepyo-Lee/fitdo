@@ -2,7 +2,9 @@ package com.jaejoo.fitdo.global.mapper;
 
 import com.jaejoo.fitdo.domain.exercise.service.application.res.*;
 import com.jaejoo.fitdo.domain.exercise.web.res.*;
+import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
 import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
+import com.jaejoo.fitdo.domain.user.web.res.FriendSimpleInfosResponse;
 import com.jaejoo.fitdo.domain.user.web.res.ReadApplierInfoResponse;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -62,10 +64,16 @@ public interface ToResponseMapper {
     @IterableMapping(qualifiedByName = "toCategoryAndExerciseWithinRoutine")
     List<CategoryAndExerciseWithinRoutineDto> toCategoryAndExerciseWithinRoutine(List<CategoryAndExerciseWithinRoutine> dto);
 
-    @Mapping(target = "userId",source = "senderId")
+    @Mapping(target = "userId", source = "senderId")
     @Named("toReadApplierInfoResponse")
     ReadApplierInfoResponse toReadApplierInfoResponse(ReadApplierInfo readApplierInfo);
 
     @IterableMapping(qualifiedByName = "toReadApplierInfoResponse")
     List<ReadApplierInfoResponse> toReadApplierInfoResponse(List<ReadApplierInfo> readApplierInfo);
+
+    @IterableMapping(qualifiedByName = "toFriendSimpleInfosResponse")
+    List<FriendSimpleInfosResponse> toFriendSimpleInfosResponse(List<FriendSimpleInfo> friendSimpleInfos);
+
+    @Named("toFriendSimpleInfosResponse")
+    FriendSimpleInfosResponse toFriendSimpleInfosResponse(FriendSimpleInfo friendSimpleInfo);
 }

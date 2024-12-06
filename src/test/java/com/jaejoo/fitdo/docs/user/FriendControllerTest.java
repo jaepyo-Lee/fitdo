@@ -1,7 +1,9 @@
 package com.jaejoo.fitdo.docs.user;
 
 import com.jaejoo.fitdo.docs.RestDocsSupport;
+import com.jaejoo.fitdo.domain.user.core.Tier;
 import com.jaejoo.fitdo.domain.user.service.application.FriendService;
+import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
 import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
 import com.jaejoo.fitdo.domain.user.web.FriendController;
 import com.jaejoo.fitdo.domain.user.web.req.FriendApplyConfirmRequest;
@@ -12,9 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -36,86 +40,31 @@ class FriendControllerTest extends RestDocsSupport {
     }
 
     @Test
-    void applyFriend() throws Exception {
+    void readSimpleFriends() throws Exception {
         // given
-        FriendApplyRequest request = new FriendApplyRequest(1L);
-        // mock the service method
-        doNothing().when(service).applyFriend(any());
-
+        List<FriendSimpleInfo> friendSimpleInfos1 = new ArrayList<>();
+        FriendSimpleInfo joomi = new FriendSimpleInfo(1L, "joomi", Tier.BRONZE);
+        FriendSimpleInfo jaepyo = new FriendSimpleInfo(2L, "jaepyo", Tier.DIAMOND);
         // when
-        mvc.perform(
-                        RestDocumentationRequestBuilders.post("/api/v1/friends")
-                                .header("Authorization", "Bearer Token")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("apply-friend",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestHeaders(
-                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
-                                ),
-                                requestFields(
-                                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("친구신청을 하고싶은 사용자의 ID")
-                                )
-                        )
-                );
-    }
-
-    @Test
-    void approveFriend() throws Exception {
-        // given
-        FriendApplyConfirmRequest request = new FriendApplyConfirmRequest(1L, true);
-        // when
-        doNothing().when(service).manageFriendApply(any());
+        when(service.readFriendInfos(any())).thenReturn(List.of(jaepyo, joomi));
 
         mvc.perform(
-                        RestDocumentationRequestBuilders.post("/api/v1/friends/confirm")
-                                .header("Authorization", "Bearer Token")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("confirm-friend-apply",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestHeaders(
-                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
-                                ), requestFields(
-                                        fieldWithPath("applyUserId").type(JsonFieldType.NUMBER).description("친구신청을 보낸 사용자의 id"),
-                                        fieldWithPath("isAccept").type(JsonFieldType.BOOLEAN).description("친구신청 수락 여부, true시 수학, false시 거절")
-                                )
-                        )
-                );
-    }
-
-    @Test
-    void readReceivedApply() throws Exception {
-        // given
-        ReadApplierInfo jaepyo = new ReadApplierInfo("jaepyo", 1L);
-        ReadApplierInfo joomi = new ReadApplierInfo("joomi", 2L);
-        // when
-        when(service.readFriendApplies(any())).thenReturn(List.of(jaepyo, joomi));
-
-        mvc.perform(
-                        RestDocumentationRequestBuilders.get("/api/v1/friends/apply-receive")
+                        RestDocumentationRequestBuilders.get("/api/v1/friends")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("read-apply-receive",
+                .andDo(document("read-simple-friends",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ), responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("name").type(JsonFieldType.STRING).description("나에게 친구요청한 사람의 이름"),
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("나에게 친구요청한 사람의 ID")
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("친구의 userId"),
+                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("친구의 닉네임"),
+                                        fieldWithPath("tier").type(JsonFieldType.STRING).description("친구의 운동계급")
                                 )
                         )
                 );

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -31,5 +33,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean isExistNickName(String nickname) {
         return userJpaRepository.existsByNickname(nickname);
+    }
+
+    public Integer findAllSize() {
+        return userJpaRepository.findAll().size();
     }
 }

@@ -11,4 +11,6 @@ public interface FriendRepository {
 
 
     List<FriendJpaEntity> findAllByReceiverId(Long receiverId);
+
+    List<FriendJpaEntity> findAllBySenderId(Long senderId);
 }

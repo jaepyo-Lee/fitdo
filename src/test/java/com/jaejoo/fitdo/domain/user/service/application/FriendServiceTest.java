@@ -9,15 +9,19 @@ import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
+import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
 import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -150,7 +154,35 @@ class FriendServiceTest {
 
         System.out.println("=====Logic End=====");
         // then
-        assertAll(()-> assertThat(receiverApplies.size()).isEqualTo(1),
-                ()-> assertThat(senderApplies.size()).isEqualTo(0));
+        assertAll(() -> assertThat(receiverApplies.size()).isEqualTo(1),
+                () -> assertThat(senderApplies.size()).isEqualTo(0));
+    }
+
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
+
+    @Test
+    void 사용자의_친구목록_간단조회() {
+        // given
+        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
+
+        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
+
+        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+        zSet.add("userScore", String.valueOf(saveFriend.getId()), 1);
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        List<FriendSimpleInfo> friendSimpleInfos = friendService.readFriendInfos(saveUser.getId());
+
+        System.out.println("=====Logic End=====");
+        // then
+        assertThat(friendSimpleInfos.size()).isEqualTo(1);
+        zSet.removeRange("userScore", 0, -1);
     }
 }

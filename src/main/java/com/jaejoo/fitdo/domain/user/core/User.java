@@ -12,6 +12,10 @@ public class User {
     private String nickname;
     private String name;
 
+    public Long getUserId() {
+        return account.getUserId();
+    }
+
     public User(Account account) {
         this.account = account;
     }
