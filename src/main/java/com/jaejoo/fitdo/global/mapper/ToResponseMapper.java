@@ -2,8 +2,15 @@ package com.jaejoo.fitdo.global.mapper;
 
 import com.jaejoo.fitdo.domain.exercise.service.application.res.*;
 import com.jaejoo.fitdo.domain.exercise.web.res.*;
+import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
+import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
+import com.jaejoo.fitdo.domain.user.service.application.res.ExerciseInfoInRoutine;
+import com.jaejoo.fitdo.domain.user.service.application.res.FriendDetailInfo;
+import com.jaejoo.fitdo.domain.user.service.application.res.UserRoutineInfo;
+import com.jaejoo.fitdo.domain.user.web.res.*;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -58,4 +65,33 @@ public interface ToResponseMapper {
 
     @IterableMapping(qualifiedByName = "toCategoryAndExerciseWithinRoutine")
     List<CategoryAndExerciseWithinRoutineDto> toCategoryAndExerciseWithinRoutine(List<CategoryAndExerciseWithinRoutine> dto);
+
+    @Mapping(target = "userId", source = "senderId")
+    @Named("toReadApplierInfoResponse")
+    ReadApplierInfoResponse toReadApplierInfoResponse(ReadApplierInfo readApplierInfo);
+
+    @IterableMapping(qualifiedByName = "toReadApplierInfoResponse")
+    List<ReadApplierInfoResponse> toReadApplierInfoResponse(List<ReadApplierInfo> readApplierInfo);
+
+    @IterableMapping(qualifiedByName = "toFriendSimpleInfosResponse")
+    List<FriendSimpleInfosResponse> toFriendSimpleInfosResponse(List<FriendSimpleInfo> friendSimpleInfos);
+
+    @Named("toFriendSimpleInfosResponse")
+    FriendSimpleInfosResponse toFriendSimpleInfosResponse(FriendSimpleInfo friendSimpleInfo);
+
+    @Named("toFriendDetailInfoResponse")
+    FriendDetailInfoResponse toFriendDetailInfoResponse(FriendDetailInfo friendDetailInfo);
+
+    @IterableMapping(qualifiedByName = "toUserRoutineInfoDto")
+    List<UserRoutineInfoDto> toUserRoutineInfoDto(List<UserRoutineInfo> userRoutineInfos);
+
+    @Named("toUserRoutineInfoDto")
+    @Mapping(target = "name",source = "routineName")
+    UserRoutineInfoDto toUserRoutineInfoDto(UserRoutineInfo userRoutineInfo);
+
+    @Named("toExerciseInfoInRoutineDto")
+    ExerciseInfoInRoutineDto toExerciseInfoInRoutineDto(ExerciseInfoInRoutine exerciseInfoInRoutine);
+
+    @IterableMapping(qualifiedByName = "toExerciseInfoInRoutineDto")
+    List<ExerciseInfoInRoutineDto> toExerciseInfoInRoutineDto(List<ExerciseInfoInRoutine> exerciseInfoInRoutine);
 }

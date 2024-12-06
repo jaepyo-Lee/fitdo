@@ -16,6 +16,7 @@ public class UserJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
+    @Getter
     private String username;
     private String nickname;
     private String authId;

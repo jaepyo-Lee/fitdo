@@ -1,0 +1,16 @@
+package com.jaejoo.fitdo.domain.user.service.application.res;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+public class FriendDetailInfo {
+    private Long userId;
+    private String userName;
+    private Integer weight;
+    private Integer height;
+    private List<UserRoutineInfo> routines;
+}

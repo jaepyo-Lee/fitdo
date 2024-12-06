@@ -8,8 +8,6 @@ import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
 import com.jaejoo.fitdo.domain.user.service.application.req.CompleteSignUpCommand;
-import com.jaejoo.fitdo.domain.user.service.application.req.NickNameIsDuplicateCommand;
-import com.jaejoo.fitdo.domain.user.service.application.res.IsNickNameDuplicateResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,9 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -35,16 +30,12 @@ class UserServiceUnitTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private CategoryInitializer categoryInitializer;
-    @Mock
-    private CategoryCommandRepository categoryCommandRepository;
 
     @Nested
     @DisplayName("사용자의 회원가입완료기능")
     class completeRegister {
         @Test
-        void success() {
+        void 키와몸무게추가하면_회원가입완료() {
             // given
             int height = 180;
             int weight = 70;
@@ -59,9 +50,6 @@ class UserServiceUnitTest {
 
             when(userRepository.findById(id)).thenReturn(mockuser);
             when(userRepository.save(any())).thenReturn(registerUser);
-            when(categoryInitializer.init(any())).thenReturn(List.of());
-            doNothing().when(categoryCommandRepository).saveAll(anyList());
-
 
             // when
             System.out.println("=====Logic Start=====");

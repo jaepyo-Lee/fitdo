@@ -11,7 +11,8 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExercis
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordDto;
-import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.RecordExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
@@ -60,11 +61,54 @@ class ExerciseRecordServiceTest {
     @DisplayName("운동기록기능 테스트")
     class ExerciseExerciseRecordCreateCommandTest {
         @Test
+        void 기존에_저장된운동을_삭제하고_다른운동들로만_기록을_생성했을때() {
+            // given
+            UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+            UserJpaEntity saveUser = userJpaRepository.save(user);
+
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
+            ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
+
+            ExerciseJpaEntity newExercise = ExerciseJpaEntity.builder().name("fly machine").category(saveCategory).build();
+            ExerciseJpaEntity newSaveExercise = exerciseJpaRepository.save(newExercise);
+
+            LocalDate today = LocalDate.now();
+
+            List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(
+                    new DailyExerciseRecordDto(1, 50, 10, true),
+                    new DailyExerciseRecordDto(2, 50, 10, true),
+                    new DailyExerciseRecordDto(3, 50, 10, true));
+            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
+
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(
+                    new DailyExerciseRecordDto(1, 50, 10, true),
+                    new DailyExerciseRecordDto(2, 50, 10, true),
+                    new DailyExerciseRecordDto(3, 50, 10, true));
+            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(newSaveExercise.getId(), newDailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
+
+            exerciseRecordService.writeDailyExerciseFrom(user.getId(), newCommand);
+
+            System.out.println("=====Logic End=====");
+            // then
+            List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
+            assertThat(all.size()).isEqualTo(3);
+
+        }
+
+        @Test
         void 다른사람의기록도저장되어있을때_생성테스트() {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -76,22 +120,23 @@ class ExerciseRecordServiceTest {
                     new DailyExerciseRecordDto(1, 50, 10, true),
                     new DailyExerciseRecordDto(2, 50, 10, true),
                     new DailyExerciseRecordDto(3, 50, 10, true));
+            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
 
-            DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
 
 
             // when
             System.out.println("=====Logic Start=====");
             UserJpaEntity user2 = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser2 = userJpaRepository.save(user2);
-            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
+            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(
+                    new DailyExerciseRecordDto(1, 50, 10, true),
                     new DailyExerciseRecordDto(2, 50, 10, true));
+            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), newDailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
 
-            DailyRecordCreateCommand newCommand = new DailyRecordCreateCommand(today, saveExercise.getId(), newDailyExerciseRecordDtos);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser2.getId(), List.of(newCommand));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser2.getId(), newCommand);
 
             System.out.println("=====Logic End=====");
             // then
@@ -105,7 +150,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -116,10 +161,10 @@ class ExerciseRecordServiceTest {
             List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
                     new DailyExerciseRecordDto(2, 50, 10, true),
                     new DailyExerciseRecordDto(3, 50, 10, true));
+            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
 
-            DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(),command);
 
 
             // when
@@ -127,10 +172,11 @@ class ExerciseRecordServiceTest {
 
             List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
                     new DailyExerciseRecordDto(2, 50, 10, true));
+            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), newDailyExerciseRecordDtos));
 
-            DailyRecordCreateCommand newCommand = new DailyRecordCreateCommand(today, saveExercise.getId(), newDailyExerciseRecordDtos);
+            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
 
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(newCommand));
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), newCommand);
 
             System.out.println("=====Logic End=====");
             // then
@@ -145,7 +191,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
             UserJpaEntity saveUser = userJpaRepository.save(user);
 
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).user(saveUser).build();
+            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
             ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
@@ -157,10 +203,9 @@ class ExerciseRecordServiceTest {
             List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
                     new DailyExerciseRecordDto(2, 50, 10, true),
                     new DailyExerciseRecordDto(3, 50, 10, true));
-
-            DailyRecordCreateCommand command = new DailyRecordCreateCommand(today, saveExercise.getId(), dailyExerciseRecordDtos);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), List.of(command));
+            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
+            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(),command);
 
             System.out.println("=====Logic End=====");
             // then
@@ -184,7 +229,7 @@ class ExerciseRecordServiceTest {
             UserJpaEntity userJpaEntity = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_USER);
             UserJpaEntity saveUser = userJpaRepository.save(userJpaEntity);
 
-            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().user(saveUser).part(BodyPart.CHEST).build();
+            CategoryJpaEntity categoryJpaEntity = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
             CategoryJpaEntity saveCategory = categoryJpaRepository.save(categoryJpaEntity);
 
             ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder().name("벤치프레스").category(saveCategory).build();

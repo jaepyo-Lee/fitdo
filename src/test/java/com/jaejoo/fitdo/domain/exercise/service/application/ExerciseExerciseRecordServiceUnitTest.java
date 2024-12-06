@@ -2,7 +2,8 @@ package com.jaejoo.fitdo.domain.exercise.service.application;
 
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordDto;
-import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.RecordExerciseRecords;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,13 @@ class ExerciseExerciseRecordServiceUnitTest {
         @Test
         void 요청된운동분류마다삭제및저장반복() {
             // given
-            DailyRecordCreateCommand command1 = new DailyRecordCreateCommand(LocalDate.now(), 1L, List.of(new DailyExerciseRecordDto(1, 10, 10, false)));
-            DailyRecordCreateCommand command2 = new DailyRecordCreateCommand(LocalDate.now(), 2L, List.of(new DailyExerciseRecordDto(1, 10, 10, false)));
+            RecordExerciseRecords recordExerciseRecords = new RecordExerciseRecords(1L, List.of(new DailyExerciseRecordDto(1, 10, 10, false)));
+            RecordExerciseRecords recordExerciseRecords1 = new RecordExerciseRecords(2L, List.of(new DailyExerciseRecordDto(2, 10, 10, false)));
+
+            DailyExerciseRecordCreateCommand command1 = new DailyExerciseRecordCreateCommand(LocalDate.now(), List.of(recordExerciseRecords, recordExerciseRecords1));
 
             // when
-            boolean actual = exerciseRecordService.writeDailyExerciseFrom(1L, List.of(command1, command2));
+            boolean actual = exerciseRecordService.writeDailyExerciseFrom(1L, command1);
 
             // then
             System.out.println("=====Logic Start=====");
@@ -45,7 +48,7 @@ class ExerciseExerciseRecordServiceUnitTest {
 
             // 매처를 모두 사용하여 verify 수정
             verify(recordCommandRepository, times(2)).saveAll(any(), any(), any(), any());
-            verify(recordCommandRepository, times(2)).deleteDateRecordOf(any(), any(), any());
+            verify(recordCommandRepository, times(1)).deleteDateRecordOf(any(), any());
             assertThat(actual).isTrue();
         }
     }

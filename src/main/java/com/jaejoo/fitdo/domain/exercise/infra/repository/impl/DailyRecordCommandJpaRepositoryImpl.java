@@ -12,13 +12,14 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaE
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandRepository {
     private final DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
@@ -33,6 +34,7 @@ public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandReposit
                 .orElseGet(() -> dailyRecordJpaRepository.save(new DailyRecordJpaEntity(dailyDate, user)));
         ExerciseJpaEntity exercise = exerciseJpaRepository.findById(exerciseId)
                 .orElseThrow(() -> new IllegalArgumentException("exercise not found"));
+
         List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = new ArrayList<>();
         for (ExerciseRecord exerciseRecord : exerciseRecords.getExerciseRecords()) {
             exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(exerciseRecord, dailyRecordJpaEntity, exercise));
@@ -41,7 +43,7 @@ public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandReposit
     }
 
     @Override
-    public void deleteDateRecordOf(Long userId, Long exerciseId, LocalDate deleteDate) {
-        dailyExerciseRecordJpaRepository.deleteAllOfUserExerciseRecordsOnDate(userId, exerciseId, deleteDate);
+    public void deleteDateRecordOf(Long userId,LocalDate deleteDate) {
+        dailyExerciseRecordJpaRepository.deleteAllOfUserExerciseRecordsOnDate(userId, deleteDate);
     }
 }

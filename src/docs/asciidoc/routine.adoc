@@ -1,0 +1,46 @@
+== 4.1 루틴 만들기
+=== Request
+Request Header:
+include::{snippets}/create-routines/request-headers.adoc[]
+
+Request Fields:
+include::{snippets}/create-routines/request-fields.adoc[]
+
+Request HTTP Example
+include::{snippets}/create-routines/httpie-request.adoc[]
+
+=== Response
+
+Response HTTP Example:
+include::{snippets}/create-routines/http-response.adoc[]
+
+== 4.2 루틴 조회하기
+=== Request
+Request Header:
+include::{snippets}/read-routine/request-headers.adoc[]
+
+Request HTTP Example
+include::{snippets}/read-routine/httpie-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/read-routine/response-fields-result.adoc[]
+
+Response HTTP Example:
+include::{snippets}/read-routine/http-response.adoc[]
+
+== 4.3 루틴 삭제하기
+Request Header:
+include::{snippets}/delete-routines/request-headers.adoc[]
+
+Request PathVariable:
+
+include::{snippets}/delete-routines/path-parameters.adoc[]
+
+Request HTTP Example
+include::{snippets}/delete-routines/httpie-request.adoc[]
+
+=== Response
+
+Response HTTP Example:
+include::{snippets}/delete-routines/http-response.adoc[]

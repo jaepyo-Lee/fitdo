@@ -6,6 +6,7 @@ import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExercise
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.web.ExerciseRecordController;
+import com.jaejoo.fitdo.domain.exercise.web.req.DailyExerciseRecordsRequest;
 import com.jaejoo.fitdo.domain.exercise.web.req.DailyRecordCreateRequest;
 import com.jaejoo.fitdo.domain.exercise.web.req.dto.ExerciseRecordRequestDto;
 import org.junit.jupiter.api.Test;
@@ -43,16 +44,16 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
     @Test
     void createExerciseRecords() throws Exception {
         // given
-        DailyRecordCreateRequest request1 = new DailyRecordCreateRequest(LocalDate.now(),
-                1L,
-                List.of(new ExerciseRecordRequestDto(1, 60, 10, true),
+        DailyExerciseRecordsRequest request1 = new DailyExerciseRecordsRequest(1L,
+                List.of(
+                        new ExerciseRecordRequestDto(1, 60, 10, true),
                         new ExerciseRecordRequestDto(2, 70, 10, false)));
-        DailyRecordCreateRequest request2 = new DailyRecordCreateRequest(LocalDate.now(),
-                2L,
-                List.of(new ExerciseRecordRequestDto(1, 30, 15, false),
+        DailyExerciseRecordsRequest request2 = new DailyExerciseRecordsRequest(2L,
+                List.of(
+                        new ExerciseRecordRequestDto(1, 30, 15, false),
                         new ExerciseRecordRequestDto(2, 100, 10, false)));
-        List<DailyRecordCreateRequest> createRequests = new ArrayList<>(List.of(request1, request2));
-
+        List<DailyExerciseRecordsRequest> createRequests = new ArrayList<>(List.of(request1, request2));
+        DailyRecordCreateRequest request = new DailyRecordCreateRequest(LocalDate.now(), createRequests);
         // mock the service method
         when(service.writeDailyExerciseFrom(any(), any())).thenReturn(true);
 
@@ -61,7 +62,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                         post("/api/v1/exercise-record")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(createRequests))
+                                .content(objectMapper.writeValueAsString(request))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -72,13 +73,14 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
                                 requestFields(
-                                        fieldWithPath("[].todayDate").type(JsonFieldType.STRING).description("기록된 날짜"),
-                                        fieldWithPath("[].exerciseId").type(JsonFieldType.NUMBER).description("기록하려는 운동의 아이디"),
-                                        fieldWithPath("[].records").type(JsonFieldType.ARRAY).description("기록목록"),
-                                        fieldWithPath("[].records[].set").type(JsonFieldType.NUMBER).description("해당 운동의 세트번호"),
-                                        fieldWithPath("[].records[].weight").type(JsonFieldType.NUMBER).description("해당 세트의 무게"),
-                                        fieldWithPath("[].records[].count").type(JsonFieldType.NUMBER).description("해당 세트의 반복수"),
-                                        fieldWithPath("[].records[].progress").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
+                                        fieldWithPath("recordDate").type(JsonFieldType.STRING).description("기록된 날짜"),
+                                        fieldWithPath("dailyExerciseRecords").type(JsonFieldType.ARRAY).description("저장하고자 하는 운동기록"),
+                                        fieldWithPath("dailyExerciseRecords[].exerciseId").type(JsonFieldType.NUMBER).description("기록하려는 운동의 아이디"),
+                                        fieldWithPath("dailyExerciseRecords[].records").type(JsonFieldType.ARRAY).description("기록목록"),
+                                        fieldWithPath("dailyExerciseRecords[].records[].set").type(JsonFieldType.NUMBER).description("해당 운동의 세트번호"),
+                                        fieldWithPath("dailyExerciseRecords[].records[].weight").type(JsonFieldType.NUMBER).description("해당 세트의 무게"),
+                                        fieldWithPath("dailyExerciseRecords[].records[].count").type(JsonFieldType.NUMBER).description("해당 세트의 반복수"),
+                                        fieldWithPath("dailyExerciseRecords[].records[].progress").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
                                 ),
                                 responseFields(
                                         fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("운동 기록이 성공적으로 생성되었는지 여부. `true`이면 성공, `false`이면 실패")
@@ -154,7 +156,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                         parameterWithName("yearMonth").description("운동 기록을 구하고자하는 연도와 월\n").description("yyyy-MM 베열형식으로 반환")
                                 ),
                                 responseFields(
-                                        fieldWithPath("[].exerciseDate").type(JsonFieldType.STRING) .description("운동한 날짜. yyyy-MM-dd 형식"),
+                                        fieldWithPath("[].exerciseDate").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식"),
                                         fieldWithPath("[].dateRecords").type(JsonFieldType.ARRAY).description("운동 기록"),
                                         fieldWithPath("[].dateRecords[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
                                         fieldWithPath("[].dateRecords[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),

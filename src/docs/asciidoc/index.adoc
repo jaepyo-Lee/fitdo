@@ -23,148 +23,16 @@ API에 관계없이 아래 사항을 지켜주셔야 합니다.
 [[API]]
 = 1. 인증/인가
 
-== 1.1 Login
-=== Request
-Request Fields:
-include::{snippets}/user-login/request-fields.adoc[]
-
-Request HTTP Example:
-include::{snippets}/user-login/http-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/user-login/response-fields.adoc[]
-
-Response HTTP Example:
-include::{snippets}/user-login/http-response.adoc[]
+include::{docfile}/../auth.adoc[]
 
 = 2. 기록
-
-== 2.1 기록 조회
-=== Request
-Request Fields:
-include::{snippets}/read-exercise-records/query-parameters.adoc[]
-
-Request HTTP Example:
-include::{snippets}/read-exercise-records/http-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/read-exercise-records/response-fields.adoc[]
-
-Response HTTP Example:
-include::{snippets}/read-exercise-records/http-response.adoc[]
-
-== 2.2 운동 기록
-=== Request
-Request Fields:
-include::{snippets}/create-exercise-records/request-fields.adoc[]
-
-Request HTTP Example:
-include::{snippets}/create-exercise-records/http-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/create-exercise-records/response-fields.adoc[]
-
-Response HTTP Example:
-include::{snippets}/create-exercise-records/http-response.adoc[]
+include::{docfile}/../exercise_record.adoc[]
 
 = 3. 운동
-
-== 3.1 운동 목록 생성
-=== Request
-Request Header:
-include::{snippets}/read-routine/request-headers.adoc[]
-
-Request Fields:
-include::{snippets}/create-exercise/request-fields.adoc[]
-
-Request HTTP Example:
-include::{snippets}/create-exercise/http-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/create-exercise/response-fields-result.adoc[]
-
-Response HTTP Example:
-include::{snippets}/create-exercise/http-response.adoc[]
-
-== 3.2 운동 목록 조회
-=== Request
-Request Header:
-include::{snippets}/read-routine/request-headers.adoc[]
-
-Request HTTP Example:
-include::{snippets}/read-exercise/http-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/read-exercise/response-fields-result.adoc[]
-
-Response HTTP Example:
-include::{snippets}/read-exercise/http-response.adoc[]
-
-== 3.3 운동 목록 삭제
-=== Request
-Request Header:
-include::{snippets}/read-routine/request-headers.adoc[]
-
-Path Parameters:
-include::{snippets}/delete-exercise/path-parameters.adoc[]
-
-Request HTTP Example:
-include::{snippets}/delete-exercise/http-request.adoc[]
-
-=== Response
-
-Response HTTP Example:
-include::{snippets}/delete-exercise/http-response.adoc[]
+include::{docfile}/../exercise.adoc[]
 
 = 4. 루틴
-== 4.1 루틴 만들기
-=== Request
-Request Header:
-include::{snippets}/read-routine/request-headers.adoc[]
+include::{docfile}/../routine.adoc[]
 
-Request Fields:
-include::{snippets}/create-routine/request-fields.adoc[]
-
-Request HTTP Example
-include::{snippets}/create-routine/httpie-request.adoc[]
-
-=== Response
-
-Response HTTP Example:
-include::{snippets}/create-routine/http-response.adoc[]
-
-== 4.2 루틴 조회하기
-=== Request
-Request Header:
-include::{snippets}/read-routine/request-headers.adoc[]
-
-Request HTTP Example
-include::{snippets}/read-routine/httpie-request.adoc[]
-
-=== Response
-Response Data Fields:
-include::{snippets}/read-routine/response-fields-result.adoc[]
-
-Response HTTP Example:
-include::{snippets}/read-routine/http-response.adoc[]
-
-== 4.3 루틴 삭제하기
-Request Header:
-include::{snippets}/delete-routines/request-headers.adoc[]
-
-Request PathVariable:
-
-include::{snippets}/delete-routines/path-parameters.adoc[]
-
-Request HTTP Example
-include::{snippets}/delete-routines/httpie-request.adoc[]
-
-=== Response
-
-Response HTTP Example:
-include::{snippets}/delete-routines/http-response.adoc[]
+= 5.친구
+include::{docfile}/../friend.adoc[]
