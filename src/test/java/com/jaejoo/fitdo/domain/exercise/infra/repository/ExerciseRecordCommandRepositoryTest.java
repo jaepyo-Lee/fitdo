@@ -44,15 +44,15 @@ class ExerciseRecordCommandRepositoryTest {
     @Autowired
     private CategoryJpaRepository categoryJpaRepository;
 
- /*   @BeforeEach
-    void init(){
-        dailyExerciseRecordJpaRepository.deleteAll();
-        dailyRecordJpaRepository.deleteAll();
-        exerciseJpaRepository.deleteAll();
-        categoryJpaRepository.deleteAll();
-        userJpaRepository.deleteAll();
-    }
-*/
+    /*   @BeforeEach
+       void init(){
+           dailyExerciseRecordJpaRepository.deleteAll();
+           dailyRecordJpaRepository.deleteAll();
+           exerciseJpaRepository.deleteAll();
+           categoryJpaRepository.deleteAll();
+           userJpaRepository.deleteAll();
+       }
+   */
     @Test
     void 사용자의특정날의운동기록정보삭제() {
         // given
@@ -91,12 +91,12 @@ class ExerciseRecordCommandRepositoryTest {
         // when
         System.out.println("=====Logic Start=====");
 
-        recordCommandRepository.deleteDateRecordOf(saveUser.getId(), exercise.getId(), todayDate);
+        recordCommandRepository.deleteDateRecordOf(saveUser.getId(), todayDate);
 
         System.out.println("=====Logic End=====");
         // then
         List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
+        assertThat(all.size()).isEqualTo(0);
     }
 
     @Test
@@ -132,7 +132,7 @@ class ExerciseRecordCommandRepositoryTest {
         ExerciseRecord exerciseRecord2 = new ExerciseRecord(20, 5, 2, false);
         Exercise exerciseRecords = new Exercise(List.of(exerciseRecord1, exerciseRecord2));
 
-        recordCommandRepository.saveAll(saveUser.getId(),exercise.getId(),todayDate, exerciseRecords);
+        recordCommandRepository.saveAll(saveUser.getId(), exercise.getId(), todayDate, exerciseRecords);
 
         System.out.println("=====Logic End=====");
         // then

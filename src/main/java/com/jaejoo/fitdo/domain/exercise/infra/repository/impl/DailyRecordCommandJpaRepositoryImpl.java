@@ -34,6 +34,7 @@ public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandReposit
                 .orElseGet(() -> dailyRecordJpaRepository.save(new DailyRecordJpaEntity(dailyDate, user)));
         ExerciseJpaEntity exercise = exerciseJpaRepository.findById(exerciseId)
                 .orElseThrow(() -> new IllegalArgumentException("exercise not found"));
+
         List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = new ArrayList<>();
         for (ExerciseRecord exerciseRecord : exerciseRecords.getExerciseRecords()) {
             exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(exerciseRecord, dailyRecordJpaEntity, exercise));
@@ -42,7 +43,7 @@ public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandReposit
     }
 
     @Override
-    public void deleteDateRecordOf(Long userId, Long exerciseId, LocalDate deleteDate) {
-        dailyExerciseRecordJpaRepository.deleteAllOfUserExerciseRecordsOnDate(userId, exerciseId, deleteDate);
+    public void deleteDateRecordOf(Long userId,LocalDate deleteDate) {
+        dailyExerciseRecordJpaRepository.deleteAllOfUserExerciseRecordsOnDate(userId, deleteDate);
     }
 }
