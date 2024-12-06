@@ -8,6 +8,9 @@ server:
   port: 8080
 
 spring:
+  batch:
+    job:
+      enabled: false
   data:
     redis:
       host: localhost

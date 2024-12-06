@@ -44,6 +44,7 @@ public class ScoreJobConfiguration {
 
     @Bean
     public Job job(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
+        System.out.println("job");
         return new JobBuilder("job", jobRepository)
                 .start(calculateScoreStep(jobRepository, transactionManager)) //점수 계산 및 DB주입
                 .next(loadScoreDataToRedis(jobRepository, transactionManager))//redis 갱신

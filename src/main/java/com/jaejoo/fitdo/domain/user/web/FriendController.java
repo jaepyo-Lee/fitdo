@@ -27,7 +27,7 @@ public class FriendController {
     }
 
     @GetMapping("/api/v1/friends/{friendId}")
-    public SuccessResponse<FriendDetailInfoResponse>readFriendInfo(@PathVariable("friendId") Long friendId){
+    public SuccessResponse<FriendDetailInfoResponse> readFriendInfo(@PathVariable("friendId") Long friendId) {
         FriendDetailInfo friendDetailInfo = friendService.readFriendDetailInfo(friendId);
         FriendDetailInfoResponse response = ToResponseMapper.INSTANCE.toFriendDetailInfoResponse(friendDetailInfo);
         return new SuccessResponse<>(response);
