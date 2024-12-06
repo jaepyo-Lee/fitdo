@@ -12,9 +12,7 @@ public interface DailyExerciseRecordJpaRepository extends JpaRepository<DailyExe
     @Modifying
     @Query("DELETE FROM DailyExerciseRecordJpaEntity DER " +
             "WHERE DER.dailyRecord.date = :date " +
-            "AND DER.dailyRecord.user.id = :userId " +
-            "AND DER.exercise.id = :exerciseId")
+            "AND DER.dailyRecord.user.id = :userId")
     void deleteAllOfUserExerciseRecordsOnDate(@Param("userId") Long userId,
-                                              @Param("exerciseId") Long exerciseId,
                                               @Param("date") LocalDate date);
 }

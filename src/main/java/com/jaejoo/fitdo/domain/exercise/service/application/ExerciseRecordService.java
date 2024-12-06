@@ -6,7 +6,8 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordQueryRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.RecordExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
@@ -25,11 +26,12 @@ public class ExerciseRecordService {
     private final RecordQueryRepository recordQueryRepository;
 
     @Transactional
-    public boolean writeDailyExerciseFrom(Long userId, List<DailyRecordCreateCommand> commands) {
-        for (DailyRecordCreateCommand command : commands) {
-            Exercise domain = command.toDomain();
-            recordCommandRepository.deleteDateRecordOf(userId, command.getExerciseId(), command.getRecordDate());
-            recordCommandRepository.saveAll(userId, command.getExerciseId(), command.getRecordDate(), domain);
+    public boolean writeDailyExerciseFrom(Long userId, DailyExerciseRecordCreateCommand command) {
+        recordCommandRepository.deleteDateRecordOf(userId,command.getRecordDate());
+        List<RecordExerciseRecords> records = command.getRecords();
+        for (RecordExerciseRecords record : records) {
+            Exercise domain = record.toDomain();
+            recordCommandRepository.saveAll(userId, record.getExerciseId(), command.getRecordDate(), domain);
         }
         return true;
     }
