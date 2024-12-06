@@ -11,3 +11,23 @@ Response Data Fields:
 include::{snippets}/read-simple-friends/response-body.adoc[]
 Response HTTP Example:
 include::{snippets}/read-simple-friends/http-response.adoc[]
+
+== 5.2 친구정보 조회
+
+=== Request
+Request Header:
+include::{snippets}/read-detail-friends/request-headers.adoc[]
+
+Request PathVariable:
+
+include::{snippets}/read-detail-friends/path-parameters.adoc[]
+
+Request HTTP Example:
+include::{snippets}/read-detail-friends/httpie-request.adoc[]
+
+
+=== Response
+Response Data Fields:
+include::{snippets}/read-detail-friends/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/read-detail-friends/http-response.adoc[]

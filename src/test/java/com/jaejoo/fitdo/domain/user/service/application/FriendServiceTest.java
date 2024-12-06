@@ -1,6 +1,16 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
+import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseRoutineJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.RoutineJpaRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseRoutineJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.RoutineJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.FriendJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
@@ -11,6 +21,7 @@ import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
 import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
 import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
+import com.jaejoo.fitdo.domain.user.service.application.res.FriendDetailInfo;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -30,12 +40,20 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class FriendServiceTest {
     @Autowired
     UserJpaRepository userJpaRepository;
-
     @Autowired
     FriendService friendService;
-
+    @Autowired
+    EntityManager em;
     @Autowired
     FriendJpaRepository friendJpaRepository;
+    @Autowired
+    private CategoryJpaRepository categoryJpaRepository;
+    @Autowired
+    private ExerciseJpaRepository exerciseJpaRepository;
+    @Autowired
+    private RoutineJpaRepository routineJpaRepository;
+    @Autowired
+    private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
 
     @Test
     void 친구추가시_한쪽만_친구신청상태로_등록() {
@@ -132,8 +150,6 @@ class FriendServiceTest {
         assertAll(() -> assertThat(all.size()).isEqualTo(0));
     }
 
-    @Autowired
-    EntityManager em;
 
     @Test
     void 친구신청목록조회시_신청을받은사람만_조회된다() {
@@ -178,11 +194,47 @@ class FriendServiceTest {
         // when
         System.out.println("=====Logic Start=====");
 
-        List<FriendSimpleInfo> friendSimpleInfos = friendService.readFriendInfos(saveUser.getId());
+        List<FriendSimpleInfo> friendSimpleInfos = friendService.readFriendsInfos(saveUser.getId());
 
         System.out.println("=====Logic End=====");
         // then
         assertThat(friendSimpleInfos.size()).isEqualTo(1);
         zSet.removeRange("userScore", 0, -1);
+    }
+
+    @Test
+    void 사용자의_친구정보_조회() {
+        // given
+        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+        CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.BACK).build();
+        CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
+
+        ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
+        ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
+
+        RoutineJpaEntity routine = RoutineJpaEntity.builder()
+                .name("routine1")
+                .user(saveUser)
+                .build();
+        RoutineJpaEntity saveRoutine = routineJpaRepository.save(routine);
+
+        ExerciseRoutineJpaEntity exerciseRoutine = ExerciseRoutineJpaEntity.builder()
+                .routine(saveRoutine)
+                .exercise(saveExercise)
+                .build();
+        ExerciseRoutineJpaEntity saveExerciseRoutine = exerciseRoutineJpaRepository.save(exerciseRoutine);
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        FriendDetailInfo friendDetailInfo = friendService.readFriendDetailInfo(saveUser.getId());
+
+        System.out.println("=====Logic End=====");
+        // then
+        assertAll(() -> assertThat(friendDetailInfo.getRoutines().size()).isEqualTo(1),
+                () -> assertThat(friendDetailInfo.getUserId()).isEqualTo(saveUser.getId()),
+                () -> assertThat(friendDetailInfo.getRoutines().get(0).getExercises().size()).isEqualTo(1));
     }
 }

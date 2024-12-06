@@ -2,9 +2,13 @@ package com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity;
 
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Entity
 public class RoutineJpaEntity {

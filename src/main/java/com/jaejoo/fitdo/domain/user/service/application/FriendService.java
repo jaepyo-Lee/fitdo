@@ -1,5 +1,10 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
+import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseRoutineQueryRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.RoutineRepository;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseRoutineJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.RoutineJpaEntity;
 import com.jaejoo.fitdo.domain.user.core.Tier;
 import com.jaejoo.fitdo.domain.user.core.User;
 import com.jaejoo.fitdo.domain.user.infra.repository.FriendDeleteRepository;
@@ -8,10 +13,10 @@ import com.jaejoo.fitdo.domain.user.infra.repository.UserRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendJpaEntity;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
-import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyCommand;
-import com.jaejoo.fitdo.domain.user.service.application.req.FriendApplyConfirmCommand;
-import com.jaejoo.fitdo.domain.user.service.application.req.FriendSimpleInfo;
-import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
+import com.jaejoo.fitdo.domain.user.service.application.req.*;
+import com.jaejoo.fitdo.domain.user.service.application.res.ExerciseInfoInRoutine;
+import com.jaejoo.fitdo.domain.user.service.application.res.FriendDetailInfo;
+import com.jaejoo.fitdo.domain.user.service.application.res.UserRoutineInfo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,10 +32,27 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
     private final FriendDeleteRepository friendDeleteRepository;
-
+    private final RoutineRepository routineRepository;
+    private final ExerciseRoutineQueryRepository exerciseRoutineQueryRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public List<FriendSimpleInfo> readFriendInfos(Long userId) {
+    public FriendDetailInfo readFriendDetailInfo(Long userId) {
+        User user = userRepository.findById(userId);
+        List<RoutineJpaEntity> routines = routineRepository.findAllByUserId(user.getUserId());
+        List<UserRoutineInfo> routineInfos = new ArrayList<>();
+        for (RoutineJpaEntity routine : routines) {
+            List<ExerciseInfoInRoutine> exerciseInfoInRoutines = new ArrayList<>();
+            List<ExerciseRoutineJpaEntity> allByRoutine = exerciseRoutineQueryRepository.findAllByRoutine(routine);
+            for (ExerciseRoutineJpaEntity exerciseRoutineJpaEntity : allByRoutine) {
+                ExerciseJpaEntity exercise = exerciseRoutineJpaEntity.getExercise();
+                exerciseInfoInRoutines.add(new ExerciseInfoInRoutine(exercise.getCategory().getPartName(), exercise.getName()));
+            }
+            routineInfos.add(new UserRoutineInfo(routine.getName(), exerciseInfoInRoutines));
+        }
+        return new FriendDetailInfo(user.getUserId(), user.getNickname(), user.getWeight(), user.getHeight(), routineInfos);
+    }
+
+    public List<FriendSimpleInfo> readFriendsInfos(Long userId) {
         List<FriendJpaEntity> friends = friendRepository.findAllBySenderId(userId);
         List<FriendSimpleInfo> friendSimpleInfos = new ArrayList<>();
         Integer totalUserSize = userRepository.findAllSize();
