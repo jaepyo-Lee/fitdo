@@ -1,5 +1,6 @@
 package com.jaejoo.fitdo.domain.user.service.application;
 
+import com.jaejoo.fitdo.config.RedisTestContainerConfig;
 import com.jaejoo.fitdo.domain.auth.service.application.req.AuthType;
 import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
@@ -24,6 +25,7 @@ import com.jaejoo.fitdo.domain.user.service.application.req.ReadApplierInfo;
 import com.jaejoo.fitdo.domain.user.service.application.res.FriendDetailInfo;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,7 +37,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class FriendServiceTest {
     @Autowired
