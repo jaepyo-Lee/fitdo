@@ -5,6 +5,7 @@ import com.jaejoo.fitdo.domain.exercise.service.application.ExerciseRecordServic
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.ProgressPercentage;
 import com.jaejoo.fitdo.domain.exercise.web.ExerciseRecordController;
 import com.jaejoo.fitdo.domain.exercise.web.req.DailyExerciseRecordsRequest;
 import com.jaejoo.fitdo.domain.exercise.web.req.DailyRecordCreateRequest;
@@ -17,6 +18,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -171,5 +173,45 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
 
         // verify
         verify(service, times(1)).findExerciseRecordsOfUserInMonth(any(), any());
+    }
+
+
+    @Test
+    void 해당월의모든일의운동진행퍼센트값구하기() throws Exception {
+        // given
+        List<ProgressPercentage> response = new ArrayList<>();
+        for (int i = 1; i <= 31; i++) {
+            response.add(new ProgressPercentage(LocalDate.of(2024, 12, i), Math.random() * 101));
+        }
+
+        // mock the service method
+        when(service.calculateProgressPercentageInMonth(any(), any())).thenReturn(response);
+
+        // when
+        mvc.perform(
+                        get("/api/v1/exercises/percentage")
+                                .header("Authorization", "Bearer Token")
+                                .param("yearMonth", "2024-12")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("read-exercise-percentage",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
+                                ),
+                                queryParameters(
+                                        parameterWithName("yearMonth").description("운동 기록을 구하고자하는 연도와 월\n").description("yyyy-MM 베열형식으로 반환")
+                                ),
+                                responseFields(
+                                        beneathPath("result").withSubsectionId("result"),
+                                        fieldWithPath("startDayValue").type(JsonFieldType.NUMBER).description("해당월의 시작요일 \n 1(월요일)~7(일요일)"),
+                                        fieldWithPath("percentagesInMonth").type(JsonFieldType.ARRAY).description("해당월의 운동진행 퍼센티지 배열"),
+                                        fieldWithPath("percentagesInMonth[].date").type(JsonFieldType.STRING).description("날짜"),
+                                        fieldWithPath("percentagesInMonth[].percentage").type(JsonFieldType.NUMBER).description("퍼센트")
+                                )
+                        )
+                );
     }
 }

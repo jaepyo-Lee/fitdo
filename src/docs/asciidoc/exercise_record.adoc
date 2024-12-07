@@ -28,3 +28,19 @@ include::{snippets}/create-exercise-records/response-fields.adoc[]
 
 Response HTTP Example:
 include::{snippets}/create-exercise-records/http-response.adoc[]
+
+== 2.3 해당월 운동진행률 조회
+=== Request
+Request Header:
+include::{snippets}/read-exercise-percentage/request-headers.adoc[]
+Request Parameter:
+include::{snippets}/read-exercise-percentage/query-parameters.adoc[]
+Request HTTP Example:
+include::{snippets}/read-exercise-percentage/http-request.adoc[]
+
+=== Response
+Response Data Fields:
+include::{snippets}/read-exercise-percentage/response-fields-result.adoc[]
+
+Response HTTP Example:
+include::{snippets}/read-exercise-percentage/http-response.adoc[]
