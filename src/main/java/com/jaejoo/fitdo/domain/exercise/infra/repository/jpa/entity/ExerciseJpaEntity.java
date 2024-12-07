@@ -28,8 +28,16 @@ public class ExerciseJpaEntity {
     private CategoryJpaEntity category;
 
     @Builder
-    public ExerciseJpaEntity(UserJpaEntity user,Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
+    public ExerciseJpaEntity(UserJpaEntity user, Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
         this.id = id;
+        this.name = name;
+        this.deleteDelimiter = deleteDelimiter;
+        this.category = category;
+        this.user = user;
+    }
+
+    @Builder
+    public ExerciseJpaEntity(UserJpaEntity user, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
         this.name = name;
         this.deleteDelimiter = deleteDelimiter;
         this.category = category;
