@@ -10,10 +10,12 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.CategoryJpaE
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordDto;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordCreateCommand;
+import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordDto;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.RecordExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindMonthExerciseRecords;
+import com.jaejoo.fitdo.domain.exercise.service.application.res.ProgressPercentage;
 import com.jaejoo.fitdo.domain.user.core.GrantRole;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
@@ -28,6 +30,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -47,15 +50,6 @@ class ExerciseRecordServiceTest {
     private DailyRecordJpaRepository dailyRecordJpaRepository;
     @Autowired
     private ExerciseRecordService exerciseRecordService;
-
-/*    @BeforeEach
-    void init() {
-        dailyExerciseRecordJpaRepository.deleteAll();
-        dailyRecordJpaRepository.deleteAll();
-        exerciseJpaRepository.deleteAll();
-        categoryJpaRepository.deleteAll();
-        userJpaRepository.deleteAll();
-    }*/
 
     @Nested
     @DisplayName("운동기록기능 테스트")
@@ -164,7 +158,7 @@ class ExerciseRecordServiceTest {
             List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
             DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
 
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(),command);
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
 
 
             // when
@@ -205,7 +199,7 @@ class ExerciseRecordServiceTest {
                     new DailyExerciseRecordDto(3, 50, 10, true));
             List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
             DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(),command);
+            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
 
             System.out.println("=====Logic End=====");
             // then
@@ -216,13 +210,47 @@ class ExerciseRecordServiceTest {
     }
 
     @Nested
+    @DisplayName("조회월의 운동진행여부 퍼센티지 조회")
+    class calculateProgressPercentageInMonth {
+        @Test
+        void 조회월의진행퍼센티지조회() {
+            // given
+            UserJpaEntity saveUser = userJpaRepository.save(new UserJpaEntity());
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(new CategoryJpaEntity(BodyPart.BACK));
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
+
+            LocalDate localDate = LocalDate.of(2024, 12, 5);
+            LocalDate beforeMonth7Days = LocalDate.of(2024, 12, 23);
+            LocalDate afterMonth7Days = LocalDate.of(2025, 1, 8);
+            DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
+            DailyRecordJpaEntity yesterdaySaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(beforeMonth7Days, saveUser));
+            DailyRecordJpaEntity tomorrowSaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(afterMonth7Days, saveUser));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 3, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 4, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, yesterdaySaveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, yesterdaySaveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, tomorrowSaveDailyRecord, saveExercise));
+            //6 3
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<ProgressPercentage> result = exerciseRecordService.calculateProgressPercentageInMonth(saveUser.getId(), YearMonth.of(2024, 12));
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertAll(() -> assertThat(result.size()).isEqualTo(31),
+                    () -> assertThat(result.get(4).getDate()).isEqualTo(LocalDate.of(2024, 12, 5)),
+                    () -> assertThat(result.get(4).getPercentage()).isEqualTo(50.0));
+        }
+    }
+
+    @Nested
     @DisplayName("특정월의 운동기록 조회")
     class findSpecificMonthExerciseTest {
-        /**
-         * Todo
-         * Work) 테스트 상태검증 자세하게하기. 현재 단순 크기로만 판단중. DTO만들어서 값검증
-         * Write-Date)
-         */
         @Test
         void 특정월의_운동기록_조회() {
             // given
@@ -292,11 +320,13 @@ class ExerciseRecordServiceTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            List<FindMonthExerciseRecords> exerciseRecordsOfUserInMonth = exerciseRecordService.findExerciseRecordsOfUserInMonth(saveUser.getId(), YearMonth.of(2024, 1));
+            FindMonthExerciseRecords exerciseRecordsOfUserInMonth = exerciseRecordService.findExerciseRecordsOfUserAtDate(saveUser.getId(), today);
 
             System.out.println("=====Logic End=====");
             // then
-            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.size()).isEqualTo(2));
+            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().size()).isEqualTo(1),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().get(0).getRecords().size()).isEqualTo(2),
+                    ()-> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
         }
     }
 }

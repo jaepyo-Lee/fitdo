@@ -86,7 +86,7 @@ public interface ToResponseMapper {
     List<UserRoutineInfoDto> toUserRoutineInfoDto(List<UserRoutineInfo> userRoutineInfos);
 
     @Named("toUserRoutineInfoDto")
-    @Mapping(target = "name",source = "routineName")
+    @Mapping(target = "name", source = "routineName")
     UserRoutineInfoDto toUserRoutineInfoDto(UserRoutineInfo userRoutineInfo);
 
     @Named("toExerciseInfoInRoutineDto")
@@ -94,4 +94,10 @@ public interface ToResponseMapper {
 
     @IterableMapping(qualifiedByName = "toExerciseInfoInRoutineDto")
     List<ExerciseInfoInRoutineDto> toExerciseInfoInRoutineDto(List<ExerciseInfoInRoutine> exerciseInfoInRoutine);
+
+
+    @Named("toProgressPercentageWithMonthInfoResponse")
+    @Mapping(target = "startDayValue", source = "value")
+    @Mapping(target = "percentagesInMonth", source = "progressPercentages")
+    ProgressPercentageWithMonthInfoResponse toProgressPercentageWithMonthInfoResponse(int value, List<ProgressPercentage> progressPercentages);
 }
