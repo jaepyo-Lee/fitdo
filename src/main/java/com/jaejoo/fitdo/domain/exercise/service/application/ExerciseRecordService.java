@@ -5,9 +5,10 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.ExerciseRecordQueryRepo
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.RecordQueryRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.impl.dto.ProgressInDateDto;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
-import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
+import com.jaejoo.fitdo.domain.exercise.infra.repository.projectiondto.ExerciseAndRecordDto;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.DailyExerciseRecordCreateCommand;
 import com.jaejoo.fitdo.domain.exercise.service.application.req.RecordExerciseRecords;
 import com.jaejoo.fitdo.domain.exercise.service.application.res.FindDateExerciseRecords;
@@ -20,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -31,6 +29,7 @@ public class ExerciseRecordService {
     private final RecordCommandRepository recordCommandRepository;
     private final RecordQueryRepository recordQueryRepository;
     private final ExerciseRecordQueryRepository exerciseRecordQueryRepository;
+    private final ExerciseJpaRepository exerciseJpaRepository;
 
     @Transactional
     public boolean writeDailyExerciseFrom(Long userId, DailyExerciseRecordCreateCommand command) {
@@ -65,46 +64,43 @@ public class ExerciseRecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindMonthExerciseRecords> findExerciseRecordsOfUserInMonth(Long userId, YearMonth yearMonth) {
-        List<FindMonthExerciseRecords> monthRecords = new ArrayList<>();
+    public FindMonthExerciseRecords findExerciseRecordsOfUserAtDate(Long userId, LocalDate date) {
+        List<ExerciseAndRecordDto> exerciseAndRecord = exerciseRecordQueryRepository.findExerciseAndRecord(userId, date);
 
-        // 1. 월별 DailyRecord 조회
-        List<DailyRecordJpaEntity> dailyRecords = recordQueryRepository.findDailyRecordsByUserAndYearMonth(userId, yearMonth);
+        Map<Long, FindDateExerciseRecords> groupedRecords = groupRecordsByExercise(exerciseAndRecord);
+        List<FindDateExerciseRecords> records = new ArrayList<>(groupedRecords.values());
 
-        for (DailyRecordJpaEntity dailyRecord : dailyRecords) {
-            // 2. DailyRecord에 해당하는 Exercise 조회
-            List<ExerciseJpaEntity> exercises = recordQueryRepository.findExercisesByDailyRecord(dailyRecord);
-            List<FindDateExerciseRecords> dateRecords = new ArrayList<>();
-            for (ExerciseJpaEntity exercise : exercises) {
-                // 3. Exercise에 해당하는 DailyExerciseRecord 조회
-                List<DailyExerciseRecordJpaEntity> exerciseRecords =
-                        recordQueryRepository.findExerciseRecordsInDailyRecordDividedBy(exercise, dailyRecord);
+        return FindMonthExerciseRecords.builder()
+                .dateRecords(records)
+                .exerciseDate(date)
+                .build();
+    }
 
-                List<FindExerciseRecords> records = new ArrayList<>();
-                for (DailyExerciseRecordJpaEntity exerciseRecord : exerciseRecords) {
-                    FindExerciseRecords record = FindExerciseRecords.builder()
-                            .exerciseSet(exerciseRecord.getExerciseSet())
-                            .weight(exerciseRecord.getWeight())
-                            .volume(exerciseRecord.getVolume())
-                            .isProgress(exerciseRecord.isProgress())
-                            .build();
-                    records.add(record);
-                }
+    private Map<Long, FindDateExerciseRecords> groupRecordsByExercise(List<ExerciseAndRecordDto> exerciseAndRecord) {
+        Map<Long, FindDateExerciseRecords> groupedRecords = new LinkedHashMap<>();
 
-                FindDateExerciseRecords dateExerciseRecords = FindDateExerciseRecords.builder()
-                        .exerciseName(exercise.getName())
-                        .exerciseId(exercise.getId())
-                        .categoryName(exercise.getCategory().getPartName())
-                        .records(records)
-                        .build();
-                dateRecords.add(dateExerciseRecords);
-            }
-            FindMonthExerciseRecords monthExerciseRecords = FindMonthExerciseRecords.builder()
-                    .dateRecords(dateRecords)
-                    .exerciseDate(dailyRecord.getDate())
-                    .build();
-            monthRecords.add(monthExerciseRecords);
+        for (ExerciseAndRecordDto dto : exerciseAndRecord) {
+            ExerciseJpaEntity exercise = dto.getExerciseJpaEntity();
+            DailyExerciseRecordJpaEntity dailyRecord = dto.getDailyExerciseRecordJpaEntity();
+
+            // 그룹화된 데이터가 없으면 새로 생성
+            groupedRecords.computeIfAbsent(exercise.getId(), id -> new FindDateExerciseRecords(
+                    exercise.getId(),
+                    exercise.getName(),
+                    exercise.getCategory().getPartName(),
+                    new ArrayList<>()
+            ));
+
+            // 기존 그룹에 데이터 추가
+            FindDateExerciseRecords findDateExerciseRecord = groupedRecords.get(exercise.getId());
+            findDateExerciseRecord.getRecords().add(new FindExerciseRecords(
+                    dailyRecord.getWeight(),
+                    dailyRecord.getVolume(),
+                    dailyRecord.getExerciseSet(),
+                    dailyRecord.isProgress()
+            ));
         }
-        return monthRecords;
+
+        return groupedRecords;
     }
 }

@@ -46,12 +46,12 @@ public class ExerciseRecordController {
         }
     }
 
-    @GetMapping("/api/v1/exercise")
-    public ResponseEntity<List<FindMonthExerciseRecordsResponse>> getExerciseRecordsInMonth(@AuthenticationPrincipal CustomUserDetail userDetail,
-                                                                                            @RequestParam(name = "yearMonth") YearMonth yearMonth) {
-        List<FindMonthExerciseRecords> exerciseRecordsOfUserInMonth = service.findExerciseRecordsOfUserInMonth(userDetail.userId(), yearMonth);
-        List<FindMonthExerciseRecordsResponse> findMonthExerciseRecordsResponse = ToResponseMapper.INSTANCE.toFindMonthExerciseRecordsResponse(exerciseRecordsOfUserInMonth);
-        return ResponseEntity.ok(findMonthExerciseRecordsResponse);
+    @GetMapping("/api/v1/exercises/records")
+    public SuccessResponse<FindMonthExerciseRecordsResponse> getExerciseRecordsInMonth(@AuthenticationPrincipal CustomUserDetail userDetail,
+                                                                                            @RequestParam(name = "date") LocalDate date) {
+        FindMonthExerciseRecords exerciseRecordsOfUserInMonth = service.findExerciseRecordsOfUserAtDate(userDetail.userId(), date);
+        FindMonthExerciseRecordsResponse findMonthExerciseRecordsResponse = ToResponseMapper.INSTANCE.toResponse(exerciseRecordsOfUserInMonth);
+        return new SuccessResponse<>(findMonthExerciseRecordsResponse);
     }
 
     @GetMapping("/api/v1/exercises/percentage")

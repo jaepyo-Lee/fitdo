@@ -4,6 +4,7 @@ import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyExercis
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
 import com.jaejoo.fitdo.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 

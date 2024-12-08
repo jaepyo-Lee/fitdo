@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -250,11 +251,6 @@ class ExerciseRecordServiceTest {
     @Nested
     @DisplayName("특정월의 운동기록 조회")
     class findSpecificMonthExerciseTest {
-        /**
-         * Todo
-         * Work) 테스트 상태검증 자세하게하기. 현재 단순 크기로만 판단중. DTO만들어서 값검증
-         * Write-Date)
-         */
         @Test
         void 특정월의_운동기록_조회() {
             // given
@@ -324,11 +320,13 @@ class ExerciseRecordServiceTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            List<FindMonthExerciseRecords> exerciseRecordsOfUserInMonth = exerciseRecordService.findExerciseRecordsOfUserInMonth(saveUser.getId(), YearMonth.of(2024, 1));
+            FindMonthExerciseRecords exerciseRecordsOfUserInMonth = exerciseRecordService.findExerciseRecordsOfUserAtDate(saveUser.getId(), today);
 
             System.out.println("=====Logic End=====");
             // then
-            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.size()).isEqualTo(2));
+            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().size()).isEqualTo(1),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().get(0).getRecords().size()).isEqualTo(2),
+                    ()-> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
         }
     }
 }

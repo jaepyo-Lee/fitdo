@@ -115,4 +115,42 @@ class ExerciseRecordQueryRepositoryTest {
         }
     }
 
+    @Nested
+    @DisplayName("findExerciseRecordAtDate")
+    class findExerciseRecordAtDateTest{
+        @Test
+        void 특정날의_운동기록_조회() {
+            // given
+            UserJpaEntity saveUser = userJpaRepository.save(new UserJpaEntity());
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(new CategoryJpaEntity(BodyPart.BACK));
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
+
+            LocalDate localDate = LocalDate.of(2024, 12, 5);
+            LocalDate beforeMonth7Days = LocalDate.of(2024, 12, 23);
+            LocalDate afterMonth7Days = LocalDate.of(2025, 1, 8);
+            DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
+            DailyRecordJpaEntity yesterdaySaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(beforeMonth7Days, saveUser));
+            DailyRecordJpaEntity tomorrowSaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(afterMonth7Days, saveUser));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 3, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 4, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, yesterdaySaveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, yesterdaySaveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, tomorrowSaveDailyRecord, saveExercise));
+
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<DailyExerciseRecordJpaEntity> response = exerciseRecordQueryRepository.findExerciseRecordAtDate(saveUser.getId(), localDate);
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertThat(response.size()).isEqualTo(6);
+        }
+    }
+
+
 }

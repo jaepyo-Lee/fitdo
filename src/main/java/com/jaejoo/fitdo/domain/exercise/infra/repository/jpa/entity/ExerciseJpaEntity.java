@@ -53,4 +53,18 @@ public class ExerciseJpaEntity {
     public static ExerciseJpaEntity create(String name, CategoryJpaEntity category) {
         return new ExerciseJpaEntity(name, category, DeleteDelimiter.IN_USER);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ExerciseJpaEntity obj1 = (ExerciseJpaEntity) obj;
+        if (obj1.getId().equals(this.getId())) {
+            return true;
+        }
+        return false;
+    }
 }
