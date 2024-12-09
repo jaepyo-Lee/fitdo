@@ -10,7 +10,7 @@ server:
 spring:
   data:
     redis:
-      host: localhost
+      host: ${ELASTICCACHE_HOST}
       port: 6379
   batch:
     job:
