@@ -80,9 +80,11 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:1.17.6"
     testImplementation "org.testcontainers:junit-jupiter:1.17.6"
 }
+
 clean {
     delete file('src/main/generated')
 }
+
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -96,17 +98,6 @@ test {
     useJUnitPlatform()
 }
 
-asciidoctor {
-    inputs.dir snippetsDir
-    configurations 'asciidoctorExt'
-    dependsOn test
-    // source를 지정하면 특정 adoc만 HTML로 만든다.
-    sources {
-        include("**/index.adoc")
-    }
-    // 경로를 baseDir로 맞춰준다!
-    baseDirFollowsSourceFile()
-}
 
 tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
@@ -118,9 +109,22 @@ tasks.register('copyDocument', Copy) {
     into('src/main/resources/static/docs')
 }
 
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+    // source를 지정하면 특정 adoc만 HTML로 만든다.
+    sources {
+        include("**/index.adoc")
+    }
+    // 경로를 baseDir로 맞춰준다!
+    baseDirFollowsSourceFile()
+    outputDir file('build/docs/asciidoc')
+}
+
 bootJar {
     dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") {
+    from("${asciidoctor.outputDir}") {
         into 'static/docs'
     }
 }
