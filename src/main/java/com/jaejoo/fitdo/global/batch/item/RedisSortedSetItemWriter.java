@@ -16,7 +16,7 @@ public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
     @Override
     public void write(Chunk<? extends UserScoreRow> chunk) throws Exception {
         for (UserScoreRow userScoreRow : chunk) {
-            redisTemplate.opsForZSet().incrementScore("userScores", String.valueOf(userScoreRow.getUserId()), userScoreRow.getScore());
+            redisTemplate.opsForZSet().add("userScores", String.valueOf(userScoreRow.getUserId()), userScoreRow.getScore());
         }
     }
 }

@@ -10,7 +10,7 @@ server:
 spring:
   batch:
     job:
-      enabled: false
+      enabled: true
   data:
     redis:
       host: localhost
