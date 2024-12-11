@@ -7,7 +7,7 @@ Request Fields:
 include::{snippets}/create-routines/request-fields.adoc[]
 
 Request HTTP Example
-include::{snippets}/create-routines/httpie-request.adoc[]
+include::{snippets}/create-routines/http-request.adoc[]
 
 === Response
 
