@@ -3,7 +3,13 @@ package com.jaejoo.fitdo.global.batch.item;
 import com.jaejoo.fitdo.global.batch.mapping.UserScoreRow;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.nio.ByteBuffer;
 
 public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
 
@@ -13,10 +19,31 @@ public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
         this.redisTemplate = redisTemplate;
     }
 
+    public static byte[] keySerialize(Long value) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(value);
+        return buffer.array();
+    }
+
+    public static byte[] valueSerialize(Double value) {
+        ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
+        buffer.putDouble(value);
+        return buffer.array();
+    }
+
     @Override
     public void write(Chunk<? extends UserScoreRow> chunk) throws Exception {
-        for (UserScoreRow userScoreRow : chunk) {
-            redisTemplate.opsForZSet().add("userScores", String.valueOf(userScoreRow.getUserId()), userScoreRow.getScore());
-        }
+        long start = System.currentTimeMillis();
+        redisTemplate.executePipelined((RedisCallback<Object>) redisConnection -> {
+            redisConnection.openPipeline();
+            StringRedisConnection stringRedisConnection = (StringRedisConnection) redisConnection;
+            for (UserScoreRow userScoreRow : chunk) {
+                stringRedisConnection.zAdd("userScores", userScoreRow.getScore(), String.valueOf(userScoreRow.getUserId()));
+            }
+            redisConnection.closePipeline();
+            return null;
+        });
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 }
