@@ -1,14 +1,11 @@
 package com.jaejoo.fitdo.global.batch.job;
 
 import com.jaejoo.fitdo.domain.exercise.core.BodyPart;
-import com.jaejoo.fitdo.domain.user.infra.repository.jpa.entity.UserJpaEntity;
 import com.jaejoo.fitdo.global.batch.item.RedisSortedSetItemWriter;
 import com.jaejoo.fitdo.global.batch.mapping.CalculateScoreRow;
 import com.jaejoo.fitdo.global.batch.mapping.UserScoreRow;
 import com.jaejoo.fitdo.global.batch.mapping.rowmapper.CalculateScoreRowMapper;
 import com.jaejoo.fitdo.global.batch.mapping.rowmapper.UserScoreMapper;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,16 +14,14 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -89,15 +84,15 @@ public class ScoreJobConfiguration {
 
         // SELECT 절
         queryProvider.setSelectClause("""
-                    SELECT s.user_id as userId, s.score as score
+                    SELECT user_id as userId, score as score
                 """);
 
         // FROM 절
         queryProvider.setFromClause("""
-                    FROM score_jpa_entity as s
+                    FROM score_jpa_entity
                 """);
 
-        queryProvider.setSortKey("userId");
+        queryProvider.setSortKey("score_jpa_entity.user_id");
 
         return queryProvider.getObject();
     }
@@ -134,10 +129,9 @@ public class ScoreJobConfiguration {
 
         // SELECT 절
         queryProvider.setSelectClause("""
-                    SELECT 
-                        u.id AS userId, 
-                        u.weight AS userWeight, 
-                        u.height AS userHeight,
+                        user_jpa_entity.id as userId, 
+                        user_jpa_entity.weight AS userWeight, 
+                        user_jpa_entity.height AS userHeight,
                         der.weight AS recordWeight, 
                         der.volume AS recordVolume,
                         der.is_progress AS isProgress, 
@@ -146,12 +140,11 @@ public class ScoreJobConfiguration {
 
         // FROM 절
         queryProvider.setFromClause("""
-                    FROM 
                         daily_exercise_record_jpa_entity AS der
                     JOIN 
                         daily_record_jpa_entity AS dr ON dr.id = der.daily_record_id
                     JOIN 
-                        user_jpa_entity AS u ON dr.user_id = u.id
+                        user_jpa_entity  ON dr.user_id = user_jpa_entity.id
                     JOIN 
                         exercise_jpa_entity AS e ON der.exercise_id = e.id
                     JOIN 
@@ -160,8 +153,7 @@ public class ScoreJobConfiguration {
 
         // WHERE 절
         queryProvider.setWhereClause("WHERE dr.exercise_date = :date");
-
-        queryProvider.setSortKey("userId");
+        queryProvider.setSortKey("user_jpa_entity.id");
 
         return queryProvider.getObject();
     }
@@ -198,12 +190,21 @@ public class ScoreJobConfiguration {
 
 
     public ItemWriter<UserScoreRow> updateUserScore() {
-        JdbcBatchItemWriter<UserScoreRow> itemWriter = new JdbcBatchItemWriterBuilder<UserScoreRow>()
-                .dataSource(dataSource)
-                .sql("UPDATE SCORE_JPA_ENTITY SET score = score + :score WHERE id = :userId")
-                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .build();
-        itemWriter.afterPropertiesSet();
-        return itemWriter;
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return items -> {
+            for (UserScoreRow item : items) {
+                // user_id를 기준으로 업데이트
+                int updated = jdbcTemplate.update(
+                        "UPDATE SCORE_JPA_ENTITY SET score = score + ? WHERE user_id = ?",
+                        item.getScore(), item.getUserId());
+
+                // 업데이트되지 않았으면 삽입
+                if (updated == 0) {
+                    jdbcTemplate.update(
+                            "INSERT INTO SCORE_JPA_ENTITY (user_id, score) VALUES (?, ?)",
+                            item.getUserId(), item.getScore());
+                }
+            }
+        };
     }
 }

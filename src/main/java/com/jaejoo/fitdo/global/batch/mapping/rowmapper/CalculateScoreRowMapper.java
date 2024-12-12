@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public class CalculateScoreRowMapper implements RowMapper<CalculateScoreRow> {
     @Override
     public CalculateScoreRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+        System.out.println("usermapper");
         return new CalculateScoreRow(
                 rs.getLong("userId"),
                 rs.getInt("userWeight"),
