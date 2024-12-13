@@ -37,12 +37,17 @@
 --        (4, 0, 140, 70, 2, 210, 310);
 
 
-INSERT INTO CATEGORY_JPA_ENTITY ("ID", "PART")
-VALUES (1, 'BACK'), (2, 'CHEST'), (3, 'SHOULDER'), (4, 'LEG'), (5, 'FULL_BODY'),
-       (6, 'ABS'), (7, 'ARM'), (8, 'HIP');
+INSERT INTO CATEGORY_JPA_ENTITY (ID, PART)
+VALUES (1, 'BACK'),
+       (2, 'CHEST'),
+       (3, 'SHOULDER'),
+       (4, 'LEG'),
+       (5, 'FULL_BODY'),
+       (6, 'ABS'),
+       (7, 'ARM'),
+       (8, 'HIP');
 
-INSERT INTO user_jpa_entity ("HEIGHT", "NEW_FLAG", "WEIGHT", "ID", "AUTH_ID", "AUTH_TYPE", "NICKNAME", "ROLE",
-                             "USERNAME")
+INSERT INTO user_jpa_entity (HEIGHT, NEW_FLAG, WEIGHT, ID, AUTH_ID, AUTH_TYPE, NICKNAME, ROLE,USERNAME)
 VALUES (160, TRUE, 50, 1, 2000, 'KAKAO', 'user_1', 'ROLE_USER', 'user1'),
        (161, FALSE, 51, 2, 2001, 'KAKAO', 'user_2', 'ROLE_USER', 'user2'),
        (162, TRUE, 52, 3, 2002, 'KAKAO', 'user_3', 'ROLE_USER', 'user3'),
@@ -144,7 +149,7 @@ VALUES (160, TRUE, 50, 1, 2000, 'KAKAO', 'user_1', 'ROLE_USER', 'user1'),
        (178, TRUE, 98, 99, 2098, 'KAKAO', 'user_99', 'ROLE_USER', 'user99'),
        (179, FALSE, 99, 100, 2099, 'KAKAO', 'user_100', 'ROLE_USER', 'user100');
 
-INSERT INTO DAILY_RECORD_JPA_ENTITY ("EXERCISE_DATE", "ID", "USER_ID")
+INSERT INTO DAILY_RECORD_JPA_ENTITY (EXERCISE_DATE, ID, USER_ID)
 VALUES (DATE '2024-12-11', 101, 1),
        (DATE '2024-12-11', 102, 2),
        (DATE '2024-12-11', 103, 3),
@@ -246,7 +251,7 @@ VALUES (DATE '2024-12-11', 101, 1),
        (DATE '2024-12-11', 199, 99),
        (DATE '2024-12-11', 200, 100);
 
-INSERT INTO EXERCISE_JPA_ENTITY ("CATEGORY_ID", "ID", "USER_ID", "DELETE_DELIMITER", "NAME")
+INSERT INTO EXERCISE_JPA_ENTITY (CATEGORY_ID, ID, USER_ID, DELETE_DELIMITER, NAME)
 VALUES (1, 501, 1, 'IN_USER', 'Exercise_A_1'),
        (2, 502, 1, 'DELETE', 'Exercise_B_1'),
        (2, 503, 2, 'IN_USER', 'Exercise_A_2'),
@@ -448,8 +453,8 @@ VALUES (1, 501, 1, 'IN_USER', 'Exercise_A_1'),
        (4, 699, 100, 'IN_USER', 'Exercise_A_100'),
        (5, 700, 100, 'DELETE', 'Exercise_B_100');
 
-INSERT INTO DAILY_EXERCISE_RECORD_JPA_ENTITY ("EXERCISE_SET", "IS_PROGRESS", "VOLUME", "WEIGHT", "DAILY_RECORD_ID",
-                                              "EXERCISE_ID", "ID")
+INSERT INTO DAILY_EXERCISE_RECORD_JPA_ENTITY (EXERCISE_SET, IS_PROGRESS, VOLUME, WEIGHT, DAILY_RECORD_ID,
+                                              EXERCISE_ID, ID)
 VALUES (3, 0, 100, 40, 101, 501, 1001),
        (4, 1, 120, 50, 101, 502, 1002),
        (4, 1, 101, 41, 102, 503, 1003),

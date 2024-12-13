@@ -1,0 +1,11 @@
+--- #local window
+spring:
+  config:
+    activate:
+      on-profile: local
+
+--- #development
+spring:
+  config:
+    activate:
+      on-profile: dev
