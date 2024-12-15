@@ -43,7 +43,7 @@ jobs:
         run: pwd
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./fitdo-batch/gradlew
 
       - name: Build with Gradle
         run: ./fitdo-batch/gradlew build
