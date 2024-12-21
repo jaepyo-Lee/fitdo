@@ -143,6 +143,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("exerciseDate").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식"),
                                         fieldWithPath("dateRecords").type(JsonFieldType.ARRAY).description("운동 기록"),
                                         fieldWithPath("dateRecords[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
+                                        fieldWithPath("dateRecords[].exerciseName").type(JsonFieldType.STRING).description("진행한 운동종목명"),
                                         fieldWithPath("dateRecords[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),
                                         fieldWithPath("dateRecords[].records").type(JsonFieldType.ARRAY).description("진행한 운동의 기록"),
                                         fieldWithPath("dateRecords[].records[].weight").type(JsonFieldType.NUMBER).description("운동 중량"),

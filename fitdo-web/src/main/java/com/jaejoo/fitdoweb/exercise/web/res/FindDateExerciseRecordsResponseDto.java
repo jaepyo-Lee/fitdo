@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 public class FindDateExerciseRecordsResponseDto {
     private Long exerciseId;
+    private String exerciseName;
     private String categoryName;
     private List<FindExerciseRecordsResponseDto> records;
 }

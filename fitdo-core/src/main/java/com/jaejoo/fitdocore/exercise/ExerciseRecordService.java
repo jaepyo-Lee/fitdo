@@ -27,9 +27,7 @@ import java.util.*;
 @Service
 public class ExerciseRecordService {
     private final RecordCommandRepository recordCommandRepository;
-    private final RecordQueryRepository recordQueryRepository;
     private final ExerciseRecordQueryRepository exerciseRecordQueryRepository;
-    private final ExerciseJpaRepository exerciseJpaRepository;
 
     @Transactional
     public boolean writeDailyExerciseFrom(Long userId, DailyExerciseRecordCreateCommand command) {
