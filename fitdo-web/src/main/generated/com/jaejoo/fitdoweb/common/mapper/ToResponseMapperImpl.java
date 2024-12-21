@@ -34,7 +34,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-20T14:28:14+0900",
+    date = "2024-12-21T17:35:26+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 public class ToResponseMapperImpl implements ToResponseMapper {
@@ -133,6 +133,7 @@ public class ToResponseMapperImpl implements ToResponseMapper {
         FindDateExerciseRecordsResponseDto findDateExerciseRecordsResponseDto = new FindDateExerciseRecordsResponseDto();
 
         findDateExerciseRecordsResponseDto.setExerciseId( dateRecord.getExerciseId() );
+        findDateExerciseRecordsResponseDto.setExerciseName( dateRecord.getExerciseName() );
         findDateExerciseRecordsResponseDto.setCategoryName( dateRecord.getCategoryName() );
         findDateExerciseRecordsResponseDto.setRecords( map( dateRecord.getRecords() ) );
 
