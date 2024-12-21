@@ -1,19 +1,16 @@
+--- #local
 spring:
-  application:
-    name: fitdo-batch
---- #local window
-spring:
-  config:
-    activate:
-      on-profile: local
---- #development
-spring:
-  config:
-    activate:
-      on-profile: dev
-
---- #default
-spring:
-  config:
-    activate:
-      on-profile: default
+  profiles:
+    group:
+      local:
+        - batch-local
+        - redis-local
+        - mysql-local
+      dev:
+        - batch-dev
+        - redis-dev
+        - mysql-dev
+      default:
+        - redis-default
+        - mysql-default
+        - batch-default

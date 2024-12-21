@@ -1,7 +1,3 @@
-spring:
-  application:
-    name: fitdo-web
-
 --- #local
 spring:
   profiles:
