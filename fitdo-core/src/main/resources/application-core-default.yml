@@ -1,0 +1,5 @@
+app:
+  auth:
+    secret: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+    accessExpired: 12312312
+    refreshExpired: 23131231313

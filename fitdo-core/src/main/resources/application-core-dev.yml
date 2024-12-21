@@ -1,0 +1,5 @@
+app:
+  auth:
+    secret: ${AUTH_SECRET}
+    accessExpired: ${ACCESSTOKEN_EXPIRED_TIME}
+    refreshExpired: ${REFRESHTOKEN_EXPIRED_TIME}

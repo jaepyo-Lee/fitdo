@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: fitdo-web
+
+--- #local
+spring:
+  profiles:
+    group:
+      local:
+        - redis-local
+        - mysql-local
+        - core-local
+      dev:
+        - redis-dev
+        - mysql-dev
+        - core-dev
+      default:
+        - redis-default
+        - mysql-default
+        - core-default

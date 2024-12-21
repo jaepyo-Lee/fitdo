@@ -38,7 +38,7 @@ jobs:
       - name: Print working directory
         run: pwd
 
-      - name: Send docker-compose.yml
+      - name: Send  docker-compose.yml
         uses: appleboy/scp-action@master
         with:
           username: ubuntu
@@ -53,7 +53,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew :fitdo-web:build
 
       - name: docker login
         uses: docker/login-action@v2
@@ -63,8 +63,8 @@ jobs:
 
       - name: Docker build & push
         run: |
-          docker build -f ./infra/docker/Dockerfile.dev -t ${{ secrets.DOCKER_USERNAME }}/fitdo .
-          docker push ${{ secrets.DOCKER_USERNAME }}/fitdo
+          docker build -f ./fitdo-web/Dockerfile-web.dev -t ${{ secrets.DOCKER_USERNAME }}/fitdo-web .
+          docker push ${{ secrets.DOCKER_USERNAME }}/fitdo-web
 
       - name: Deploy to dev
         uses: appleboy/ssh-action@master
@@ -80,7 +80,7 @@ jobs:
             
             sudo chmod 666 /var/run/docker.sock
             
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo
-            docker compose -f docker-compose.yml --env-file ./.env up -d dev
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo-web
+            docker compose -f docker-compose.yml --env-file ./.env up -d fitdo-web
             
             docker image prune -f

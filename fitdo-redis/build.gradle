@@ -1,0 +1,13 @@
+dependencies {
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+bootJar{
+    enabled=false
+}
+jar{
+    enabled=true
+}
