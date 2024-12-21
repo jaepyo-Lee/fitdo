@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: fitdo-batch
+--- #local window
+spring:
+  config:
+    activate:
+      on-profile: local
+--- #development
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+--- #default
+spring:
+  config:
+    activate:
+      on-profile: default

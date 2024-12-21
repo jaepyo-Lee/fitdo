@@ -1,8 +1,8 @@
 version: '3'
 services:
-  dev:
-    container_name: dev
-    image: jaepyo99/fitdo
+  fitdo-api:
+    container_name: fitdo-api
+    image: jaepyo99/fitdo-web
     env_file:
       - ./.env
     expose:
@@ -12,3 +12,15 @@ services:
     tty: true
     environment:
       - TZ=Asia/Seoul
+#  dev:
+#    container_name: dev
+#    image: jaepyo99/fitdo
+#    env_file:
+#      - ./.env
+#    expose:
+#      - 8080
+#    ports:
+#      - 8080:8080
+#    tty: true
+#    environment:
+#      - TZ=Asia/Seoul

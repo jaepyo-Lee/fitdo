@@ -1,0 +1,75 @@
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExt
+}
+dependencies {
+    implementation project(':fitdo-core')
+    implementation project(':fitdo-util')
+
+    // restdocs(fitdo-api)
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    //mapstruct(root)
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // security(fitdo-api)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+
+tasks.register('copyDocument', Copy) {
+    dependsOn asciidoctor
+
+    delete('src/main/resources/static/docs')
+    from("${asciidoctor.outputDir}") {
+        include("**/index.html")
+    }
+    into('src/main/resources/static/docs')
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+    // source를 지정하면 특정 adoc만 HTML로 만든다.
+    sources {
+        include("**/index.adoc")
+    }
+    // 경로를 baseDir로 맞춰준다!
+    baseDirFollowsSourceFile()
+    outputDir file('build/docs/asciidoc')
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+    enabled=true
+}
+jar{
+    enabled=false
+}
+
+build {
+    dependsOn copyDocument
+}
+tasks.named('test') {
+    useJUnitPlatform()
+}

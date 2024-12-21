@@ -1,0 +1,17 @@
+dependencies {
+	// webclient(fitdo-external)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation project(":fitdo-mysql")
+	implementation project(":fitdo-redis")
+	implementation project(":fitdo-util")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+bootJar{
+	enabled=false
+}
+jar{
+	enabled=true
+}
