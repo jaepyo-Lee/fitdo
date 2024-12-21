@@ -80,7 +80,7 @@ jobs:
             
             sudo chmod 666 /var/run/docker.sock
             
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo
-            docker compose -f docker-compose.yml --env-file ./.env up -d dev
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo-web
+            docker compose -f docker-compose.yml --env-file ./.env up -d fitdo-web
             
             docker image prune -f

@@ -1,7 +1,7 @@
 version: '3'
 services:
-  fitdo-api:
-    container_name: fitdo-api
+  fitdo-web:
+    container_name: fitdo-web
     image: jaepyo99/fitdo-web
     env_file:
       - ./.env
