@@ -72,6 +72,6 @@ jobs:
           docker build -f ./fitdo-batch/DockerFile-Batch.dev -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./fitdo-batch
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-      - name: Deploy Lambda
-        run: |
           aws lambda update-function-code --function-name ${{secrets.AWS_LAMBDA_NAME}} --image-uri  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+# 863518449084.dkr.ecr.ap-northeast-2.amazonaws.com/jaejoo/fitdo@sha256:07a08a40bf15936f1f63e3c14fecb8d1323ab03c3e4a39e9eb8e1d6168c42617
