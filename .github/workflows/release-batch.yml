@@ -63,10 +63,9 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.ECR_PREFIX }}
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker image
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${IMAGE_TAG} -f ./fitdo-batch/DockerFile-Batch.dev ./fitdo-batch
+          docker build -f ./fitdo-batch/DockerFile-Batch.dev -t $ECR_REGISTRY/$ECR_REPOSITORY .
 
           # Push to ECR
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${IMAGE_TAG}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
