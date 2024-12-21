@@ -62,22 +62,3 @@ jobs:
         run: |
           docker build -f ./fitdo-web/Dockerfile-web.dev -t ${{ secrets.DOCKER_USERNAME }}/fitdo-web .
           docker push ${{ secrets.DOCKER_USERNAME }}/fitdo-web
-
-      - name: Deploy to dev
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.AWS_PUBLIC_DNS }}
-          username: ubuntu
-          key: ${{ secrets.AWS_PEM_KEY }}
-          script: |
-            cd /home/ubuntu
-            
-            sudo touch .env
-            echo "${{ secrets.ENV_VARS }}" | sudo tee .env > /dev/null
-            
-            sudo chmod 666 /var/run/docker.sock
-            
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fitdo-web
-            docker compose -f docker-compose.yml --env-file ./.env up -d fitdo-web
-            
-            docker image prune -f
