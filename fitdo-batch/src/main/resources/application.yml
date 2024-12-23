@@ -3,14 +3,14 @@ spring:
   profiles:
     group:
       local:
-        - batch-local
+        - batch
         - redis-local
         - mysql-local
       dev:
-        - batch-dev
+        - batch
         - redis-dev
         - mysql-dev
       default:
         - redis-default
         - mysql-default
-        - batch-default
+        - batch
