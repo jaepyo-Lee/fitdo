@@ -195,13 +195,13 @@ public class ScoreJobConfiguration {
             for (UserScoreRow item : items) {
                 // user_id를 기준으로 업데이트
                 int updated = jdbcTemplate.update(
-                        "UPDATE SCORE_JPA_ENTITY SET score = score + ? WHERE user_id = ?",
+                        "UPDATE score_jpa_entity SET score = score + ? WHERE user_id = ?",
                         item.getScore(), item.getUserId());
 
                 // 업데이트되지 않았으면 삽입
                 if (updated == 0) {
                     jdbcTemplate.update(
-                            "INSERT INTO SCORE_JPA_ENTITY (user_id, score) VALUES (?, ?)",
+                            "INSERT INTO score_jpa_entity (user_id, score) VALUES (?, ?)",
                             item.getUserId(), item.getScore());
                 }
             }
