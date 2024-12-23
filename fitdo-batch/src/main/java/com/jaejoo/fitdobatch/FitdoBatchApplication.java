@@ -6,7 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication
+@SpringBootApplication(/*scanBasePackages = {"com.jaejoo.fitdobatch",
+"com.jaejoo.fitdomysql.domain.user.repository.jpa.entity",
+"com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity",
+"com.jaejoo.fitdoredis"}*/)
 public class FitdoBatchApplication {
 
     public static void main(String[] args) {
