@@ -66,10 +66,21 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          ENV_ARG: ${{}}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
-          docker build -f ./fitdo-batch/DockerFile-Batch.dev -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $(cat ${{secrets.BATCH_ENV_VARS}} | sed 's/^/--build-arg /' | tr '\n' ' ') ./fitdo-batch 
+          docker build \
+          --build-arg DB_URL_ARG=${{ secrets.DB_URL }} \
+          --build-arg DB_USERNAME_ARG=${{ secrets.DB_USERNAME }} \
+          --build-arg DB_PASSWORD_ARG=${{ secrets.DB_PASSWORD }} \
+          --build-arg DB_DDL_TYPE_ARG=${{ secrets.DB_DDL_TYPE }} \
+          --build-arg ELASTICCACHE_HOST_ARG=${{ secrets.ELASTICCACHE_HOST }} \
+          -f ./fitdo-batch/DockerFile-Batch.dev \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./fitdo-batch
+  
+
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           aws lambda update-function-code --function-name ${{secrets.AWS_LAMBDA_NAME}} --image-uri  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
