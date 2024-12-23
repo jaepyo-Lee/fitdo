@@ -92,7 +92,7 @@ public class ScoreJobConfiguration {
                     FROM score_jpa_entity
                 """);
 
-        queryProvider.setSortKey("score_jpa_entity.user_id");
+        queryProvider.setSortKey("userId");
 
         return queryProvider.getObject();
     }
@@ -153,7 +153,7 @@ public class ScoreJobConfiguration {
 
         // WHERE 절
         queryProvider.setWhereClause("WHERE dr.exercise_date = :date");
-        queryProvider.setSortKey("user_jpa_entity.id");
+        queryProvider.setSortKey("userId");
 
         return queryProvider.getObject();
     }

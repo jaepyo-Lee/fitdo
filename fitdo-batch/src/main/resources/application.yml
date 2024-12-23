@@ -7,7 +7,7 @@ spring:
         - redis-local
         - mysql-local
       dev:
-        - batch
+        - batch-dev
         - redis-dev
         - mysql-dev
       default:
