@@ -13,9 +13,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class FitdoBatchApplication {
 
     public static void main(String[] args) {
-/*        final ConfigurableApplicationContext context = SpringApplication.run(FitdoBatchApplication.class, args);
+        final ConfigurableApplicationContext context = SpringApplication.run(FitdoBatchApplication.class, args);
         final int exitCode = SpringApplication.exit(context, () -> 0);
-        System.exit(exitCode);*/
+        System.exit(exitCode);
         SpringApplication.run(FitdoBatchApplication.class, args);
 
     }
