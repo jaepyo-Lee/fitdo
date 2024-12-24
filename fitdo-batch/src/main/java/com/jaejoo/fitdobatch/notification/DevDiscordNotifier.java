@@ -1,25 +1,21 @@
 package com.jaejoo.fitdobatch.notification;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Component
-@RequiredArgsConstructor
-public class DiscordBatchNotifier {
+public class DevDiscordNotifier implements DiscordNotification{
 
     @Value("${discord.webhook.uri}")
     private String DISCORD_WEBHOOK_URI;
     private final WebClient webClient;
 
 
-    public DiscordBatchNotifier() {
+    public DevDiscordNotifier() {
         this.webClient = WebClient.create("https://discord.com");
     }
 
-    public void send(Object sendMessage) throws InterruptedException {
+    public void send(Object sendMessage) {
         webClient.post()
                 .uri(DISCORD_WEBHOOK_URI)
                 .contentType(MediaType.APPLICATION_JSON)

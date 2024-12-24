@@ -1,8 +1,8 @@
 package com.jaejoo.fitdobatch.runner;
 
 import com.jaejoo.fitdobatch.launcher.ScoreJobLauncher;
-import com.jaejoo.fitdobatch.notification.DiscordBatchNotifier;
 import com.jaejoo.fitdobatch.notification.DiscordMessage;
+import com.jaejoo.fitdobatch.notification.DiscordNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BatchRunner implements ApplicationRunner {
     private final ScoreJobLauncher scoreJobLauncher;
-    private final DiscordBatchNotifier notifier;
+    private final DiscordNotification notifier;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
