@@ -17,7 +17,6 @@ public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
 
     @Override
     public void write(Chunk<? extends UserScoreRow> chunk) throws Exception {
-        long start = System.currentTimeMillis();
         redisTemplate.executePipelined((RedisCallback<Object>) redisConnection -> {
             redisConnection.openPipeline();
             StringRedisConnection stringRedisConnection = (StringRedisConnection) redisConnection;
@@ -27,7 +26,5 @@ public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
             redisConnection.closePipeline();
             return null;
         });
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
     }
 }
