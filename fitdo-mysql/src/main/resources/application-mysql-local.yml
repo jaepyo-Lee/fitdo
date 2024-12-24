@@ -1,23 +1,19 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:local'
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fitdo?serverTimezone=Asia/Seoul
+    username: root
+    password: dlwovy135!#%
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         show_sql: true
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
+    database-platform: org.hibernate.dialect.MySQLDialect
   sql:
     init:
-      mode: always
+      mode: never

@@ -38,7 +38,7 @@ public class ScoreJobConfiguration {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
-    public Job job(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
+    public Job start(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         System.out.println("job");
         return new JobBuilder("job", jobRepository)
                 .start(calculateScoreStep(jobRepository, transactionManager)) //점수 계산 및 DB주입
@@ -92,7 +92,7 @@ public class ScoreJobConfiguration {
                     FROM score_jpa_entity
                 """);
 
-        queryProvider.setSortKey("score_jpa_entity.user_id");
+        queryProvider.setSortKey("userId");
 
         return queryProvider.getObject();
     }
@@ -153,7 +153,7 @@ public class ScoreJobConfiguration {
 
         // WHERE 절
         queryProvider.setWhereClause("WHERE dr.exercise_date = :date");
-        queryProvider.setSortKey("user_jpa_entity.id");
+        queryProvider.setSortKey("userId");
 
         return queryProvider.getObject();
     }
@@ -195,13 +195,13 @@ public class ScoreJobConfiguration {
             for (UserScoreRow item : items) {
                 // user_id를 기준으로 업데이트
                 int updated = jdbcTemplate.update(
-                        "UPDATE SCORE_JPA_ENTITY SET score = score + ? WHERE user_id = ?",
+                        "UPDATE score_jpa_entity SET score = score + ? WHERE user_id = ?",
                         item.getScore(), item.getUserId());
 
                 // 업데이트되지 않았으면 삽입
                 if (updated == 0) {
                     jdbcTemplate.update(
-                            "INSERT INTO SCORE_JPA_ENTITY (user_id, score) VALUES (?, ?)",
+                            "INSERT INTO score_jpa_entity (user_id, score) VALUES (?, ?)",
                             item.getUserId(), item.getScore());
                 }
             }

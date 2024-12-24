@@ -1,0 +1,85 @@
+name: Java CI/CD with Gradle and Docker
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'fitdo-batch/**'
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - 'fitdo-batch/**'
+
+permissions:
+  contents: read
+env:
+  AWS_REGION: ap-northeast-2                  # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}         # set this to your Amazon ECR repository name
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Gradle caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew :fitdo-batch:clean :fitdo-batch:build
+
+      - name: Verify JAR file existence
+        run: ls -la fitdo-batch/build/libs/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          docker build \
+          --build-arg DB_URL_ARG=${{ secrets.DB_URL }} \
+          --build-arg DB_USERNAME_ARG=${{ secrets.DB_USERNAME }} \
+          --build-arg DB_PASSWORD_ARG=${{ secrets.DB_PASSWORD }} \
+          --build-arg DB_DDL_TYPE_ARG=${{ secrets.DB_DDL_TYPE }} \
+          --build-arg ELASTICCACHE_HOST_ARG=${{ secrets.ELASTICCACHE_HOST }} \
+          -f ./fitdo-batch/DockerFile-Batch.dev \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./fitdo-batch
+  
+
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          aws lambda update-function-code --function-name ${{secrets.AWS_LAMBDA_NAME}} --image-uri  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -7,26 +7,12 @@ import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.nio.ByteBuffer;
-
 public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
 
     private final RedisTemplate<String, String> redisTemplate;
 
     public RedisSortedSetItemWriter(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
-    }
-
-    public static byte[] keySerialize(Long value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(value);
-        return buffer.array();
-    }
-
-    public static byte[] valueSerialize(Double value) {
-        ByteBuffer buffer = ByteBuffer.allocate(Double.BYTES);
-        buffer.putDouble(value);
-        return buffer.array();
     }
 
     @Override
