@@ -1,4 +1,4 @@
 package com.jaejoo.fitdocore.user.req;
 
-public record FriendApplyCommand(Long receiverId, Long senderId) {
+public record FriendApplyCommand(Long receiverId, String senderId) {
 }

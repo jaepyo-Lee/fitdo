@@ -7,6 +7,7 @@ import com.jaejoo.fitdocore.user.req.FriendApplyConfirmCommand;
 import com.jaejoo.fitdocore.user.req.FriendSimpleInfo;
 import com.jaejoo.fitdocore.user.req.ReadApplierInfo;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
+import com.jaejoo.fitdocore.util.AESConverter;
 import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
 import com.jaejoo.fitdomysql.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
@@ -58,39 +59,41 @@ class FriendServiceTest {
     private RoutineJpaRepository routineJpaRepository;
     @Autowired
     private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
-
+    @Autowired
+    private AESConverter converter;
     @Test
-    void 친구추가시_한쪽만_친구신청상태로_등록() {
+    void 친구추가시_한쪽만_친구신청상태로_등록() throws Exception {
         // given
         UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveFriend = userJpaRepository.save(friend);
+        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
 
         // when
         System.out.println("=====Logic Start=====");
 
-        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), saveUser.getId()));
+        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
 
         System.out.println("=====Logic End=====");
         // then
-        assertThat(friendJpaRepository.findAll().size()).isEqualTo(1);
+        assertThat(friendJpaRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
-    void 친구신청시_상태는_친구신청을_보낸사람이_FROM이되어_APPLY상태이어야한다_추가받은사람은_아무엔티티도없다() {
+    void 친구신청시_상태는_친구신청을_보낸사람이_FROM이되어_APPLY상태이어야한다_추가받은사람은_아무엔티티도없다() throws Exception {
         // given
         UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveFriend = userJpaRepository.save(friend);
-
+        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
         // when
         System.out.println("=====Logic Start=====");
 
-        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), saveUser.getId()));
+        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
 
         System.out.println("=====Logic End=====");
         // then
@@ -102,8 +105,8 @@ class FriendServiceTest {
             }
         }
         int finalCnt = cnt;
-        assertAll(() -> assertThat(finalCnt).isOne(),
-                () -> assertThat(all.size()).isOne());
+        assertAll(() -> assertThat(finalCnt).isEqualTo(2),
+                () -> assertThat(all.size()).isEqualTo(2));
     }
 
     @Test

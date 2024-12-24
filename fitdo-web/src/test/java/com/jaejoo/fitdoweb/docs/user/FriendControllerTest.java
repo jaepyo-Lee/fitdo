@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -111,4 +112,65 @@ class FriendControllerTest extends RestDocsSupport {
                 );
     }
 
+
+    @Test
+    void 친구추가_딥링크_조회() throws Exception {
+        // given
+        String deepLink = "superfitdo://fitdo/friend?userId=" + "암호화된 유저아이디";
+        // when
+        when(service.generateDeepLink(any())).thenReturn(deepLink);
+
+        mvc.perform(
+                        RestDocumentationRequestBuilders.get("/api/v1/user/link")
+                                .header("Authorization", "Bearer Token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("generate-deep-link",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
+                                ),
+                                responseFields(
+                                        beneathPath("result").withSubsectionId("result"),
+                                        fieldWithPath("deepLink").type(JsonFieldType.STRING).description("딥링크")
+                                )
+                        )
+                );
+    }
+
+    /**
+     * @PostMapping("/api/v1/friends/{DeepLinkUserId}")
+     *     public SuccessResponse registerFriend(@PathVariable("friendDeepLinkUserId") String friendId,
+     *                                           @AuthenticationPrincipal CustomUserDetail user) throws Exception {
+     *         friendService.applyFriend(new FriendApplyCommand(user.userId(), friendId));
+     *         return SuccessResponse.ok();
+     *     }
+     * @throws Exception
+     */
+    @Test
+    void 딥링크를_통한_친구추가() throws Exception {
+        // given
+        // when
+        doNothing().when(service).applyFriend(any());
+
+        mvc.perform(
+                        RestDocumentationRequestBuilders.post("/api/v1/friends/{DeepLinkUserId}","{ userId that get by DeepLink }")
+                                .header("Authorization", "Bearer Token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("register-friend",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
+                                ),
+                        pathParameters(parameterWithName("DeepLinkUserId").description("딥링크의 Query로 받은 userId"))
+                        )
+                );
+    }
 }

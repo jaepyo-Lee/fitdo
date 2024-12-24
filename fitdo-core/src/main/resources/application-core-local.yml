@@ -3,4 +3,5 @@ app:
     secret: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
     accessExpired: 12312312
     refreshExpired: 23131231313
-
+deeplink:
+  key: asdasdasdasdaasdasdasdadadasdasa
