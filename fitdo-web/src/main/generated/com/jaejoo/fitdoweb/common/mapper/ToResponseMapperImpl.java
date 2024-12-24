@@ -34,7 +34,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-21T17:35:26+0900",
+    date = "2024-12-24T19:43:05+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 public class ToResponseMapperImpl implements ToResponseMapper {

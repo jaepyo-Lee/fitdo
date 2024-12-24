@@ -4,6 +4,7 @@ import com.jaejoo.fitdocore.user.req.*;
 import com.jaejoo.fitdocore.user.res.ExerciseInfoInRoutine;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
 import com.jaejoo.fitdocore.user.res.UserRoutineInfo;
+import com.jaejoo.fitdocore.util.AESConverter;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRoutineQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RoutineRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
@@ -35,6 +36,7 @@ public class FriendService {
     private final RoutineRepository routineRepository;
     private final ExerciseRoutineQueryRepository exerciseRoutineQueryRepository;
     private final RedisTemplate<String, String> redisTemplate;
+    private final AESConverter aesConverter;
 
     public FriendDetailInfo readFriendDetailInfo(Long userId) {
         User user = userRepository.findById(userId);
@@ -71,16 +73,18 @@ public class FriendService {
     }
 
 
-    @Transactional
-    public void applyFriend(FriendApplyCommand command) {
-        User user = userRepository.findById(command.senderId());
+    @Transactional(readOnly = true)
+    public void applyFriend(FriendApplyCommand command) throws Exception {
+        long senderId = Long.parseLong(aesConverter.deserialize(command.senderId()));
+        if (senderId == command.receiverId()) {
+            throw new IllegalArgumentException("같은 사용자끼리 친구될수 없습니다.");
+        }
+        User user = userRepository.findById(senderId);
         User friend = userRepository.findById(command.receiverId());
         FriendJpaEntity userToFriend = FriendJpaEntity.apply(UserJpaEntity.from(friend), UserJpaEntity.from(user));
+        FriendJpaEntity FriendToUser = FriendJpaEntity.apply(UserJpaEntity.from(user), UserJpaEntity.from(friend));
         friendRepository.save(userToFriend);
-//        FriendJpaEntity friendToUser = FriendJpaEntity.apply(UserJpaEntity.from(user), UserJpaEntity.from(friend));
-//        friendRepository.save(friendToUser);
-        //sse로 알림 user->friend로
-        //친구신청받았는지 확인도 해야할듯
+        friendRepository.save(FriendToUser);
     }
 
     @Transactional
@@ -112,5 +116,10 @@ public class FriendService {
             applierInfos.add(new ReadApplierInfo(sender.getUsername(), sender.getId()));
         }
         return applierInfos;
+    }
+
+    public String generateDeepLink(Long userId) throws Exception {
+        String serializeUserId = aesConverter.serialize(String.valueOf(userId));
+        return "superfitdo://fitdo/friend?userId=" + serializeUserId;
     }
 }

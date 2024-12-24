@@ -31,3 +31,36 @@ Response Data Fields:
 include::{snippets}/read-detail-friends/response-body.adoc[]
 Response HTTP Example:
 include::{snippets}/read-detail-friends/http-response.adoc[]
+
+== 5.3 친구등록용 딥링크 생성
+
+=== Request
+Request Header:
+include::{snippets}/generate-deep-link/request-headers.adoc[]
+
+Request HTTP Example:
+include::{snippets}/read-detail-friends/httpie-request.adoc[]
+
+
+=== Response
+Response Data Fields:
+include::{snippets}/generate-deep-link/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/generate-deep-link/http-response.adoc[]
+
+== 5.4 딥링크를 통한 친구등록
+
+=== Request
+Request Header:
+include::{snippets}/register-friend/request-headers.adoc[]
+Request Path Variable
+include::{snippets}/register-friend/path-parameters.adoc[]
+Request HTTP Example:
+include::{snippets}/register-friend/http-request.adoc[]
+
+
+=== Response
+Response Data Fields:
+include::{snippets}/register-friend/response-body.adoc[]
+Response HTTP Example:
+include::{snippets}/register-friend/http-response.adoc[]
