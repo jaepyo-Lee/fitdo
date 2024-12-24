@@ -1,7 +1,8 @@
 dependencies {
     implementation project(":fitdo-mysql")
     implementation project(":fitdo-redis")
-
+    // webclient(fitdo-external)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     //spring batch(fitdo-batch)
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
@@ -15,9 +16,9 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-bootJar{
-    enabled=true
+bootJar {
+    enabled = true
 }
-jar{
-    enabled=false
+jar {
+    enabled = false
 }

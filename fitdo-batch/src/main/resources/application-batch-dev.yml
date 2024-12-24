@@ -1,4 +1,7 @@
 spring:
   batch:
     job:
-      enabled: true
+      enabled: false
+discord:
+  webhook:
+    uri: ${DISCORD_WEBHOOK_URI}

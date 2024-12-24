@@ -75,6 +75,7 @@ jobs:
           --build-arg DB_PASSWORD_ARG=${{ secrets.DB_PASSWORD }} \
           --build-arg DB_DDL_TYPE_ARG=${{ secrets.DB_DDL_TYPE }} \
           --build-arg ELASTICCACHE_HOST_ARG=${{ secrets.ELASTICCACHE_HOST }} \
+          --build-arg DISCORD_WEBHOOK_URI_ARG=${{ secrets.DISCORD_WEBHOOK_URI }} \
           -f ./fitdo-batch/DockerFile-Batch.dev \
           -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./fitdo-batch
   
