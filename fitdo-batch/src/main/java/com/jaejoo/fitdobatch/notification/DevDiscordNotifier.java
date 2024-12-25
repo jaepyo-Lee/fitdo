@@ -16,6 +16,7 @@ public class DevDiscordNotifier implements DiscordNotification{
     }
 
     public void send(Object sendMessage) {
+        System.out.println("디코..보냈어");
         webClient.post()
                 .uri(DISCORD_WEBHOOK_URI)
                 .contentType(MediaType.APPLICATION_JSON)
