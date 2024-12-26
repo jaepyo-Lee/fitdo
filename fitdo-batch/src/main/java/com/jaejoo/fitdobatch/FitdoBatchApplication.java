@@ -6,10 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(/*scanBasePackages = {"com.jaejoo.fitdobatch",
+@SpringBootApplication
+/*(scanBasePackages = {"com.jaejoo.fitdobatch",
 "com.jaejoo.fitdomysql.domain.user.repository.jpa.entity",
 "com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity",
-"com.jaejoo.fitdoredis"}*/)
+"com.jaejoo.fitdoredis"})*/
 public class FitdoBatchApplication {
 
     public static void main(String[] args) {
@@ -17,7 +18,6 @@ public class FitdoBatchApplication {
         final int exitCode = SpringApplication.exit(context, () -> 0);
         System.exit(exitCode);
         SpringApplication.run(FitdoBatchApplication.class, args);
-
     }
 
 }

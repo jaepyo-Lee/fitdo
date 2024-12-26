@@ -1,6 +1,7 @@
 package com.jaejoo.fitdobatch.runner;
 
 import com.jaejoo.fitdobatch.launcher.ScoreJobLauncher;
+import com.jaejoo.fitdobatch.notification.DevDiscordNotifier;
 import com.jaejoo.fitdobatch.notification.DiscordMessage;
 import com.jaejoo.fitdobatch.notification.DiscordNotification;
 import lombok.RequiredArgsConstructor;
