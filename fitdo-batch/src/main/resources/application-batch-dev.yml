@@ -2,6 +2,14 @@ spring:
   batch:
     job:
       enabled: false
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
 discord:
   webhook:
     uri: ${DISCORD_WEBHOOK_URI}
