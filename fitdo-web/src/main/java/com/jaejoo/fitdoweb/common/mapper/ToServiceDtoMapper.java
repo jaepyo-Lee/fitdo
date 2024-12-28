@@ -18,8 +18,8 @@ import java.util.List;
 public interface ToServiceDtoMapper {
     ToServiceDtoMapper INSTANCE = Mappers.getMapper(ToServiceDtoMapper.class);
 
-    @Named("toDailyExerciseRecordCreateCommand")
-    @Mapping(source = "request.dailyExerciseRecords", target = "records")
+    @Mapping(source = "recordDate", target = "recordDate")
+    @Mapping(source = "dailyExerciseRecords", target = "records")
     DailyExerciseRecordCreateCommand toDailyExerciseRecordCreateCommand(DailyRecordCreateRequest request);
 
     @IterableMapping(qualifiedByName = "toRecordExerciseRecords")

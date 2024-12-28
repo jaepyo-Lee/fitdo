@@ -12,7 +12,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-24T19:43:05+0900",
+    date = "2024-12-29T01:27:10+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 public class ToServiceDtoMapperImpl implements ToServiceDtoMapper {
@@ -23,16 +23,12 @@ public class ToServiceDtoMapperImpl implements ToServiceDtoMapper {
             return null;
         }
 
-        DailyExerciseRecordCreateCommand dailyExerciseRecordCreateCommand = new DailyExerciseRecordCreateCommand();
+        DailyExerciseRecordCreateCommand.DailyExerciseRecordCreateCommandBuilder dailyExerciseRecordCreateCommand = DailyExerciseRecordCreateCommand.builder();
 
-        if ( dailyExerciseRecordCreateCommand.getRecords() != null ) {
-            List<RecordExerciseRecords> list = toRecordExerciseRecords( request.getDailyExerciseRecords() );
-            if ( list != null ) {
-                dailyExerciseRecordCreateCommand.getRecords().addAll( list );
-            }
-        }
+        dailyExerciseRecordCreateCommand.recordDate( request.getRecordDate() );
+        dailyExerciseRecordCreateCommand.records( toRecordExerciseRecords( request.getDailyExerciseRecords() ) );
 
-        return dailyExerciseRecordCreateCommand;
+        return dailyExerciseRecordCreateCommand.build();
     }
 
     @Override
