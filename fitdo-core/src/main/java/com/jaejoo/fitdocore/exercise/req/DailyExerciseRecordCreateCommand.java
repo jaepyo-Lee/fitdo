@@ -1,13 +1,13 @@
 package com.jaejoo.fitdocore.exercise.req;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Builder
 public class DailyExerciseRecordCreateCommand {
     private LocalDate recordDate;
     private List<RecordExerciseRecords> records;

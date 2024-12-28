@@ -56,6 +56,10 @@ asciidoctor {
     outputDir file('build/docs/asciidoc')
 }
 
+def mapstructDir = 'src/main/generated'
+clean {
+    delete file(mapstructDir)
+}
 bootJar {
     dependsOn asciidoctor
     from("${asciidoctor.outputDir}") {
