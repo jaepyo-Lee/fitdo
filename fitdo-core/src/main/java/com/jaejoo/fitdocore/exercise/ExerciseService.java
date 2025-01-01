@@ -13,6 +13,7 @@ import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.Exercis
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ExerciseService {
     private final ExerciseQueryRepository exerciseQueryRepository;
     private final ExerciseRoutineCommandRepository exerciseRoutineCommandRepository;
 
+    @Transactional
     public String createExercise(ExerciseCreateCommand command) {
         CategoryJpaEntity categories = categoryQueryRepository.findById(command.getCategoryId());
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.create(command.getExerciseName(), categories);
@@ -32,11 +34,12 @@ public class ExerciseService {
         return save.getName();
     }
 
+    @Transactional(readOnly = true)
     public List<FindExercisesWithCategory> findExercisesWithCategoryOf(Long userId) {
         List<FindExercisesWithCategory> exercisesWithCategory = new ArrayList<>();
         List<CategoryJpaEntity> categories = categoryQueryRepository.findAll();
         for (CategoryJpaEntity category : categories) {
-            List<ExerciseJpaEntity> exercisesByCategory = exerciseQueryRepository.findExercisesByCategoryAndUserId(category,userId);
+            List<ExerciseJpaEntity> exercisesByCategory = exerciseQueryRepository.findExercisesByCategoryAndUserId(category, userId);
             List<ExercisesWithinCategory> exercises = new ArrayList<>();
             for (ExerciseJpaEntity exerciseJpaEntity : exercisesByCategory) {
                 exercises.add(ExercisesWithinCategory.builder()
@@ -50,6 +53,7 @@ public class ExerciseService {
         return exercisesWithCategory;
     }
 
+    @Transactional
     public void removeExercises(Long exerciseId) {
         ExerciseJpaEntity willRemoveEntity = exerciseQueryRepository.findById(exerciseId);
         ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.builder()
