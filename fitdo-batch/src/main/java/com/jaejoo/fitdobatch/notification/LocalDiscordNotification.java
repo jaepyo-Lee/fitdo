@@ -2,7 +2,11 @@ package com.jaejoo.fitdobatch.notification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
+@Component
+@Profile({"local", "default"})
 public class LocalDiscordNotification implements DiscordNotification {
     @Override
     public void send(Object o) throws JsonProcessingException {
