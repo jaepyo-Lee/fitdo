@@ -22,8 +22,9 @@ public class ExerciseController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/exercises")
-    public SuccessResponse<ExerciseCreateResponse> create(@RequestBody ExerciseCreateRequest exerciseCreateRequest) {
-        String exercise = service.createExercise(exerciseCreateRequest.toCommand());
+    public SuccessResponse<ExerciseCreateResponse> create(@AuthenticationPrincipal CustomUserDetail userDetail,
+                                                          @RequestBody ExerciseCreateRequest exerciseCreateRequest) {
+        String exercise = service.createExercise(exerciseCreateRequest.toCommand(userDetail.userId()));
         return new SuccessResponse<>(HttpStatus.CREATED.value(), new ExerciseCreateResponse(exercise));
     }
 
