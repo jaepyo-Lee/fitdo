@@ -50,8 +50,8 @@ public class ExerciseJpaEntity {
         this.category = category;
     }
 
-    public static ExerciseJpaEntity create(String name, CategoryJpaEntity category) {
-        return new ExerciseJpaEntity(name, category, DeleteDelimiter.IN_USER);
+    public static ExerciseJpaEntity create(UserJpaEntity user, String name, CategoryJpaEntity category) {
+        return new ExerciseJpaEntity(user, name, DeleteDelimiter.IN_USER,category );
     }
 
     @Override

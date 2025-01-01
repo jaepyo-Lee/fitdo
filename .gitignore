@@ -41,3 +41,4 @@ out/
 /src/main/generated/
 /src/main/resources/static/docs/**
 fitdo-web/src/main/resources/static/docs/index.html
+/fitdo-web/src/main/generated/

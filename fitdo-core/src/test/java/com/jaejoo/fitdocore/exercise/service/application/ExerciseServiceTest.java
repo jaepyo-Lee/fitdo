@@ -55,9 +55,6 @@ class ExerciseServiceTest {
         UserJpaEntity user = UserJpaEntity.builder().build();
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
-        UserJpaEntity user2 = UserJpaEntity.builder().build();
-        UserJpaEntity saveUser2 = userJpaRepository.save(user2);
-
         CategoryJpaEntity chestCategory = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
         CategoryJpaEntity saveChestCategory = categoryJpaRepository.save(chestCategory);
 
@@ -71,7 +68,7 @@ class ExerciseServiceTest {
         System.out.println("=====Logic Start=====");
 
         String name = "벤치프레스";
-        String actual = exerciseService.createExercise(new ExerciseCreateCommand(saveChestCategory.getId(), name));
+        String actual = exerciseService.createExercise(new ExerciseCreateCommand(saveChestCategory.getId(), name,saveUser.getId()));
 
         System.out.println("=====Logic End=====");
         // then
