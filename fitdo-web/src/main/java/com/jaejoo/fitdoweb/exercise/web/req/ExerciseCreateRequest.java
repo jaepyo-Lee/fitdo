@@ -14,7 +14,7 @@ public class ExerciseCreateRequest {
     private Long categoryId;
     private String exerciseName;
 
-    public ExerciseCreateCommand toCommand() {
-        return new ExerciseCreateCommand(categoryId, exerciseName);
+    public ExerciseCreateCommand toCommand(Long userId) {
+        return new ExerciseCreateCommand(categoryId, exerciseName,userId);
     }
 }

@@ -11,6 +11,9 @@ import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRoutineCom
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.enumerate.DeleteDelimiter;
+import com.jaejoo.fitdomysql.domain.user.core.User;
+import com.jaejoo.fitdomysql.domain.user.repository.UserRepository;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +28,13 @@ public class ExerciseService {
     private final ExerciseCommandRepository exerciseCommandRepository;
     private final ExerciseQueryRepository exerciseQueryRepository;
     private final ExerciseRoutineCommandRepository exerciseRoutineCommandRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public String createExercise(ExerciseCreateCommand command) {
-        CategoryJpaEntity categories = categoryQueryRepository.findById(command.getCategoryId());
-        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.create(command.getExerciseName(), categories);
+        CategoryJpaEntity categories = categoryQueryRepository.findById(command.categoryId());
+        User user = userRepository.findById(command.userId());
+        ExerciseJpaEntity exerciseJpaEntity = ExerciseJpaEntity.create(UserJpaEntity.from(user), command.exerciseName(), categories);
         ExerciseJpaEntity save = exerciseCommandRepository.save(exerciseJpaEntity);
         return save.getName();
     }
