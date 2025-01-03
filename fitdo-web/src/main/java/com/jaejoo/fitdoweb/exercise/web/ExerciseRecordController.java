@@ -5,8 +5,9 @@ import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
 import com.jaejoo.fitdoweb.common.format.success.SuccessResponse;
-import com.jaejoo.fitdoweb.common.mapper.ToResponseMapper;
-import com.jaejoo.fitdoweb.common.mapper.ToServiceDtoMapper;
+import com.jaejoo.fitdoweb.common.mapper.CreateExerciseRecordsMapper;
+import com.jaejoo.fitdoweb.common.mapper.ReadExerciseRecordsInMonthMapper;
+import com.jaejoo.fitdoweb.common.mapper.ReadProgressPercentageMapper;
 import com.jaejoo.fitdoweb.exercise.web.req.DailyRecordCreateRequest;
 import com.jaejoo.fitdoweb.exercise.web.res.FindMonthExerciseRecordsResponse;
 import com.jaejoo.fitdoweb.exercise.web.res.ProgressPercentageWithMonthInfoResponse;
@@ -31,7 +32,7 @@ public class ExerciseRecordController {
     @PostMapping("/api/v1/exercise-record")
     public ResponseEntity<ResponseDto> createExerciseRecords(@AuthenticationPrincipal CustomUserDetail userDetail,
                                                              @RequestBody DailyRecordCreateRequest requests) {
-        DailyExerciseRecordCreateCommand command = ToServiceDtoMapper.INSTANCE.toDailyExerciseRecordCreateCommand(requests);
+        DailyExerciseRecordCreateCommand command = CreateExerciseRecordsMapper.INSTANCE.toDailyExerciseRecordCreateCommand(requests);
         boolean success = service.writeDailyExerciseFrom(userDetail.userId(), command);
         return ResponseEntity.ok(new ResponseDto(success));
     }
@@ -50,7 +51,7 @@ public class ExerciseRecordController {
     public SuccessResponse<FindMonthExerciseRecordsResponse> getExerciseRecordsInMonth(@AuthenticationPrincipal CustomUserDetail userDetail,
                                                                                        @RequestParam(name = "date") LocalDate date) {
         FindMonthExerciseRecords exerciseRecordsOfUserInMonth = service.findExerciseRecordsOfUserAtDate(userDetail.userId(), date);
-        FindMonthExerciseRecordsResponse findMonthExerciseRecordsResponse = ToResponseMapper.INSTANCE.toResponse(exerciseRecordsOfUserInMonth);
+        FindMonthExerciseRecordsResponse findMonthExerciseRecordsResponse = ReadExerciseRecordsInMonthMapper.INSTANCE.toResponse(exerciseRecordsOfUserInMonth);
         return new SuccessResponse<>(findMonthExerciseRecordsResponse);
     }
 
@@ -61,7 +62,7 @@ public class ExerciseRecordController {
         LocalDate startDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
         DayOfWeek dayOfWeek = startDate.getDayOfWeek();
         int value = dayOfWeek.getValue();
-        ProgressPercentageWithMonthInfoResponse response = ToResponseMapper.INSTANCE.toProgressPercentageWithMonthInfoResponse(value, progressPercentages);
+        ProgressPercentageWithMonthInfoResponse response = ReadProgressPercentageMapper.INSTANCE.toProgressPercentageWithMonthInfoResponse(value, progressPercentages);
         return new SuccessResponse<>(response);
     }
 }

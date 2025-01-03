@@ -4,7 +4,7 @@ import com.jaejoo.fitdocore.exercise.RoutineService;
 import com.jaejoo.fitdocore.exercise.req.RoutineCreateCommand;
 import com.jaejoo.fitdocore.exercise.res.ReadRoutineOfUser;
 import com.jaejoo.fitdoweb.common.format.success.SuccessResponse;
-import com.jaejoo.fitdoweb.common.mapper.ToResponseMapper;
+import com.jaejoo.fitdoweb.common.mapper.ReadRoutineMapper;
 import com.jaejoo.fitdoweb.exercise.web.req.RoutineCreateRequest;
 import com.jaejoo.fitdoweb.exercise.web.res.ReadRoutinesOfUserResponse;
 import com.jaejoo.fitdoweb.security.CustomUserDetail;
@@ -31,7 +31,7 @@ public class RoutineController {
     @GetMapping("/api/v1/routines")
     public SuccessResponse<List<ReadRoutinesOfUserResponse>> readRoutine(@AuthenticationPrincipal CustomUserDetail userDetail) {
         List<ReadRoutineOfUser> readRoutineOfUsers = routineService.readRoutine(userDetail.userId());
-        List<ReadRoutinesOfUserResponse> response = ToResponseMapper.INSTANCE.toReadRoutineOfUserResponse(readRoutineOfUsers);
+        List<ReadRoutinesOfUserResponse> response = ReadRoutineMapper.INSTANCE.toReadRoutineOfUserResponse(readRoutineOfUsers);
         return new SuccessResponse<>(response);
     }
 

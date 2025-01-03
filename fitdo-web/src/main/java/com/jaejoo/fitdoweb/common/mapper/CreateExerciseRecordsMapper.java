@@ -15,8 +15,8 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface ToServiceDtoMapper {
-    ToServiceDtoMapper INSTANCE = Mappers.getMapper(ToServiceDtoMapper.class);
+public interface CreateExerciseRecordsMapper {
+    CreateExerciseRecordsMapper INSTANCE = Mappers.getMapper(CreateExerciseRecordsMapper.class);
 
     @Mapping(source = "recordDate", target = "recordDate")
     @Mapping(source = "dailyExerciseRecords", target = "records")
