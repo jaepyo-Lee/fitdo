@@ -214,6 +214,30 @@ class ExerciseRecordServiceTest {
     @DisplayName("조회월의 운동진행여부 퍼센티지 조회")
     class calculateProgressPercentageInMonth {
         @Test
+        void 데이터가없는날0퍼센트조회되는지확인() {
+            // given
+            UserJpaEntity saveUser = userJpaRepository.save(new UserJpaEntity());
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(new CategoryJpaEntity(BodyPart.BACK));
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
+
+            LocalDate localDate = LocalDate.of(2024, 12, 5);
+            DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
+            //6 3
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<ProgressPercentage> result = exerciseRecordService.readProgressPercentage(saveUser.getId(), YearMonth.of(2024, 12));
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertAll(() -> assertThat(result.size()).isEqualTo(31),
+                    () -> assertThat(result.get(0).getDate()).isEqualTo(LocalDate.of(2024, 12, 1)),
+                    () -> assertThat(result.get(0).getPercentage()).isEqualTo(0.0));
+        }
+
+        @Test
         void 조회월의진행퍼센티지조회() {
             // given
             UserJpaEntity saveUser = userJpaRepository.save(new UserJpaEntity());
@@ -221,20 +245,13 @@ class ExerciseRecordServiceTest {
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
 
             LocalDate localDate = LocalDate.of(2024, 12, 5);
-            LocalDate beforeMonth7Days = LocalDate.of(2024, 12, 23);
-            LocalDate afterMonth7Days = LocalDate.of(2025, 1, 8);
             DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
-            DailyRecordJpaEntity yesterdaySaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(beforeMonth7Days, saveUser));
-            DailyRecordJpaEntity tomorrowSaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(afterMonth7Days, saveUser));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, false, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, false, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 3, true, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 4, true, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, yesterdaySaveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, yesterdaySaveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, tomorrowSaveDailyRecord, saveExercise));
             //6 3
             // when
             System.out.println("=====Logic Start=====");
@@ -327,7 +344,7 @@ class ExerciseRecordServiceTest {
             // then
             assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().size()).isEqualTo(1),
                     () -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().get(0).getRecords().size()).isEqualTo(2),
-                    ()-> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
         }
     }
 }

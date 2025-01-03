@@ -38,6 +38,7 @@ public class ExerciseRecordService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     public List<ProgressPercentage> readProgressPercentage(Long userId, YearMonth yearMonth) {
         List<ProgressInDateDto> progressesInMonth = exerciseRecordQueryRepository.findAllProgress(userId, yearMonth);
 
@@ -51,8 +52,9 @@ public class ExerciseRecordService {
     }
 
     private static List<ProgressPercentage> getPercentagesIn(YearMonth yearMonth, Map<LocalDate, List<Boolean>> map) {
+        final int INIT_DAY = 1;
         List<ProgressPercentage> answer = new ArrayList<>();
-        for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
+        for (int day = INIT_DAY; day <= yearMonth.lengthOfMonth(); day++) {
             double percentage = calculatePercentOfEachDay(yearMonth, map, day);
             answer.add(new ProgressPercentage(yearMonth.atDay(day), percentage));
         }
