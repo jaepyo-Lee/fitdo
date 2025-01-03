@@ -69,10 +69,10 @@ class ExerciseServiceTest {
 
         String name = "벤치프레스";
         String actual = exerciseService.createExercise(new ExerciseCreateCommand(saveChestCategory.getId(), name,saveUser.getId()));
-
+        List<FindExercisesWithCategory> exercisesWithCategoryOf = exerciseService.findExercisesWithCategoryOf(saveUser.getId());
         System.out.println("=====Logic End=====");
         // then
-        assertThat(actual).isEqualTo(name);
+        assertThat(exercisesWithCategoryOf.size()).isEqualTo(1);
     }
 
     //내부값도 테스트해야함. 현재 테스트 깨짐
