@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -168,7 +167,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
         }
 
         // mock the service method
-        when(service.calculateProgressPercentageInMonth(any(), any())).thenReturn(response);
+        when(service.readProgressPercentage(any(), any())).thenReturn(response);
 
         // when
         mvc.perform(

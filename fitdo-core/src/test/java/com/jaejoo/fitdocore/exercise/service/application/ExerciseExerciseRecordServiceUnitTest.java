@@ -21,7 +21,6 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -67,13 +66,13 @@ class ExerciseExerciseRecordServiceUnitTest {
         void 전체날이31일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgressInMonthOfUser(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 12);
             int monthsize = yearMonth.lengthOfMonth();
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressPercentage> progressPercentages = exerciseRecordService.calculateProgressPercentageInMonth(1L, yearMonth);
+            List<ProgressPercentage> progressPercentages = exerciseRecordService.readProgressPercentage(1L, yearMonth);
 
             System.out.println("=====Logic End=====");
             // then
@@ -84,13 +83,13 @@ class ExerciseExerciseRecordServiceUnitTest {
         void 전체날이30일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgressInMonthOfUser(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 11);
             int monthsize = yearMonth.lengthOfMonth();
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressPercentage> progressPercentages = exerciseRecordService.calculateProgressPercentageInMonth(1L, yearMonth);
+            List<ProgressPercentage> progressPercentages = exerciseRecordService.readProgressPercentage(1L, yearMonth);
 
             System.out.println("=====Logic End=====");
             // then
@@ -101,12 +100,12 @@ class ExerciseExerciseRecordServiceUnitTest {
         void 전체날이28일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgressInMonthOfUser(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 2);
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressPercentage> progressPercentages = exerciseRecordService.calculateProgressPercentageInMonth(1L, yearMonth);
+            List<ProgressPercentage> progressPercentages = exerciseRecordService.readProgressPercentage(1L, yearMonth);
 
             System.out.println("=====Logic End=====");
             // then

@@ -32,7 +32,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -240,7 +239,7 @@ class ExerciseRecordServiceTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressPercentage> result = exerciseRecordService.calculateProgressPercentageInMonth(saveUser.getId(), YearMonth.of(2024, 12));
+            List<ProgressPercentage> result = exerciseRecordService.readProgressPercentage(saveUser.getId(), YearMonth.of(2024, 12));
 
             System.out.println("=====Logic End=====");
             // then

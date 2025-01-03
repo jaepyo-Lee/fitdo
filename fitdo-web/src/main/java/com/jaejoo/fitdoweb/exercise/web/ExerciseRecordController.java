@@ -58,7 +58,7 @@ public class ExerciseRecordController {
     @GetMapping("/api/v1/exercises/percentage")
     public SuccessResponse<ProgressPercentageWithMonthInfoResponse> readExerciseProgressPercentageInMonth(@AuthenticationPrincipal CustomUserDetail userDetail,
                                                                                                           @RequestParam("yearMonth") YearMonth yearMonth) {
-        List<ProgressPercentage> progressPercentages = service.calculateProgressPercentageInMonth(userDetail.userId(), yearMonth);
+        List<ProgressPercentage> progressPercentages = service.readProgressPercentage(userDetail.userId(), yearMonth);
         LocalDate startDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
         DayOfWeek dayOfWeek = startDate.getDayOfWeek();
         int value = dayOfWeek.getValue();

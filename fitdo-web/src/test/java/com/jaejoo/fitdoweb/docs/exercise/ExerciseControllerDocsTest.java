@@ -97,7 +97,7 @@ class ExerciseControllerDocsTest extends RestDocsSupport {
         response.add(exercises);
 
         // mock the service method
-        when(service.findExercisesWithCategoryOf(any())).thenReturn(response);
+        when(service.findExercisesWithCategoryFor(any())).thenReturn(response);
 
         // when
         MvcResult mvcResult = mvc.perform(

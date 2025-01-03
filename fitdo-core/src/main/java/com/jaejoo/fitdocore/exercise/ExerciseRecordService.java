@@ -9,9 +9,7 @@ import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
 import com.jaejoo.fitdomysql.domain.exercise.core.Exercise;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRecordQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RecordCommandRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RecordQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.dto.ProgressInDateDto;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.projectiondto.ExerciseAndRecordDto;
@@ -40,26 +38,33 @@ public class ExerciseRecordService {
         return true;
     }
 
-    public List<ProgressPercentage> calculateProgressPercentageInMonth(Long userId, YearMonth yearMonth) {
-        //해당 연월의 앞뒤 6일까지 조회하기
-        List<ProgressInDateDto> allProgressInMonthOfUser = exerciseRecordQueryRepository.findAllProgressInMonthOfUser(userId, yearMonth);
+    public List<ProgressPercentage> readProgressPercentage(Long userId, YearMonth yearMonth) {
+        List<ProgressInDateDto> progressesInMonth = exerciseRecordQueryRepository.findAllProgress(userId, yearMonth);
+
         Map<LocalDate, List<Boolean>> map = new HashMap<>();
-        for (int i = 1; i <= yearMonth.lengthOfMonth(); i++) {
-            map.putIfAbsent(yearMonth.atDay(i), new ArrayList<>());
+        for (ProgressInDateDto dateProgress : progressesInMonth) {
+            LocalDate date = dateProgress.getDate();
+            map.computeIfAbsent(date, (k) -> new ArrayList<>()).add(dateProgress.getIsProgress());
         }
-        for (ProgressInDateDto progressInDateDto : allProgressInMonthOfUser) {
-            LocalDate date = progressInDateDto.getDate();
-            map.get(date).add(progressInDateDto.getIsProgress());
-        }
+
+        return getPercentagesIn(yearMonth, map);
+    }
+
+    private static List<ProgressPercentage> getPercentagesIn(YearMonth yearMonth, Map<LocalDate, List<Boolean>> map) {
         List<ProgressPercentage> answer = new ArrayList<>();
-        for (int i = 1; i <= yearMonth.lengthOfMonth(); i++) {
-            List<Boolean> booleans = map.get(yearMonth.atDay(i));
-            Long trueCount = booleans.stream().filter(value -> value.equals(Boolean.TRUE)).count();
-            Double percentage = ((double) trueCount / (double) booleans.size()) * 100;
-            answer.add(new ProgressPercentage(yearMonth.atDay(i), percentage));
+        for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
+            double percentage = calculatePercentOfEachDay(yearMonth, map, day);
+            answer.add(new ProgressPercentage(yearMonth.atDay(day), percentage));
         }
         return answer;
     }
+
+    private static double calculatePercentOfEachDay(YearMonth yearMonth, Map<LocalDate, List<Boolean>> map, int day) {
+        List<Boolean> progresses = map.getOrDefault(yearMonth.atDay(day), new ArrayList<>());
+        long trueCount = progresses.stream().filter(value -> value.equals(Boolean.TRUE)).count();
+        return progresses.isEmpty() ? 0 : ((double) trueCount / progresses.size()) * 100;
+    }
+
 
     @Transactional(readOnly = true)
     public FindMonthExerciseRecords findExerciseRecordsOfUserAtDate(Long userId, LocalDate date) {
