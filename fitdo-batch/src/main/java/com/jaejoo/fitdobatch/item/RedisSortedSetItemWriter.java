@@ -3,7 +3,6 @@ package com.jaejoo.fitdobatch.item;
 import com.jaejoo.fitdobatch.mapping.UserScoreRow;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -18,12 +17,10 @@ public class RedisSortedSetItemWriter implements ItemWriter<UserScoreRow> {
     @Override
     public void write(Chunk<? extends UserScoreRow> chunk) throws Exception {
         redisTemplate.executePipelined((RedisCallback<Object>) redisConnection -> {
-            redisConnection.openPipeline();
-            StringRedisConnection stringRedisConnection = (StringRedisConnection) redisConnection;
-            for (UserScoreRow userScoreRow : chunk) {
-                stringRedisConnection.zAdd("userScores", userScoreRow.getScore(), String.valueOf(userScoreRow.getUserId()));
+            for (UserScoreRow item : chunk.getItems()) {
+                redisConnection.zAdd("userScores".getBytes(), item.getScore(),
+                        String.valueOf(item.getUserId()).getBytes());
             }
-            redisConnection.closePipeline();
             return null;
         });
     }

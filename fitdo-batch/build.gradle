@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":fitdo-mysql")
     implementation project(":fitdo-redis")
+    testImplementation project(":fitdo-redis")
     // webclient(fitdo-external)
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     //spring batch(fitdo-batch)
