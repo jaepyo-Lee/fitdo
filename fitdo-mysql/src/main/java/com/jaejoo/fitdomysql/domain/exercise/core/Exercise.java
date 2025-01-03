@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class Exercise {
-    List<ExerciseRecord> exerciseRecords;
+    private final List<ExerciseRecord> exerciseRecords;
 
     public Exercise(List<ExerciseRecord> exerciseRecords) {
         this.exerciseRecords = exerciseRecords;

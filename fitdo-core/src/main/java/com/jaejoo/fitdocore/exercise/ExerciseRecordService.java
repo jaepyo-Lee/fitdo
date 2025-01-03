@@ -1,14 +1,10 @@
 package com.jaejoo.fitdocore.exercise;
 
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
-import com.jaejoo.fitdocore.exercise.req.RecordExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindDateExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
-import com.jaejoo.fitdomysql.domain.exercise.core.Exercise;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRecordQueryRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.dto.ProgressInDateDto;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
@@ -24,19 +20,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class ExerciseRecordService {
-    private final RecordCommandRepository recordCommandRepository;
     private final ExerciseRecordQueryRepository exerciseRecordQueryRepository;
-
-    @Transactional
-    public boolean writeDailyExerciseFrom(Long userId, DailyExerciseRecordCreateCommand command) {
-        recordCommandRepository.deleteDateRecordOf(userId, command.getRecordDate());
-        List<RecordExerciseRecords> records = command.getRecords();
-        for (RecordExerciseRecords record : records) {
-            Exercise domain = record.toDomain();
-            recordCommandRepository.saveAll(userId, record.getExerciseId(), command.getRecordDate(), domain);
-        }
-        return true;
-    }
 
     @Transactional(readOnly = true)
     public List<ProgressPercentage> readProgressPercentage(Long userId, YearMonth yearMonth) {

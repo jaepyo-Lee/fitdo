@@ -2,6 +2,7 @@ package com.jaejoo.fitdoweb.docs.exercise;
 
 
 import com.jaejoo.fitdocore.exercise.ExerciseRecordService;
+import com.jaejoo.fitdocore.exercise.ExerciseRecordWriteService;
 import com.jaejoo.fitdocore.exercise.res.FindDateExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
@@ -38,9 +39,12 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
     @Mock
     private ExerciseRecordService service;
 
+    @Mock
+    private ExerciseRecordWriteService writeService;
+
     @Override
     protected Object initController() {
-        return new ExerciseRecordController(service);
+        return new ExerciseRecordController(service,writeService);
     }
 
     @Test
@@ -57,7 +61,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
         List<DailyExerciseRecordsRequest> createRequests = new ArrayList<>(List.of(request1, request2));
         DailyRecordCreateRequest request = new DailyRecordCreateRequest(LocalDate.now(), createRequests);
         // mock the service method
-        when(service.writeDailyExerciseFrom(any(), any())).thenReturn(true);
+        when(writeService.writeDailyExerciseFrom(any(), any())).thenReturn(true);
 
         // when
         mvc.perform(
@@ -91,7 +95,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                 );
 
         // verify
-        verify(service, times(1)).writeDailyExerciseFrom(any(), any());
+        verify(writeService, times(1)).writeDailyExerciseFrom(any(), any());
     }
 
 

@@ -1,6 +1,7 @@
 package com.jaejoo.fitdoweb.exercise.web;
 
 import com.jaejoo.fitdocore.exercise.ExerciseRecordService;
+import com.jaejoo.fitdocore.exercise.ExerciseRecordWriteService;
 import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
@@ -28,12 +29,12 @@ import java.util.List;
 @RestController
 public class ExerciseRecordController {
     private final ExerciseRecordService service;
-
+    private final ExerciseRecordWriteService writeService;
     @PostMapping("/api/v1/exercise-record")
     public ResponseEntity<ResponseDto> createExerciseRecords(@AuthenticationPrincipal CustomUserDetail userDetail,
                                                              @RequestBody DailyRecordCreateRequest requests) {
         DailyExerciseRecordCreateCommand command = CreateExerciseRecordsMapper.INSTANCE.toDailyExerciseRecordCreateCommand(requests);
-        boolean success = service.writeDailyExerciseFrom(userDetail.userId(), command);
+        boolean success = writeService.writeDailyExerciseFrom(userDetail.userId(), command);
         return ResponseEntity.ok(new ResponseDto(success));
     }
 
