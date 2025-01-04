@@ -1,5 +1,6 @@
 package com.jaejoo.fitdoweb.docs.exercise;
 
+import com.jaejoo.fitdocore.exercise.RoutineReadService;
 import com.jaejoo.fitdocore.exercise.RoutineService;
 import com.jaejoo.fitdocore.exercise.res.CategoryAndExerciseWithinRoutine;
 import com.jaejoo.fitdocore.exercise.res.ReadRoutineOfUser;
@@ -33,9 +34,12 @@ class RoutineControllerDocsTest extends RestDocsSupport {
     @Mock
     private RoutineService service;
 
+    @Mock
+    private RoutineReadService readService;
+
     @Override
     protected Object initController() {
-        return new RoutineController(service);
+        return new RoutineController(service,readService);
     }
 
     @Test
@@ -84,7 +88,7 @@ class RoutineControllerDocsTest extends RestDocsSupport {
 
         List<ReadRoutineOfUser> response = List.of(readRoutineOfUser1, readRoutineOfUser2);
         // when
-        when(service.readRoutine(any())).thenReturn(response);
+        when(readService.readRoutine(any())).thenReturn(response);
 
         mvc.perform(
                         RestDocumentationRequestBuilders.get("/api/v1/routines")

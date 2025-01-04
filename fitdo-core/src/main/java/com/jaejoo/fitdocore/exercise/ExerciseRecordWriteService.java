@@ -43,19 +43,14 @@ public class ExerciseRecordWriteService {
         List<ExerciseRecord> exerciseRecords = recordsOfEachExercise.sets().stream()
                 .map(dto -> new ExerciseRecord(dto.weight(), dto.volume(), dto.number(), dto.done()))
                 .toList();
-
         User user = userRepository.findById(userId);
-
         DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordRepository.findByUserIdAndDate(userId, command.getDate())
                 .orElseGet(() ->
                         dailyRecordRepository.save(new DailyRecordJpaEntity(command.getDate(), UserJpaEntity.from(user))));
-
         ExerciseJpaEntity exercise = exerciseQueryRepository.findById(recordsOfEachExercise.exerciseId());
-
         List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = exerciseRecords.stream()
                 .map(er -> DailyExerciseRecordJpaEntity.from(er, dailyRecordJpaEntity, exercise))
                 .toList();
-
         exerciseRecordCommandRepository.saveAll(exerciseRecordJpaEntities);
     }
 
