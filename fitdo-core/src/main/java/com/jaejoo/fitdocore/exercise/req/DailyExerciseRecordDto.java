@@ -1,4 +1,4 @@
 package com.jaejoo.fitdocore.exercise.req;
 
-public record DailyExerciseRecordDto(int set, int weight, int count, boolean progress) {
+public record DailyExerciseRecordDto(int number, int weight, int volume, boolean done) {
 }

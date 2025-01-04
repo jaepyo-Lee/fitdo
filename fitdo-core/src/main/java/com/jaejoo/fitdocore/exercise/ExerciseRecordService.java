@@ -60,8 +60,8 @@ public class ExerciseRecordService {
         List<FindDateExerciseRecords> records = new ArrayList<>(groupedRecords.values());
 
         return FindMonthExerciseRecords.builder()
-                .dateRecords(records)
-                .exerciseDate(date)
+                .records(records)
+                .date(date)
                 .build();
     }
 
@@ -82,7 +82,7 @@ public class ExerciseRecordService {
 
             // 기존 그룹에 데이터 추가
             FindDateExerciseRecords findDateExerciseRecord = groupedRecords.get(exercise.getId());
-            findDateExerciseRecord.getRecords().add(new FindExerciseRecords(
+            findDateExerciseRecord.getSets().add(new FindExerciseRecords(
                     dailyRecord.getWeight(),
                     dailyRecord.getVolume(),
                     dailyRecord.getExerciseSet(),

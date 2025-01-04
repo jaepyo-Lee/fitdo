@@ -1,0 +1,90 @@
+package com.jaejoo.fitdocore.user.service.application;
+
+import com.jaejoo.fitdocore.user.FriendShareService;
+import com.jaejoo.fitdocore.user.req.FriendApplyCommand;
+import com.jaejoo.fitdocore.util.AESConverter;
+import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
+import com.jaejoo.fitdomysql.domain.user.core.GrantRole;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.FriendJpaRepository;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.UserJpaRepository;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.FriendJpaEntity;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.FriendStatus;
+import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
+class FriendShareServiceTest {
+    @Autowired
+    UserJpaRepository userJpaRepository;
+    @Autowired
+    FriendShareService friendService;
+    @Autowired
+    FriendJpaRepository friendJpaRepository;
+    @Autowired
+    private AESConverter converter;
+
+    @Test
+    void 친구추가시_한쪽만_친구신청상태로_등록() throws Exception {
+        // given
+        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
+        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
+
+        // when
+        System.out.println("=====Logic Start=====");
+
+        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
+
+        System.out.println("=====Logic End=====");
+        // then
+        assertThat(friendJpaRepository.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
+    void 친구신청시_상태는_친구신청을_보낸사람이_FROM이되어_APPLY상태이어야한다_추가받은사람은_아무엔티티도없다() throws Exception {
+        // given
+        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveUser = userJpaRepository.save(user);
+
+        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
+        UserJpaEntity saveFriend = userJpaRepository.save(friend);
+        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
+        // when
+        System.out.println("=====Logic Start=====");
+
+        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
+
+        System.out.println("=====Logic End=====");
+        // then
+        List<FriendJpaEntity> all = friendJpaRepository.findAll();
+        int cnt = 0;
+        for (FriendJpaEntity friendJpaEntity : all) {
+            if (friendJpaEntity.isSupport(FriendStatus.APPLY)) {
+                cnt++;
+            }
+        }
+        int finalCnt = cnt;
+        assertAll(() -> assertThat(finalCnt).isEqualTo(2),
+                () -> assertThat(all.size()).isEqualTo(2));
+    }
+
+}

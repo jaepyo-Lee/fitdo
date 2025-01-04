@@ -1,6 +1,7 @@
 package com.jaejoo.fitdoweb.user.web;
 
 import com.jaejoo.fitdocore.user.FriendService;
+import com.jaejoo.fitdocore.user.FriendShareService;
 import com.jaejoo.fitdocore.user.req.FriendApplyCommand;
 import com.jaejoo.fitdocore.user.req.FriendSimpleInfo;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 public class FriendController {
     private final FriendService friendService;
+    private final FriendShareService friendShareService;
 
     @GetMapping("/api/v1/friends")
     public SuccessResponse<List<FriendSimpleInfosResponse>> readFriends(@AuthenticationPrincipal CustomUserDetail user) {
@@ -42,13 +44,13 @@ public class FriendController {
     @PostMapping("/api/v1/friends/{DeepLinkUserId}")
     public SuccessResponse registerFriend(@PathVariable("DeepLinkUserId") String friendId,
                                           @AuthenticationPrincipal CustomUserDetail user) throws Exception {
-        friendService.applyFriend(new FriendApplyCommand(user.userId(), friendId));
+        friendShareService.applyFriend(new FriendApplyCommand(user.userId(), friendId));
         return SuccessResponse.ok();
     }
 
     @GetMapping("/api/v1/user/link")
     public SuccessResponse<DeepLinkResponse> generateFriendLink(@AuthenticationPrincipal CustomUserDetail user) throws Exception {
-        String deepLink = friendService.generateDeepLink(user.userId());
+        String deepLink = friendShareService.generateDeepLink(user.userId());
         return new SuccessResponse<>(new DeepLinkResponse(deepLink));
     }
 

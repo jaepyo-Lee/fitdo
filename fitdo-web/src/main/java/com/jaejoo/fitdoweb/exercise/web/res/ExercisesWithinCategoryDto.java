@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ExercisesWithinCategoryDto {
-    private String exerciseName;
-    private Long exerciseId;
+    private String name;
+    private Long id;
 }

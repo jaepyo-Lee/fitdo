@@ -2,9 +2,6 @@ package com.jaejoo.fitdocore.exercise.service.application;
 
 
 import com.jaejoo.fitdocore.exercise.ExerciseRecordService;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordDto;
-import com.jaejoo.fitdocore.exercise.req.RecordExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
 import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
@@ -184,9 +181,9 @@ class ExerciseRecordServiceTest {
 
             System.out.println("=====Logic End=====");
             // then
-            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().size()).isEqualTo(1),
-                    () -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().get(0).getRecords().size()).isEqualTo(2),
-                    () -> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
+            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getRecords().size()).isEqualTo(1),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getRecords().get(0).getSets().size()).isEqualTo(2),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getDate()).isEqualTo(today));
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.jaejoo.fitdomysql.domain.exercise.infra.repository;
 
-import com.jaejoo.fitdomysql.domain.exercise.core.Exercise;
-
 import java.time.LocalDate;
 
 public interface RecordCommandRepository {

@@ -1,6 +1,7 @@
 package com.jaejoo.fitdoweb.docs.user;
 
 import com.jaejoo.fitdocore.user.FriendService;
+import com.jaejoo.fitdocore.user.FriendShareService;
 import com.jaejoo.fitdocore.user.req.FriendSimpleInfo;
 import com.jaejoo.fitdocore.user.res.ExerciseInfoInRoutine;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
@@ -34,10 +35,12 @@ class FriendControllerTest extends RestDocsSupport {
 
     @Mock
     private FriendService service;
+    @Mock
+    private FriendShareService shareService;
 
     @Override
     protected Object initController() {
-        return new FriendController(service);
+        return new FriendController(service, shareService);
     }
 
     @Test
@@ -118,7 +121,7 @@ class FriendControllerTest extends RestDocsSupport {
         // given
         String deepLink = "superfitdo://fitdo/friend?userId=" + "암호화된 유저아이디";
         // when
-        when(service.generateDeepLink(any())).thenReturn(deepLink);
+        when(shareService.generateDeepLink(any())).thenReturn(deepLink);
 
         mvc.perform(
                         RestDocumentationRequestBuilders.get("/api/v1/user/link")
@@ -154,7 +157,7 @@ class FriendControllerTest extends RestDocsSupport {
     void 딥링크를_통한_친구추가() throws Exception {
         // given
         // when
-        doNothing().when(service).applyFriend(any());
+        doNothing().when(shareService).applyFriend(any());
 
         mvc.perform(
                         RestDocumentationRequestBuilders.post("/api/v1/friends/{DeepLinkUserId}","{ userId that get by DeepLink }")

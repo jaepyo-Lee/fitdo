@@ -2,10 +2,6 @@
 
 === Request
 
-Request Fields:
-
-include::{snippets}/read-exercise-records/query-parameters.adoc[]
-
 Request Parameter
 
 include::{snippets}/read-exercise-records/query-parameters.adoc[]
@@ -30,21 +26,21 @@ include::{snippets}/read-exercise-records/http-response.adoc[]
 
 Request Fields:
 
-include::{snippets}/create-exercise-records/request-fields.adoc[]
+include::{snippets}/create-exercise-record/request-fields.adoc[]
 
 Request HTTP Example:
 
-include::{snippets}/create-exercise-records/http-request.adoc[]
+include::{snippets}/create-exercise-record/http-request.adoc[]
 
 === Response
 
 Response Data Fields:
 
-include::{snippets}/create-exercise-records/response-fields.adoc[]
+include::{snippets}/create-exercise-record/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/create-exercise-records/http-response.adoc[]
+include::{snippets}/create-exercise-record/http-response.adoc[]
 
 == 2.3 해당월 운동진행률 조회
 

@@ -13,5 +13,5 @@ public class FindDateExerciseRecords {
     private Long exerciseId;
     private String exerciseName;
     private String categoryName;
-    private List<FindExerciseRecords> records;
+    private List<FindExerciseRecords> sets;
 }

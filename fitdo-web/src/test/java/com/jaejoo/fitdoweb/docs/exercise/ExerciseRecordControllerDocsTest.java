@@ -32,6 +32,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,21 +73,21 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("create-exercise-records",
+                .andDo(document("create-exercise-record",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
                                 requestFields(
-                                        fieldWithPath("recordDate").type(JsonFieldType.STRING).description("기록된 날짜"),
-                                        fieldWithPath("dailyExerciseRecords").type(JsonFieldType.ARRAY).description("저장하고자 하는 운동기록"),
-                                        fieldWithPath("dailyExerciseRecords[].exerciseId").type(JsonFieldType.NUMBER).description("기록하려는 운동의 아이디"),
-                                        fieldWithPath("dailyExerciseRecords[].records").type(JsonFieldType.ARRAY).description("기록목록"),
-                                        fieldWithPath("dailyExerciseRecords[].records[].set").type(JsonFieldType.NUMBER).description("해당 운동의 세트번호"),
-                                        fieldWithPath("dailyExerciseRecords[].records[].weight").type(JsonFieldType.NUMBER).description("해당 세트의 무게"),
-                                        fieldWithPath("dailyExerciseRecords[].records[].count").type(JsonFieldType.NUMBER).description("해당 세트의 반복수"),
-                                        fieldWithPath("dailyExerciseRecords[].records[].progress").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
+                                        fieldWithPath("date").type(JsonFieldType.STRING).description("기록된 날짜"),
+                                        fieldWithPath("records").type(JsonFieldType.ARRAY).description("저장하고자 하는 운동기록"),
+                                        fieldWithPath("records[].exerciseId").type(JsonFieldType.NUMBER).description("기록하려는 운동의 아이디"),
+                                        fieldWithPath("records[].sets").type(JsonFieldType.ARRAY).description("기록목록"),
+                                        fieldWithPath("records[].sets[].number").type(JsonFieldType.NUMBER).description("해당 운동의 세트번호"),
+                                        fieldWithPath("records[].sets[].weight").type(JsonFieldType.NUMBER).description("해당 세트의 무게"),
+                                        fieldWithPath("records[].sets[].volume").type(JsonFieldType.NUMBER).description("해당 세트의 반복수"),
+                                        fieldWithPath("records[].sets[].done").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
                                 ),
                                 responseFields(
                                         fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("운동 기록이 성공적으로 생성되었는지 여부. `true`이면 성공, `false`이면 실패")
@@ -102,22 +103,22 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
     @Test
     void getExerciseRecordAtDayTest() throws Exception {
         // given
-        FindExerciseRecords exerciseRecords1 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(true).build();
-        FindExerciseRecords exerciseRecords2 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
-        FindExerciseRecords exerciseRecords3 = FindExerciseRecords.builder().exerciseSet(3).weight(60).volume(8).isProgress(true).build();
+        FindExerciseRecords exerciseRecords1 = FindExerciseRecords.builder().number(1).weight(50).volume(10).done(true).build();
+        FindExerciseRecords exerciseRecords2 = FindExerciseRecords.builder().number(2).weight(50).volume(10).done(true).build();
+        FindExerciseRecords exerciseRecords3 = FindExerciseRecords.builder().number(3).weight(60).volume(8).done(true).build();
 
-        FindExerciseRecords exerciseRecords4 = FindExerciseRecords.builder().exerciseSet(1).weight(50).volume(10).isProgress(false).build();
-        FindExerciseRecords exerciseRecords5 = FindExerciseRecords.builder().exerciseSet(2).weight(50).volume(10).isProgress(true).build();
+        FindExerciseRecords exerciseRecords4 = FindExerciseRecords.builder().number(1).weight(50).volume(10).done(false).build();
+        FindExerciseRecords exerciseRecords5 = FindExerciseRecords.builder().number(2).weight(50).volume(10).done(true).build();
 
         List<FindExerciseRecords> records1 = List.of(exerciseRecords1, exerciseRecords2, exerciseRecords3);
         List<FindExerciseRecords> records2 = List.of(exerciseRecords4, exerciseRecords5);
 
-        FindDateExerciseRecords dateExerciseRecord = FindDateExerciseRecords.builder().exerciseId(1L).exerciseName("벤치프레스").records(records1).categoryName("가슴").build();
+        FindDateExerciseRecords dateExerciseRecord = FindDateExerciseRecords.builder().exerciseId(1L).exerciseName("벤치프레스").sets(records1).categoryName("가슴").build();
 
-        FindDateExerciseRecords dateExerciseRecord1 = FindDateExerciseRecords.builder().exerciseId(2L).exerciseName("플라이머신").records(records2).categoryName("가슴").build();
+        FindDateExerciseRecords dateExerciseRecord1 = FindDateExerciseRecords.builder().exerciseId(2L).exerciseName("플라이머신").sets(records2).categoryName("가슴").build();
         List<FindDateExerciseRecords> dateExerciseRecords = List.of(dateExerciseRecord, dateExerciseRecord1);
 
-        FindMonthExerciseRecords findMonthExerciseRecords = FindMonthExerciseRecords.builder().exerciseDate(LocalDate.of(2024, 11, 20)).dateRecords(dateExerciseRecords).build();
+        FindMonthExerciseRecords findMonthExerciseRecords = FindMonthExerciseRecords.builder().date(LocalDate.of(2024, 11, 20)).records(dateExerciseRecords).build();
 
 
         // mock the service method
@@ -143,16 +144,16 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("exerciseDate").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식"),
-                                        fieldWithPath("dateRecords").type(JsonFieldType.ARRAY).description("운동 기록"),
-                                        fieldWithPath("dateRecords[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
-                                        fieldWithPath("dateRecords[].exerciseName").type(JsonFieldType.STRING).description("진행한 운동종목명"),
-                                        fieldWithPath("dateRecords[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),
-                                        fieldWithPath("dateRecords[].records").type(JsonFieldType.ARRAY).description("진행한 운동의 기록"),
-                                        fieldWithPath("dateRecords[].records[].weight").type(JsonFieldType.NUMBER).description("운동 중량"),
-                                        fieldWithPath("dateRecords[].records[].volume").type(JsonFieldType.NUMBER).description("운동 횟수"),
-                                        fieldWithPath("dateRecords[].records[].exerciseSet").type(JsonFieldType.NUMBER).description("세트번호"),
-                                        fieldWithPath("dateRecords[].records[].progress").type(JsonFieldType.BOOLEAN).description("운동 진행 여부")
+                                        fieldWithPath("date").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식"),
+                                        fieldWithPath("records").type(JsonFieldType.ARRAY).description("운동 기록"),
+                                        fieldWithPath("records[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
+                                        fieldWithPath("records[].exerciseName").type(JsonFieldType.STRING).description("진행한 운동종목명"),
+                                        fieldWithPath("records[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),
+                                        fieldWithPath("records[].sets").type(JsonFieldType.ARRAY).description("진행한 운동의 기록"),
+                                        fieldWithPath("records[].sets[].weight").type(JsonFieldType.NUMBER).description("운동 중량"),
+                                        fieldWithPath("records[].sets[].volume").type(JsonFieldType.NUMBER).description("운동 횟수"),
+                                        fieldWithPath("records[].sets[].number").type(JsonFieldType.NUMBER).description("세트번호"),
+                                        fieldWithPath("records[].sets[].done").type(JsonFieldType.BOOLEAN).description("운동 진행 여부")
                                 )
                         )
                 );

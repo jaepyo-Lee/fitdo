@@ -2,7 +2,6 @@ package com.jaejoo.fitdocore.exercise;
 
 import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
 import com.jaejoo.fitdocore.exercise.req.RecordExerciseRecords;
-import com.jaejoo.fitdomysql.domain.exercise.core.Exercise;
 import com.jaejoo.fitdomysql.domain.exercise.core.ExerciseRecord;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.DailyRecordRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseQueryRepository;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,20 +30,37 @@ public class ExerciseRecordWriteService {
 
     @Transactional
     public boolean writeDailyExerciseFrom(Long userId, DailyExerciseRecordCreateCommand command) {
-        recordCommandRepository.deleteDateRecordOf(userId, command.getRecordDate());
-        List<RecordExerciseRecords> records = command.getRecords();
-        for (RecordExerciseRecords record : records) {
-            Exercise domain = record.toDomain();
-            User user = userRepository.findById(userId);
-            DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordRepository.findByUserIdAndDate(userId, command.getRecordDate())
-                    .orElseGet(() -> dailyRecordRepository.save(new DailyRecordJpaEntity(command.getRecordDate(), UserJpaEntity.from(user))));
-            ExerciseJpaEntity exercise = exerciseQueryRepository.findById(record.exerciseId());
-            List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = new ArrayList<>();
-            for (ExerciseRecord exerciseRecord : domain.getExerciseRecords()) {
-                exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(exerciseRecord, dailyRecordJpaEntity, exercise));
-            }
-            exerciseRecordCommandRepository.saveAll(exerciseRecordJpaEntities);
+        removeOriginRecord(userId, command);
+
+        for (RecordExerciseRecords recordsOfEachExercise : command.getRecords()) {
+            saveExerciseRecord(userId, command, recordsOfEachExercise);
         }
+
         return true;
     }
+
+    private void saveExerciseRecord(Long userId, DailyExerciseRecordCreateCommand command, RecordExerciseRecords recordsOfEachExercise) {
+        List<ExerciseRecord> exerciseRecords = recordsOfEachExercise.sets().stream()
+                .map(dto -> new ExerciseRecord(dto.weight(), dto.volume(), dto.number(), dto.done()))
+                .toList();
+
+        User user = userRepository.findById(userId);
+
+        DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordRepository.findByUserIdAndDate(userId, command.getDate())
+                .orElseGet(() ->
+                        dailyRecordRepository.save(new DailyRecordJpaEntity(command.getDate(), UserJpaEntity.from(user))));
+
+        ExerciseJpaEntity exercise = exerciseQueryRepository.findById(recordsOfEachExercise.exerciseId());
+
+        List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = exerciseRecords.stream()
+                .map(er -> DailyExerciseRecordJpaEntity.from(er, dailyRecordJpaEntity, exercise))
+                .toList();
+
+        exerciseRecordCommandRepository.saveAll(exerciseRecordJpaEntities);
+    }
+
+    private void removeOriginRecord(Long userId, DailyExerciseRecordCreateCommand command) {
+        recordCommandRepository.deleteDateRecordOf(userId, command.getDate());
+    }
+
 }

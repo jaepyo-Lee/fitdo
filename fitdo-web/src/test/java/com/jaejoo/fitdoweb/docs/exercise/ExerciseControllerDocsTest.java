@@ -119,8 +119,8 @@ class ExerciseControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("categoryId").type(NUMBER).description("운동부위id"),
                                         fieldWithPath("categoryName").type(STRING).description("운동부위명"),
                                         fieldWithPath("exercises").type(ARRAY).description("부위에 속한 운동리스트"),
-                                        fieldWithPath("exercises[].exerciseName").type(STRING).description("운동명"),
-                                        fieldWithPath("exercises[].exerciseId").type(NUMBER).description("운동Id")
+                                        fieldWithPath("exercises[].name").type(STRING).description("운동명"),
+                                        fieldWithPath("exercises[].id").type(NUMBER).description("운동Id")
                                 )
                         )
                 ).andReturn();

@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class ExerciseRecordRequestDto {
-    private int set;
+    private int number;
     private int weight;
-    private int count;
-    private boolean progress;
+    private int volume;
+    private boolean done;
 }

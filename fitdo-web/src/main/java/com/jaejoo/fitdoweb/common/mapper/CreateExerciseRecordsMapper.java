@@ -18,8 +18,6 @@ import java.util.List;
 public interface CreateExerciseRecordsMapper {
     CreateExerciseRecordsMapper INSTANCE = Mappers.getMapper(CreateExerciseRecordsMapper.class);
 
-    @Mapping(source = "recordDate", target = "recordDate")
-    @Mapping(source = "dailyExerciseRecords", target = "records")
     DailyExerciseRecordCreateCommand toDailyExerciseRecordCreateCommand(DailyRecordCreateRequest request);
 
     @IterableMapping(qualifiedByName = "toRecordExerciseRecords")
