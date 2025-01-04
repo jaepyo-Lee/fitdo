@@ -33,19 +33,52 @@ public class FriendService {
     @Transactional(readOnly = true)
     public FriendDetailInfo readFriendDetailInfo(Long userId) {
         User user = userRepository.findById(userId);
+
+        // 사용자의 루틴 목록을 가져오기
         List<RoutineJpaEntity> routines = routineRepository.findAllByUserId(user.getUserId());
-        List<UserRoutineInfo> routineInfos = new ArrayList<>();
-        for (RoutineJpaEntity routine : routines) {
-            List<ExerciseInfoInRoutine> exerciseInfoInRoutines = new ArrayList<>();
-            List<ExerciseRoutineJpaEntity> allByRoutine = exerciseRoutineQueryRepository.findAllByRoutine(routine);
-            for (ExerciseRoutineJpaEntity exerciseRoutineJpaEntity : allByRoutine) {
-                ExerciseJpaEntity exercise = exerciseRoutineJpaEntity.getExercise();
-                exerciseInfoInRoutines.add(new ExerciseInfoInRoutine(exercise.getCategory().getPartName(), exercise.getName()));
-            }
-            routineInfos.add(new UserRoutineInfo(routine.getName(), exerciseInfoInRoutines));
-        }
-        return new FriendDetailInfo(user.getUserId(), user.getNickname(), user.getWeight(), user.getHeight(), routineInfos);
+        List<UserRoutineInfo> routineDetails = findFriendRoutineDetails(routines);
+
+        return new FriendDetailInfo(
+                user.getUserId(),
+                user.getNickname(),
+                user.getWeight(),
+                user.getHeight(),
+                routineDetails
+        );
     }
+
+    private List<UserRoutineInfo> findFriendRoutineDetails(List<RoutineJpaEntity> routines) {
+        List<UserRoutineInfo> routineInfos = new ArrayList<>();
+
+        for (RoutineJpaEntity routine : routines) {
+            UserRoutineInfo routineInfo = findExercisesOf(routine);
+            routineInfos.add(routineInfo);
+        }
+
+        return routineInfos;
+    }
+
+    private UserRoutineInfo findExercisesOf(RoutineJpaEntity routine) {
+        List<ExerciseRoutineJpaEntity> exerciseInRoutines = exerciseRoutineQueryRepository.findAllByRoutine(routine);
+        List<ExerciseInfoInRoutine> exerciseInfoInRoutines = new ArrayList<>();
+
+        for (ExerciseRoutineJpaEntity exerciseRoutine : exerciseInRoutines) {
+            ExerciseInfoInRoutine exerciseInfo = findExerciseDetails(exerciseRoutine);
+            exerciseInfoInRoutines.add(exerciseInfo);
+        }
+
+        return new UserRoutineInfo(routine.getName(), exerciseInfoInRoutines);
+    }
+
+    private ExerciseInfoInRoutine findExerciseDetails(ExerciseRoutineJpaEntity exerciseRoutine) {
+        ExerciseJpaEntity exercise = exerciseRoutine.getExercise();
+        return new ExerciseInfoInRoutine(
+                exercise.getCategory().getPartName(),
+                exercise.getName()
+        );
+    }
+
+
 
     @Transactional(readOnly = true)
     public List<FriendSimpleInfo> readFriendsInfos(Long userId) {
@@ -53,7 +86,8 @@ public class FriendService {
         return friendRelations.stream()
                 .map(relations -> {
                     User friend = relations.getReceiver().toUserModel();
-                    return tierCalculator.calculate(friend);
+                    String tier = tierCalculator.calculate(friend);
+                    return new FriendSimpleInfo(friend.getUserId(), friend.getNickname(), tier);
                 })
                 .toList();
     }

@@ -15,7 +15,7 @@ import java.util.Objects;
 public class TierCalculator {
     private final RedisTemplate<String, String> redisTemplate;
 
-    public FriendSimpleInfo calculate(User user) {
+    public String calculate(User user) {
         long total = Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get("total")));
         ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
         Long rank = zSet.rank("userScore", String.valueOf(user.getUserId()));
@@ -23,6 +23,6 @@ public class TierCalculator {
             rank = total; // 기본적으로 최하위로 설정
         }
         rank += 1;
-        return new FriendSimpleInfo(user.getUserId(), user.getNickname(), Tier.calculateTier(total, rank).name());
+        return Tier.calculateTier(total, rank).name();
     }
 }

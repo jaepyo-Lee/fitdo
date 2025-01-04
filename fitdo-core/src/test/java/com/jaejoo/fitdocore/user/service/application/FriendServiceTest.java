@@ -94,6 +94,12 @@ class FriendServiceTest {
         ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
         ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
 
+        ExerciseJpaEntity exercise2 = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트2").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
+        ExerciseJpaEntity saveExercise2 = exerciseJpaRepository.save(exercise2);
+
+        ExerciseJpaEntity exercise3 = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트3").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
+        ExerciseJpaEntity saveExercise3 = exerciseJpaRepository.save(exercise3);
+
         RoutineJpaEntity routine = RoutineJpaEntity.builder()
                 .name("routine1")
                 .user(saveUser)
@@ -104,7 +110,17 @@ class FriendServiceTest {
                 .routine(saveRoutine)
                 .exercise(saveExercise)
                 .build();
+        ExerciseRoutineJpaEntity exerciseRoutine2 = ExerciseRoutineJpaEntity.builder()
+                .routine(saveRoutine)
+                .exercise(saveExercise2)
+                .build();
+        ExerciseRoutineJpaEntity exerciseRoutine3 = ExerciseRoutineJpaEntity.builder()
+                .routine(saveRoutine)
+                .exercise(saveExercise3)
+                .build();
         ExerciseRoutineJpaEntity saveExerciseRoutine = exerciseRoutineJpaRepository.save(exerciseRoutine);
+        ExerciseRoutineJpaEntity saveExerciseRoutine2 = exerciseRoutineJpaRepository.save(exerciseRoutine2);
+        ExerciseRoutineJpaEntity saveExerciseRoutine3 = exerciseRoutineJpaRepository.save(exerciseRoutine3);
 
         // when
         System.out.println("=====Logic Start=====");
@@ -115,6 +131,6 @@ class FriendServiceTest {
         // then
         assertAll(() -> assertThat(friendDetailInfo.getRoutines().size()).isEqualTo(1),
                 () -> assertThat(friendDetailInfo.getUserId()).isEqualTo(saveUser.getId()),
-                () -> assertThat(friendDetailInfo.getRoutines().get(0).getExercises().size()).isEqualTo(1));
+                () -> assertThat(friendDetailInfo.getRoutines().get(0).getExercises().size()).isEqualTo(3));
     }
 }
