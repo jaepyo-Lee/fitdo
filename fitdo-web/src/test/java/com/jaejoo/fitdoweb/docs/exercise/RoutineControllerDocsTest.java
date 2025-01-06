@@ -26,6 +26,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -105,13 +106,41 @@ class RoutineControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("routineId").type(NUMBER).description("루틴 ID"),
-                                        fieldWithPath("routineName").type(STRING).description("루틴명"),
-                                        fieldWithPath("categoryAndExercise").type(ARRAY).description("루틴에 저장된 운동과 운동카테고리 정보"),
-                                        fieldWithPath("categoryAndExercise[].categoryId").type(NUMBER).description("운동카테고리(부위)ID"),
-                                        fieldWithPath("categoryAndExercise[].categoryName").type(STRING).description("운동카테고리(부위)명"),
-                                        fieldWithPath("categoryAndExercise[].exerciseId").type(NUMBER).description("운동ID"),
-                                        fieldWithPath("categoryAndExercise[].exerciseName").type(STRING).description("운동명")
+                                        fieldWithPath("routineId").type(NUMBER).description("루틴 ID").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routineName").type(STRING).description("루틴명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryAndExercise").type(ARRAY).description("루틴에 저장된 운동과 운동카테고리 정보").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryAndExercise[].categoryId").type(NUMBER).description("운동카테고리(부위)ID").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryAndExercise[].categoryName").type(STRING).description("운동카테고리(부위)명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryAndExercise[].exerciseId").type(NUMBER).description("운동ID").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryAndExercise[].exerciseName").type(STRING).description("운동명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 );

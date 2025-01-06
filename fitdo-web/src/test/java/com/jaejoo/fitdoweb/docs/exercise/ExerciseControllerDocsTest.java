@@ -29,6 +29,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,7 +73,11 @@ class ExerciseControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("exerciseName").type(STRING).description("저장된 운동")
+                                        fieldWithPath("exerciseName").type(STRING).description("저장된 운동").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 ).andReturn();
@@ -116,11 +121,31 @@ class ExerciseControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("categoryId").type(NUMBER).description("운동부위id"),
-                                        fieldWithPath("categoryName").type(STRING).description("운동부위명"),
-                                        fieldWithPath("exercises").type(ARRAY).description("부위에 속한 운동리스트"),
-                                        fieldWithPath("exercises[].name").type(STRING).description("운동명"),
-                                        fieldWithPath("exercises[].id").type(NUMBER).description("운동Id")
+                                        fieldWithPath("categoryId").type(NUMBER).description("운동부위id").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("categoryName").type(STRING).description("운동부위명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("exercises").type(ARRAY).description("부위에 속한 운동리스트").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("exercises[].name").type(STRING).description("운동명").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("exerciseName"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("exercises[].id").type(NUMBER).description("운동Id").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("exerciseId"),
+                                                key("updateDate").value("2025-01-06")
+                                        )
                                 )
                         )
                 ).andReturn();

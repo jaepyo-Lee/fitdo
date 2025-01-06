@@ -13,15 +13,10 @@ import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +37,8 @@ class FriendShareServiceTest {
     @Test
     void 친구추가시_한쪽만_친구신청상태로_등록() throws Exception {
         // given
+        LinkedList<Object> objects = new LinkedList<>();
+        ArrayList<Object> list = new ArrayList<>();
         UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveUser = userJpaRepository.save(user);
 
