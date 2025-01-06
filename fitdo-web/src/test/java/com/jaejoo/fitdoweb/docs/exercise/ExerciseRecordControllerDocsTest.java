@@ -45,7 +45,7 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
 
     @Override
     protected Object initController() {
-        return new ExerciseRecordController(service,writeService);
+        return new ExerciseRecordController(service, writeService);
     }
 
     @Test
@@ -90,7 +90,11 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("records[].sets[].done").type(JsonFieldType.BOOLEAN).description("해당 운동의 진행여부")
                                 ),
                                 responseFields(
-                                        fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("운동 기록이 성공적으로 생성되었는지 여부. `true`이면 성공, `false`이면 실패")
+                                        fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("운동 기록이 성공적으로 생성되었는지 여부. `true`이면 성공, `false`이면 실패").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 );
@@ -144,16 +148,57 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("date").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식"),
-                                        fieldWithPath("records").type(JsonFieldType.ARRAY).description("운동 기록"),
-                                        fieldWithPath("records[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID"),
-                                        fieldWithPath("records[].exerciseName").type(JsonFieldType.STRING).description("진행한 운동종목명"),
-                                        fieldWithPath("records[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명"),
-                                        fieldWithPath("records[].sets").type(JsonFieldType.ARRAY).description("진행한 운동의 기록"),
-                                        fieldWithPath("records[].sets[].weight").type(JsonFieldType.NUMBER).description("운동 중량"),
-                                        fieldWithPath("records[].sets[].volume").type(JsonFieldType.NUMBER).description("운동 횟수"),
-                                        fieldWithPath("records[].sets[].number").type(JsonFieldType.NUMBER).description("세트번호"),
-                                        fieldWithPath("records[].sets[].done").type(JsonFieldType.BOOLEAN).description("운동 진행 여부")
+                                        fieldWithPath("date").type(JsonFieldType.STRING).description("운동한 날짜. yyyy-MM-dd 형식")
+                                                .attributes(
+                                                        key("updateContent").value("필드명 변경"),
+                                                        key("beforeUpdate").value("exerciseDate"),
+                                                        key("updateDate").value("2025-01-06")
+                                                ),
+                                        fieldWithPath("records").type(JsonFieldType.ARRAY).description("운동 기록").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("exerciseDate"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].exerciseId").type(JsonFieldType.NUMBER).description("진행한 운동종목 ID").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].exerciseId"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].exerciseName").type(JsonFieldType.STRING).description("진행한 운동종목명").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].exerciseName"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].categoryName").type(JsonFieldType.STRING).description("진행한 운동종목의 부위명").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].categoryName"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].sets").type(JsonFieldType.ARRAY).description("진행한 운동의 기록").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].records"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].sets[].weight").type(JsonFieldType.NUMBER).description("운동 중량").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].records[].weight"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].sets[].volume").type(JsonFieldType.NUMBER).description("운동 횟수").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].records[].volume"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].sets[].number").type(JsonFieldType.NUMBER).description("세트번호").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].records[].exerciseSet"),
+                                                key("updateDate").value("2025-01-06")
+                                        ),
+                                        fieldWithPath("records[].sets[].done").type(JsonFieldType.BOOLEAN).description("운동 진행 여부").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("dateRecords[].records[].progress"),
+                                                key("updateDate").value("2025-01-06")
+                                        )
                                 )
                         )
                 );
@@ -193,10 +238,26 @@ public class ExerciseRecordControllerDocsTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("startDayValue").type(JsonFieldType.NUMBER).description("해당월의 시작요일 \n 1(월요일)~7(일요일)"),
-                                        fieldWithPath("percentagesInMonth").type(JsonFieldType.ARRAY).description("해당월의 운동진행 퍼센티지 배열"),
-                                        fieldWithPath("percentagesInMonth[].date").type(JsonFieldType.STRING).description("날짜"),
-                                        fieldWithPath("percentagesInMonth[].percentage").type(JsonFieldType.NUMBER).description("퍼센트")
+                                        fieldWithPath("startDayValue").type(JsonFieldType.NUMBER).description("해당월의 시작요일 \n 1(월요일)~7(일요일)").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("percentages").type(JsonFieldType.ARRAY).description("해당월의 운동진행 퍼센티지 배열").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("percentagesInMonth"),
+                                                key("updateDate").value("2025-01-07")
+                                        ),
+                                        fieldWithPath("percentages[].date").type(JsonFieldType.STRING).description("날짜").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("percentagesInMonth[].date"),
+                                                key("updateDate").value("2025-01-07")
+                                        ),
+                                        fieldWithPath("percentages[].value").type(JsonFieldType.NUMBER).description("퍼센트").attributes(
+                                                key("updateContent").value("필드명 변경"),
+                                                key("beforeUpdate").value("percentagesInMonth[].percentage"),
+                                                key("updateDate").value("2025-01-07")
+                                        )
                                 )
                         )
                 );

@@ -11,5 +11,5 @@ import java.time.LocalDate;
 public class ProgressPercentageDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
-    private Double percentage;
+    private Double value;
 }
