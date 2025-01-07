@@ -13,15 +13,12 @@ spring:
         path: /h2-console       # H2 Console 접속 주소
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true      # 쿼리 로그 포맷 (정렬)
         show_sql: true
-
   sql:
     init:
       mode: never
