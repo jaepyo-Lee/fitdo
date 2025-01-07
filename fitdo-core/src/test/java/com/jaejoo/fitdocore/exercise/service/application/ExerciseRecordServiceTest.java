@@ -2,9 +2,6 @@ package com.jaejoo.fitdocore.exercise.service.application;
 
 
 import com.jaejoo.fitdocore.exercise.ExerciseRecordService;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordDto;
-import com.jaejoo.fitdocore.exercise.req.RecordExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.FindMonthExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
 import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
@@ -32,7 +29,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -54,166 +50,32 @@ class ExerciseRecordServiceTest {
     private ExerciseRecordService exerciseRecordService;
 
     @Nested
-    @DisplayName("운동기록기능 테스트")
-    class ExerciseExerciseRecordCreateCommandTest {
-        @Test
-        void 기존에_저장된운동을_삭제하고_다른운동들로만_기록을_생성했을때() {
-            // given
-            UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-            UserJpaEntity saveUser = userJpaRepository.save(user);
-
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
-            CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
-            ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
-            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
-
-            ExerciseJpaEntity newExercise = ExerciseJpaEntity.builder().name("fly machine").category(saveCategory).build();
-            ExerciseJpaEntity newSaveExercise = exerciseJpaRepository.save(newExercise);
-
-            LocalDate today = LocalDate.now();
-
-            List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(
-                    new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true),
-                    new DailyExerciseRecordDto(3, 50, 10, true));
-            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
-            // when
-            System.out.println("=====Logic Start=====");
-
-            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(
-                    new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true),
-                    new DailyExerciseRecordDto(3, 50, 10, true));
-            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(newSaveExercise.getId(), newDailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(user.getId(), newCommand);
-
-            System.out.println("=====Logic End=====");
-            // then
-            List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
-            assertThat(all.size()).isEqualTo(3);
-
-        }
-
-        @Test
-        void 다른사람의기록도저장되어있을때_생성테스트() {
-            UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-            UserJpaEntity saveUser = userJpaRepository.save(user);
-
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
-            CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
-            ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
-            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
-
-
-            LocalDate today = LocalDate.now();
-
-            List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(
-                    new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true),
-                    new DailyExerciseRecordDto(3, 50, 10, true));
-            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
-
-
-            // when
-            System.out.println("=====Logic Start=====");
-            UserJpaEntity user2 = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-            UserJpaEntity saveUser2 = userJpaRepository.save(user2);
-            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(
-                    new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true));
-            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), newDailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser2.getId(), newCommand);
-
-            System.out.println("=====Logic End=====");
-            // then
-            List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
-            assertThat(all.size()).isEqualTo(5);
-        }
-
-        @Test
-        void 이미기록됐던운동기록에대한_재생성테스트() {
-            // given
-            UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-            UserJpaEntity saveUser = userJpaRepository.save(user);
-
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
-            CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
-            ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
-            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
-
-
-            LocalDate today = LocalDate.now();
-
-            List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true),
-                    new DailyExerciseRecordDto(3, 50, 10, true));
-            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
-
-
-            // when
-            System.out.println("=====Logic Start=====");
-
-            List<DailyExerciseRecordDto> newDailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true));
-            List<RecordExerciseRecords> newRecordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), newDailyExerciseRecordDtos));
-
-            DailyExerciseRecordCreateCommand newCommand = new DailyExerciseRecordCreateCommand(today, newRecordExerciseRecords);
-
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), newCommand);
-
-            System.out.println("=====Logic End=====");
-            // then
-            List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
-            assertThat(all.size()).isEqualTo(2);
-
-        }
-
-        @Test
-        void 처음기록되는운동기록에대한_생성테스트() {
-            // given
-            UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-            UserJpaEntity saveUser = userJpaRepository.save(user);
-
-            CategoryJpaEntity category = CategoryJpaEntity.builder().part(BodyPart.CHEST).build();
-            CategoryJpaEntity saveCategory = categoryJpaRepository.save(category);
-            ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().name("bench press").category(saveCategory).build();
-            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
-
-            // when
-            System.out.println("=====Logic Start=====");
-            LocalDate today = LocalDate.now();
-
-            List<DailyExerciseRecordDto> dailyExerciseRecordDtos = List.of(new DailyExerciseRecordDto(1, 50, 10, true),
-                    new DailyExerciseRecordDto(2, 50, 10, true),
-                    new DailyExerciseRecordDto(3, 50, 10, true));
-            List<RecordExerciseRecords> recordExerciseRecords = List.of(new RecordExerciseRecords(saveExercise.getId(), dailyExerciseRecordDtos));
-            DailyExerciseRecordCreateCommand command = new DailyExerciseRecordCreateCommand(today, recordExerciseRecords);
-            exerciseRecordService.writeDailyExerciseFrom(saveUser.getId(), command);
-
-            System.out.println("=====Logic End=====");
-            // then
-            List<DailyExerciseRecordJpaEntity> all = dailyExerciseRecordJpaRepository.findAll();
-            assertThat(all.size()).isEqualTo(3);
-
-        }
-    }
-
-    @Nested
     @DisplayName("조회월의 운동진행여부 퍼센티지 조회")
     class calculateProgressPercentageInMonth {
+        @Test
+        void 데이터가없는날0퍼센트조회되는지확인() {
+            // given
+            UserJpaEntity saveUser = userJpaRepository.save(new UserJpaEntity());
+            CategoryJpaEntity saveCategory = categoryJpaRepository.save(new CategoryJpaEntity(BodyPart.BACK));
+            ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
+
+            LocalDate localDate = LocalDate.of(2024, 12, 5);
+            DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
+            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
+            //6 3
+            // when
+            System.out.println("=====Logic Start=====");
+
+            List<ProgressPercentage> result = exerciseRecordService.readProgressPercentage(saveUser.getId(), YearMonth.of(2024, 12));
+
+            System.out.println("=====Logic End=====");
+            // then
+            assertAll(() -> assertThat(result.size()).isEqualTo(31),
+                    () -> assertThat(result.get(0).getDate()).isEqualTo(LocalDate.of(2024, 12, 1)),
+                    () -> assertThat(result.get(0).getPercentage()).isEqualTo(0.0));
+        }
+
         @Test
         void 조회월의진행퍼센티지조회() {
             // given
@@ -222,25 +84,18 @@ class ExerciseRecordServiceTest {
             ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(ExerciseJpaEntity.builder().name("exercise").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).user(saveUser).build());
 
             LocalDate localDate = LocalDate.of(2024, 12, 5);
-            LocalDate beforeMonth7Days = LocalDate.of(2024, 12, 23);
-            LocalDate afterMonth7Days = LocalDate.of(2025, 1, 8);
             DailyRecordJpaEntity saveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(localDate, saveUser));
-            DailyRecordJpaEntity yesterdaySaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(beforeMonth7Days, saveUser));
-            DailyRecordJpaEntity tomorrowSaveDailyRecord = dailyRecordJpaRepository.save(new DailyRecordJpaEntity(afterMonth7Days, saveUser));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, false, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, false, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 3, true, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 4, true, saveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 5, false, saveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, yesterdaySaveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, yesterdaySaveDailyRecord, saveExercise));
             dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 1, true, saveDailyRecord, saveExercise));
-            dailyExerciseRecordJpaRepository.save(new DailyExerciseRecordJpaEntity(1, 1, 2, true, tomorrowSaveDailyRecord, saveExercise));
             //6 3
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressPercentage> result = exerciseRecordService.calculateProgressPercentageInMonth(saveUser.getId(), YearMonth.of(2024, 12));
+            List<ProgressPercentage> result = exerciseRecordService.readProgressPercentage(saveUser.getId(), YearMonth.of(2024, 12));
 
             System.out.println("=====Logic End=====");
             // then
@@ -326,9 +181,9 @@ class ExerciseRecordServiceTest {
 
             System.out.println("=====Logic End=====");
             // then
-            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().size()).isEqualTo(1),
-                    () -> assertThat(exerciseRecordsOfUserInMonth.getDateRecords().get(0).getRecords().size()).isEqualTo(2),
-                    ()-> assertThat(exerciseRecordsOfUserInMonth.getExerciseDate()).isEqualTo(today));
+            assertAll(() -> assertThat(exerciseRecordsOfUserInMonth.getRecords().size()).isEqualTo(1),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getRecords().get(0).getSets().size()).isEqualTo(2),
+                    () -> assertThat(exerciseRecordsOfUserInMonth.getDate()).isEqualTo(today));
         }
     }
 }

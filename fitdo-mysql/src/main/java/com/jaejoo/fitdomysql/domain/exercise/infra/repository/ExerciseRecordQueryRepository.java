@@ -9,7 +9,7 @@ import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseRecordQueryRepository {
-    List<ProgressInDateDto> findAllProgressInMonthOfUser(Long userId, YearMonth yearMonth);
+    List<ProgressInDateDto> findAllProgress(Long userId, YearMonth yearMonth);
 
     List<DailyExerciseRecordJpaEntity> findExerciseRecordAtDate(Long userId, LocalDate date);
 

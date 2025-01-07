@@ -27,7 +27,6 @@ public class RoutineService {
     private final ExerciseRoutineCommandRepository exerciseRoutineCommandRepository;
     private final RoutineRepository routineRepository;
     private final UserRepository userRepository;
-    private final ExerciseRoutineQueryRepository exerciseRoutineQueryRepository;
 
     public void create(RoutineCreateCommand command) {
         User user = userRepository.findById(command.userId());
@@ -39,22 +38,6 @@ public class RoutineService {
             exerciseRoutines.add(new ExerciseRoutineJpaEntity(saveRoutine, saveExercise));
         }
         exerciseRoutineCommandRepository.saveAll(exerciseRoutines);
-    }
-
-    public List<ReadRoutineOfUser> readRoutine(Long userId) {
-        List<RoutineJpaEntity> routinesOfUser = routineRepository.findAllByUserId(userId);
-        List<ReadRoutineOfUser> routineInfosOfUser = new ArrayList<>();
-        for (RoutineJpaEntity routine : routinesOfUser) {
-            List<ExerciseRoutineJpaEntity> ExerciseRoutine = exerciseRoutineQueryRepository.findAllByRoutine(routine);
-            List<CategoryAndExerciseWithinRoutine> categoryAndExercise = new ArrayList<>();
-            for (ExerciseRoutineJpaEntity exerciseRoutine : ExerciseRoutine) {
-                ExerciseJpaEntity exercise = exerciseRoutine.getExercise();
-                CategoryJpaEntity category = exercise.getCategory();
-                categoryAndExercise.add(new CategoryAndExerciseWithinRoutine(category.getId(), category.getPartName(), exercise.getId(), exercise.getName()));
-            }
-            routineInfosOfUser.add(new ReadRoutineOfUser(routine.getId(), routine.getName(), categoryAndExercise));
-        }
-        return routineInfosOfUser;
     }
 
     public void deleteRoutine(Long routineId){

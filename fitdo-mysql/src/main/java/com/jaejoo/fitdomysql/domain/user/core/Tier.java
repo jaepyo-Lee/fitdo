@@ -3,7 +3,7 @@ package com.jaejoo.fitdomysql.domain.user.core;
 public enum Tier {
     BRONZE, SILVER, GOLD, PLATINUM, DIAMOND;
 
-    public static Tier calculateTier(int total, long rank) {
+    public static Tier calculateTier(long total, long rank) {
         double percentage = (double) rank / (double) total * 100;
         if (percentage >= 0 && percentage <= 20) {
             return DIAMOND;

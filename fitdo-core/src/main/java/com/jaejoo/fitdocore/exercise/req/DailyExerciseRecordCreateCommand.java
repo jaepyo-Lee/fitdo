@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 @Builder
 public class DailyExerciseRecordCreateCommand {
-    private LocalDate recordDate;
+    private LocalDate date;
     private List<RecordExerciseRecords> records;
 
-    public DailyExerciseRecordCreateCommand(LocalDate recordDate, List<RecordExerciseRecords> records) {
-        this.recordDate = recordDate;
+    public DailyExerciseRecordCreateCommand(LocalDate date, List<RecordExerciseRecords> records) {
+        this.date = date;
         this.records = records;
     }
 }

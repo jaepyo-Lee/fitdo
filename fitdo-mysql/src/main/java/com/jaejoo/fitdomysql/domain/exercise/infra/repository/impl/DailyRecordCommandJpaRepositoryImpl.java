@@ -1,49 +1,20 @@
 package com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl;
 
 
-import com.jaejoo.fitdomysql.domain.exercise.core.Exercise;
-import com.jaejoo.fitdomysql.domain.exercise.core.ExerciseRecord;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RecordCommandRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.DailyExerciseRecordJpaRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.DailyRecordJpaRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.ExerciseJpaRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.DailyExerciseRecordJpaEntity;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.DailyRecordJpaEntity;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
-import com.jaejoo.fitdomysql.domain.user.repository.jpa.UserJpaRepository;
-import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class DailyRecordCommandJpaRepositoryImpl implements RecordCommandRepository {
     private final DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
-    private final DailyRecordJpaRepository dailyRecordJpaRepository;
-    private final ExerciseJpaRepository exerciseJpaRepository;
-    private final UserJpaRepository userJpaRepository;
 
     @Override
-    public void saveAll(Long userId, Long exerciseId, LocalDate dailyDate, Exercise exerciseRecords) {
-        UserJpaEntity user = userJpaRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("user not found"));
-        DailyRecordJpaEntity dailyRecordJpaEntity = dailyRecordJpaRepository.findByUserIdAndDate(userId, dailyDate)
-                .orElseGet(() -> dailyRecordJpaRepository.save(new DailyRecordJpaEntity(dailyDate, user)));
-        ExerciseJpaEntity exercise = exerciseJpaRepository.findById(exerciseId)
-                .orElseThrow(() -> new IllegalArgumentException("exercise not found"));
-
-        List<DailyExerciseRecordJpaEntity> exerciseRecordJpaEntities = new ArrayList<>();
-        for (ExerciseRecord exerciseRecord : exerciseRecords.getExerciseRecords()) {
-            exerciseRecordJpaEntities.add(DailyExerciseRecordJpaEntity.from(exerciseRecord, dailyRecordJpaEntity, exercise));
-        }
-        dailyExerciseRecordJpaRepository.saveAll(exerciseRecordJpaEntities);
-    }
-
-    @Override
-    public void deleteDateRecordOf(Long userId,LocalDate deleteDate) {
+    public void deleteDateRecordOf(Long userId, LocalDate deleteDate) {
         dailyExerciseRecordJpaRepository.deleteAllOfUserExerciseRecordsOnDate(userId, deleteDate);
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 public class ProgressPercentageWithMonthInfoResponse {
     private int startDayValue;
-    private List<ProgressPercentageDto> percentagesInMonth;
+    private List<ProgressPercentageDto> percentages;
 }

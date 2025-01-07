@@ -20,6 +20,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,9 +66,22 @@ class AuthControllerDocsTest extends RestDocsSupport {
                                 requestFields(
                                         fieldWithPath("loginType").type(JsonFieldType.STRING).description("로그인을 진행하는 플랫폼")),
                                 responseFields(
-                                        fieldWithPath("accessToken").type(JsonFieldType.STRING).description("서비스에 사용될 jwt토큰"),
-                                        fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("토큰 재발급에 사용될 refreshToken"),
-                                        fieldWithPath("isNewFlag").type(JsonFieldType.BOOLEAN).description("신규회원여부"))
+                                        fieldWithPath("accessToken").type(JsonFieldType.STRING).description("서비스에 사용될 jwt토큰").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("토큰 재발급에 사용될 refreshToken").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("isNewFlag").type(JsonFieldType.BOOLEAN).description("신규회원여부").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
+                                )
                         )
                 );
 

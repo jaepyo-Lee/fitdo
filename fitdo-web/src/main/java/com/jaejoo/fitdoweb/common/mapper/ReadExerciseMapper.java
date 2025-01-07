@@ -6,6 +6,7 @@ import com.jaejoo.fitdoweb.exercise.web.res.ExerciseReadResponse;
 import com.jaejoo.fitdoweb.exercise.web.res.ExercisesWithinCategoryDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -24,5 +25,7 @@ public interface ReadExerciseMapper {
     List<ExercisesWithinCategoryDto> toExerciseWithinCategoryDto(List<ExercisesWithinCategory> exercisesWithinCategory);
 
     @Named("toExerciseWithinCategoryDto")
+    @Mapping(source = "exerciseName",target = "name")
+    @Mapping(source = "exerciseId",target = "id")
     ExercisesWithinCategoryDto toExercisesWithinCategoryDto(ExercisesWithinCategory exercisesWithinCategory);
 }

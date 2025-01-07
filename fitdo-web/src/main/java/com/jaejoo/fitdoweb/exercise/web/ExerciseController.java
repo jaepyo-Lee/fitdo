@@ -30,7 +30,7 @@ public class ExerciseController {
 
     @GetMapping("/api/v1/exercises")
     public SuccessResponse<List<ExerciseReadResponse>> read(@AuthenticationPrincipal CustomUserDetail userDetail) {
-        List<FindExercisesWithCategory> exercisesWithCategoryOf = service.findExercisesWithCategoryOf(userDetail.userId());
+        List<FindExercisesWithCategory> exercisesWithCategoryOf = service.findExercisesWithCategoryFor(userDetail.userId());
         List<ExerciseReadResponse> exerciseReadResponse = ReadExerciseMapper.INSTANCE.toExerciseReadResponse(exercisesWithCategoryOf);
         return new SuccessResponse<>(HttpStatus.OK.value(), exerciseReadResponse);
     }

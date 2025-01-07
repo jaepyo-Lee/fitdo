@@ -12,5 +12,5 @@ import java.util.List;
 @Getter
 public class DailyExerciseRecordsRequest {
     private Long exerciseId;
-    private List<ExerciseRecordRequestDto> records;
+    private List<ExerciseRecordRequestDto> sets;
 }

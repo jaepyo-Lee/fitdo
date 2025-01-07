@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 @Builder
 public class FindMonthExerciseRecords {
-    private LocalDate exerciseDate;
-    private List<FindDateExerciseRecords> dateRecords;
+    private LocalDate date;
+    private List<FindDateExerciseRecords> records;
 }
