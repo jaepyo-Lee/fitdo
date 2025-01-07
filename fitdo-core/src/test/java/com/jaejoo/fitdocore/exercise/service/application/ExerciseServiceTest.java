@@ -68,8 +68,8 @@ class ExerciseServiceTest {
         System.out.println("=====Logic Start=====");
 
         String name = "벤치프레스";
-        String actual = exerciseService.createExercise(new ExerciseCreateCommand(saveChestCategory.getId(), name,saveUser.getId()));
-        List<FindExercisesWithCategory> exercisesWithCategoryOf = exerciseService.findExercisesWithCategoryOf(saveUser.getId());
+        String actual = exerciseService.createExercise(new ExerciseCreateCommand(saveChestCategory.getId(), name, saveUser.getId()));
+        List<FindExercisesWithCategory> exercisesWithCategoryOf = exerciseService.findExercisesWithCategoryFor(saveUser.getId());
         System.out.println("=====Logic End=====");
         // then
         assertThat(exercisesWithCategoryOf.size()).isEqualTo(1);
@@ -107,7 +107,7 @@ class ExerciseServiceTest {
         // when
         System.out.println("=====Logic Start=====");
 
-        List<FindExercisesWithCategory> exercisesWithCategoryOf = exerciseService.findExercisesWithCategoryOf(saveUser.getId());
+        List<FindExercisesWithCategory> exercisesWithCategoryOf = exerciseService.findExercisesWithCategoryFor(saveUser.getId());
 
         System.out.println("=====Logic End=====");
         // then
@@ -185,7 +185,7 @@ class ExerciseServiceTest {
     }
 
     @Test
-    void 운동삭제시_같은운동이_여러개_포함된_루틴에_저장된목록은_지워지도록_hard_delete진행() {
+    void 운동삭제시_삭제된운동이_포함하고있는_루틴에는_운동이_지워지면안됌() {
         // given
         UserJpaEntity user = UserJpaEntity.builder().build();
         UserJpaEntity saveUser = userJpaRepository.save(user);
@@ -211,11 +211,11 @@ class ExerciseServiceTest {
         RoutineJpaEntity saveRoutine = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
         RoutineJpaEntity saveRoutine2 = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
 
-        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, benchpress1));
-        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, benchpress1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, exercise1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine, exercise2));
 
-        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, benchpress1));
-        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, benchpress1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, exercise1));
+        exerciseRoutineJpaRepository.save(new ExerciseRoutineJpaEntity(saveRoutine2, exercise3));
 
         // when
         System.out.println("=====Logic Start=====");
@@ -227,7 +227,7 @@ class ExerciseServiceTest {
         List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine);
         List<ExerciseRoutineJpaEntity> allExerciseWithinRoutine2 = exerciseRoutineJpaRepository.findAllByRoutine(saveRoutine2);
 
-        assertAll(() -> assertThat(allExerciseWithinRoutine.size()).isZero(),
-                () -> assertThat(allExerciseWithinRoutine2.size()).isZero());
+        assertAll(() -> assertThat(allExerciseWithinRoutine.size()).isEqualTo(2),
+                () -> assertThat(allExerciseWithinRoutine2.size()).isEqualTo(2));
     }
 }

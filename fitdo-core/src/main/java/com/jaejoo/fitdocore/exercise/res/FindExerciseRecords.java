@@ -10,6 +10,6 @@ import lombok.Getter;
 public class FindExerciseRecords {
     private int weight;
     private int volume;
-    private int exerciseSet;
-    private boolean isProgress;
+    private int number;
+    private boolean done;
 }

@@ -1,6 +1,7 @@
 package com.jaejoo.fitdoweb.docs.user;
 
 import com.jaejoo.fitdocore.user.FriendService;
+import com.jaejoo.fitdocore.user.FriendShareService;
 import com.jaejoo.fitdocore.user.req.FriendSimpleInfo;
 import com.jaejoo.fitdocore.user.res.ExerciseInfoInRoutine;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
@@ -27,6 +28,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,10 +36,12 @@ class FriendControllerTest extends RestDocsSupport {
 
     @Mock
     private FriendService service;
+    @Mock
+    private FriendShareService shareService;
 
     @Override
     protected Object initController() {
-        return new FriendController(service);
+        return new FriendController(service, shareService);
     }
 
     @Test
@@ -67,15 +71,51 @@ class FriendControllerTest extends RestDocsSupport {
                                 pathParameters(parameterWithName("friendId").description("친구목록조회시 얻은 사용자ID(userId)")),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("친구의 userId"),
-                                        fieldWithPath("userName").type(JsonFieldType.STRING).description("친구의 닉네임"),
-                                        fieldWithPath("weight").type(JsonFieldType.NUMBER).description("친구의 몸무게"),
-                                        fieldWithPath("height").type(JsonFieldType.NUMBER).description("친구의 키"),
-                                        fieldWithPath("routines").type(JsonFieldType.ARRAY).description("친구의 운동루틴배열"),
-                                        fieldWithPath("routines[].name").type(JsonFieldType.STRING).description("친구의 루틴명"),
-                                        fieldWithPath("routines[].exercises").type(JsonFieldType.ARRAY).description("루틴에 속한 운동배열"),
-                                        fieldWithPath("routines[].exercises[].bodyPart").type(JsonFieldType.STRING).description("루틴에 속한 운동부위"),
-                                        fieldWithPath("routines[].exercises[].exerciseName").type(JsonFieldType.STRING).description("루틴에 속한 운동명")
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("친구의 userId").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("userName").type(JsonFieldType.STRING).description("친구의 닉네임").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("weight").type(JsonFieldType.NUMBER).description("친구의 몸무게").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("height").type(JsonFieldType.NUMBER).description("친구의 키").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routines").type(JsonFieldType.ARRAY).description("친구의 운동루틴배열").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routines[].name").type(JsonFieldType.STRING).description("친구의 루틴명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routines[].exercises").type(JsonFieldType.ARRAY).description("루틴에 속한 운동배열").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routines[].exercises[].bodyPart").type(JsonFieldType.STRING).description("루틴에 속한 운동부위").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("routines[].exercises[].exerciseName").type(JsonFieldType.STRING).description("루틴에 속한 운동명").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 );
@@ -104,9 +144,21 @@ class FriendControllerTest extends RestDocsSupport {
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ), responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("친구의 userId"),
-                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("친구의 닉네임"),
-                                        fieldWithPath("tier").type(JsonFieldType.STRING).description("친구의 운동계급")
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("친구의 userId").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("친구의 닉네임").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        ),
+                                        fieldWithPath("tier").type(JsonFieldType.STRING).description("친구의 운동계급").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 );
@@ -118,7 +170,7 @@ class FriendControllerTest extends RestDocsSupport {
         // given
         String deepLink = "superfitdo://fitdo/friend?userId=" + "암호화된 유저아이디";
         // when
-        when(service.generateDeepLink(any())).thenReturn(deepLink);
+        when(shareService.generateDeepLink(any())).thenReturn(deepLink);
 
         mvc.perform(
                         RestDocumentationRequestBuilders.get("/api/v1/user/link")
@@ -135,7 +187,11 @@ class FriendControllerTest extends RestDocsSupport {
                                 ),
                                 responseFields(
                                         beneathPath("result").withSubsectionId("result"),
-                                        fieldWithPath("deepLink").type(JsonFieldType.STRING).description("딥링크")
+                                        fieldWithPath("deepLink").type(JsonFieldType.STRING).description("딥링크").attributes(
+                                                key("updateContent").value("-"),
+                                                key("beforeUpdate").value("-"),
+                                                key("updateDate").value("-")
+                                        )
                                 )
                         )
                 );
@@ -154,10 +210,10 @@ class FriendControllerTest extends RestDocsSupport {
     void 딥링크를_통한_친구추가() throws Exception {
         // given
         // when
-        doNothing().when(service).applyFriend(any());
+        doNothing().when(shareService).applyFriend(any());
 
         mvc.perform(
-                        RestDocumentationRequestBuilders.post("/api/v1/friends/{DeepLinkUserId}","{ userId that get by DeepLink }")
+                        RestDocumentationRequestBuilders.post("/api/v1/friends/{DeepLinkUserId}", "{ userId that get by DeepLink }")
                                 .header("Authorization", "Bearer Token")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -169,7 +225,7 @@ class FriendControllerTest extends RestDocsSupport {
                                 requestHeaders(
                                         headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
                                 ),
-                        pathParameters(parameterWithName("DeepLinkUserId").description("딥링크의 Query로 받은 userId"))
+                                pathParameters(parameterWithName("DeepLinkUserId").description("딥링크의 Query로 받은 userId"))
                         )
                 );
     }

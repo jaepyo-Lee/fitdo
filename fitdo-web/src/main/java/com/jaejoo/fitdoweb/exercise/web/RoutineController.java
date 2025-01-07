@@ -1,5 +1,6 @@
 package com.jaejoo.fitdoweb.exercise.web;
 
+import com.jaejoo.fitdocore.exercise.RoutineReadService;
 import com.jaejoo.fitdocore.exercise.RoutineService;
 import com.jaejoo.fitdocore.exercise.req.RoutineCreateCommand;
 import com.jaejoo.fitdocore.exercise.res.ReadRoutineOfUser;
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 public class RoutineController {
     private final RoutineService routineService;
-
+    private final RoutineReadService routineReadService;
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/routines")
     public SuccessResponse createRoutine(@AuthenticationPrincipal CustomUserDetail userDetail,
@@ -30,7 +31,7 @@ public class RoutineController {
 
     @GetMapping("/api/v1/routines")
     public SuccessResponse<List<ReadRoutinesOfUserResponse>> readRoutine(@AuthenticationPrincipal CustomUserDetail userDetail) {
-        List<ReadRoutineOfUser> readRoutineOfUsers = routineService.readRoutine(userDetail.userId());
+        List<ReadRoutineOfUser> readRoutineOfUsers = routineReadService.readRoutine(userDetail.userId());
         List<ReadRoutinesOfUserResponse> response = ReadRoutineMapper.INSTANCE.toReadRoutineOfUserResponse(readRoutineOfUsers);
         return new SuccessResponse<>(response);
     }

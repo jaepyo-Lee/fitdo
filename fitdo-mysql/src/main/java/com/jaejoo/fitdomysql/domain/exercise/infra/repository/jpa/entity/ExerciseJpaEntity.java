@@ -67,4 +67,8 @@ public class ExerciseJpaEntity {
         }
         return false;
     }
+
+    public void delete() {
+        this.deleteDelimiter = DeleteDelimiter.DELETE;
+    }
 }

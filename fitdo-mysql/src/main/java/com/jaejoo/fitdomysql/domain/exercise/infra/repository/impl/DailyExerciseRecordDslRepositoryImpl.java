@@ -25,7 +25,7 @@ import static com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.
 public class DailyExerciseRecordDslRepositoryImpl implements ExerciseRecordQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<ProgressInDateDto> findAllProgressInMonthOfUser(Long userId, YearMonth yearMonth) {
+    public List<ProgressInDateDto> findAllProgress(Long userId, YearMonth yearMonth) {
         LocalDate endDate = yearMonth.atEndOfMonth();
         LocalDate startDate = yearMonth.atDay(1);
 

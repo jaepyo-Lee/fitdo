@@ -1,13 +1,19 @@
 == 1.1 Login
+
 === Request
+
 Request Fields:
+
 include::{snippets}/user-login/request-fields.adoc[]
 
 Request HTTP Example:
+
 include::{snippets}/user-login/http-request.adoc[]
 
 === Response
+
 Response Data Fields:
+
 include::{snippets}/user-login/response-fields.adoc[]
 
 Response HTTP Example:

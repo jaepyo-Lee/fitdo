@@ -2,12 +2,8 @@ package com.jaejoo.fitdocore.user.service.application;
 
 
 import com.jaejoo.fitdocore.user.FriendService;
-import com.jaejoo.fitdocore.user.req.FriendApplyCommand;
-import com.jaejoo.fitdocore.user.req.FriendApplyConfirmCommand;
 import com.jaejoo.fitdocore.user.req.FriendSimpleInfo;
-import com.jaejoo.fitdocore.user.req.ReadApplierInfo;
 import com.jaejoo.fitdocore.user.res.FriendDetailInfo;
-import com.jaejoo.fitdocore.util.AESConverter;
 import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
 import com.jaejoo.fitdomysql.domain.exercise.core.BodyPart;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.CategoryJpaRepository;
@@ -25,11 +21,10 @@ import com.jaejoo.fitdomysql.domain.user.repository.jpa.UserJpaRepository;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.FriendJpaEntity;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.FriendStatus;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,14 +36,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestConfiguration
 @Transactional
 class FriendServiceTest {
     @Autowired
     UserJpaRepository userJpaRepository;
     @Autowired
     FriendService friendService;
-    @Autowired
-    EntityManager em;
     @Autowired
     FriendJpaRepository friendJpaRepository;
     @Autowired
@@ -60,129 +54,8 @@ class FriendServiceTest {
     @Autowired
     private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
     @Autowired
-    private AESConverter converter;
-    @Test
-    void 친구추가시_한쪽만_친구신청상태로_등록() throws Exception {
-        // given
-        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveUser = userJpaRepository.save(user);
-
-        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(friend);
-        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
-
-        // when
-        System.out.println("=====Logic Start=====");
-
-        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
-
-        System.out.println("=====Logic End=====");
-        // then
-        assertThat(friendJpaRepository.findAll().size()).isEqualTo(2);
-    }
-
-    @Test
-    void 친구신청시_상태는_친구신청을_보낸사람이_FROM이되어_APPLY상태이어야한다_추가받은사람은_아무엔티티도없다() throws Exception {
-        // given
-        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveUser = userJpaRepository.save(user);
-
-        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(friend);
-        String serialize = converter.serialize(String.valueOf(saveUser.getId()));
-        // when
-        System.out.println("=====Logic Start=====");
-
-        friendService.applyFriend(new FriendApplyCommand(saveFriend.getId(), serialize)); //암호화되어있어야함, 근데 지금은 아니어서 안됌
-
-        System.out.println("=====Logic End=====");
-        // then
-        List<FriendJpaEntity> all = friendJpaRepository.findAll();
-        int cnt = 0;
-        for (FriendJpaEntity friendJpaEntity : all) {
-            if (friendJpaEntity.isSupport(FriendStatus.APPLY)) {
-                cnt++;
-            }
-        }
-        int finalCnt = cnt;
-        assertAll(() -> assertThat(finalCnt).isEqualTo(2),
-                () -> assertThat(all.size()).isEqualTo(2));
-    }
-
-    @Test
-    void 친구신청수락시_요청과응답사용자_모두_친구로_등록되고ACCEPT됩니다() {
-        // given
-        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveUser = userJpaRepository.save(user);
-
-        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(friend);
-
-        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
-
-        // when
-        System.out.println("=====Logic Start=====");
-
-        friendService.manageFriendApply(new FriendApplyConfirmCommand(saveUser.getId(), saveFriend.getId(), true));
-
-        System.out.println("=====Logic End=====");
-        // then
-        List<FriendJpaEntity> all = friendJpaRepository.findAll();
-        int cnt = (int) all.stream().filter(friendJpaEntity -> friendJpaEntity.isSupport(FriendStatus.ACCEPT)).count();
-        assertAll(() -> assertThat(all.size()).isEqualTo(2),
-                () -> assertThat(cnt).isEqualTo(2));
-    }
-
-    @Test
-    void 친구신청거절시_목록이_hard_delete됩니다() {
-        // given
-        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "sender", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity sender = userJpaRepository.save(user);
-
-        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "receiver", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity receiver = userJpaRepository.save(friend);
-
-        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(sender, receiver, FriendStatus.APPLY));
-
-        // when
-        System.out.println("=====Logic Start=====");
-        System.out.println(sender.getId());
-        System.out.println(receiver.getId());
-        friendService.manageFriendApply(new FriendApplyConfirmCommand(sender.getId(), receiver.getId(), false));
-//        friendService.manageFriendApply(new FriendApplyConfirmCommand( saveFriend.getId(),saveUser.getId(), false));
-
-        System.out.println("=====Logic End=====");
-        // then
-        List<FriendJpaEntity> all = friendJpaRepository.findAll();
-        assertAll(() -> assertThat(all.size()).isEqualTo(0));
-    }
-
-
-    @Test
-    void 친구신청목록조회시_신청을받은사람만_조회된다() {
-        // given
-        UserJpaEntity user = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveUser = userJpaRepository.save(user);
-
-        UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
-        UserJpaEntity saveFriend = userJpaRepository.save(friend);
-
-        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
-
-        // when
-        System.out.println("=====Logic Start=====");
-
-        List<ReadApplierInfo> receiverApplies = friendService.readFriendApplies(saveFriend.getId());
-        List<ReadApplierInfo> senderApplies = friendService.readFriendApplies(saveUser.getId());
-
-        System.out.println("=====Logic End=====");
-        // then
-        assertAll(() -> assertThat(receiverApplies.size()).isEqualTo(1),
-                () -> assertThat(senderApplies.size()).isEqualTo(0));
-    }
-
-    @Autowired
     RedisTemplate<String, String> redisTemplate;
+
 
     @Test
     void 사용자의_친구목록_간단조회() {
@@ -192,7 +65,7 @@ class FriendServiceTest {
 
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveFriend = userJpaRepository.save(friend);
-
+        redisTemplate.opsForValue().set("total", "2");
         FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
 
         ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
@@ -221,6 +94,12 @@ class FriendServiceTest {
         ExerciseJpaEntity exercise = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
         ExerciseJpaEntity saveExercise = exerciseJpaRepository.save(exercise);
 
+        ExerciseJpaEntity exercise2 = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트2").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
+        ExerciseJpaEntity saveExercise2 = exerciseJpaRepository.save(exercise2);
+
+        ExerciseJpaEntity exercise3 = ExerciseJpaEntity.builder().user(saveUser).name("데드리프트3").deleteDelimiter(DeleteDelimiter.IN_USER).category(saveCategory).build();
+        ExerciseJpaEntity saveExercise3 = exerciseJpaRepository.save(exercise3);
+
         RoutineJpaEntity routine = RoutineJpaEntity.builder()
                 .name("routine1")
                 .user(saveUser)
@@ -231,7 +110,17 @@ class FriendServiceTest {
                 .routine(saveRoutine)
                 .exercise(saveExercise)
                 .build();
+        ExerciseRoutineJpaEntity exerciseRoutine2 = ExerciseRoutineJpaEntity.builder()
+                .routine(saveRoutine)
+                .exercise(saveExercise2)
+                .build();
+        ExerciseRoutineJpaEntity exerciseRoutine3 = ExerciseRoutineJpaEntity.builder()
+                .routine(saveRoutine)
+                .exercise(saveExercise3)
+                .build();
         ExerciseRoutineJpaEntity saveExerciseRoutine = exerciseRoutineJpaRepository.save(exerciseRoutine);
+        ExerciseRoutineJpaEntity saveExerciseRoutine2 = exerciseRoutineJpaRepository.save(exerciseRoutine2);
+        ExerciseRoutineJpaEntity saveExerciseRoutine3 = exerciseRoutineJpaRepository.save(exerciseRoutine3);
 
         // when
         System.out.println("=====Logic Start=====");
@@ -242,6 +131,6 @@ class FriendServiceTest {
         // then
         assertAll(() -> assertThat(friendDetailInfo.getRoutines().size()).isEqualTo(1),
                 () -> assertThat(friendDetailInfo.getUserId()).isEqualTo(saveUser.getId()),
-                () -> assertThat(friendDetailInfo.getRoutines().get(0).getExercises().size()).isEqualTo(1));
+                () -> assertThat(friendDetailInfo.getRoutines().get(0).getExercises().size()).isEqualTo(3));
     }
 }

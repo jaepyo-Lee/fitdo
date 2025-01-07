@@ -6,6 +6,6 @@ import lombok.Data;
 public class FindExerciseRecordsResponseDto {
     private int weight;
     private int volume;
-    private int exerciseSet;
-    private boolean isProgress;
+    private int number;
+    private boolean done;
 }

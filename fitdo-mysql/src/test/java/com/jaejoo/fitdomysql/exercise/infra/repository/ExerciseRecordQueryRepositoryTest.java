@@ -74,7 +74,7 @@ class ExerciseRecordQueryRepositoryTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressInDateDto> response = exerciseRecordQueryRepository.findAllProgressInMonthOfUser(saveUser.getId(), YearMonth.of(2024, 12));
+            List<ProgressInDateDto> response = exerciseRecordQueryRepository.findAllProgress(saveUser.getId(), YearMonth.of(2024, 12));
 
             System.out.println("=====Logic End=====");
             // then
@@ -108,7 +108,7 @@ class ExerciseRecordQueryRepositoryTest {
             // when
             System.out.println("=====Logic Start=====");
 
-            List<ProgressInDateDto> response = exerciseRecordQueryRepository.findAllProgressInMonthOfUser(saveUser.getId(), YearMonth.of(2024, 12));
+            List<ProgressInDateDto> response = exerciseRecordQueryRepository.findAllProgress(saveUser.getId(), YearMonth.of(2024, 12));
 
             System.out.println("=====Logic End=====");
             // then

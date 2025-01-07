@@ -1,5 +1,6 @@
 package com.jaejoo.fitdocore.exercise.service.application;
 
+import com.jaejoo.fitdocore.exercise.RoutineReadService;
 import com.jaejoo.fitdocore.exercise.RoutineService;
 import com.jaejoo.fitdocore.exercise.req.RoutineCreateCommand;
 import com.jaejoo.fitdocore.exercise.res.ReadRoutineOfUser;
@@ -39,6 +40,8 @@ class RoutineServiceTest {
     RoutineJpaRepository routineRepository;
     @Autowired
     RoutineService routineService;
+    @Autowired
+    RoutineReadService routineReadService;
     @Autowired
     private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
     @Autowired
@@ -106,7 +109,8 @@ class RoutineServiceTest {
         // when
         System.out.println("=====Logic Start=====");
 
-        List<ReadRoutineOfUser> readRoutineOfUsers = routineService.readRoutine(saveUser.getId());
+        List<ReadRoutineOfUser> readRoutineOfUsers = routineReadService
+                .readRoutine(saveUser.getId());
 
         System.out.println("=====Logic End=====");
         // then

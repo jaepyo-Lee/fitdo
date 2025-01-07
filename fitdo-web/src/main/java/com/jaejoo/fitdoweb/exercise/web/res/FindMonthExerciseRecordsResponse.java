@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class FindMonthExerciseRecordsResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate exerciseDate;
-    private List<FindDateExerciseRecordsResponseDto> dateRecords;
+    private LocalDate date;
+    private List<FindDateExerciseRecordsResponseDto> records;
 }

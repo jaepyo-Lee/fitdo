@@ -46,7 +46,7 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
 
         //h2(root)
-        testRuntimeOnly 'com.h2database:h2'
+        runtimeOnly 'com.h2database:h2'
 
         //testcontainer(root)
         testImplementation "org.testcontainers:testcontainers:1.17.6"
