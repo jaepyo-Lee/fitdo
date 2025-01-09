@@ -21,12 +21,12 @@ public class DailyExerciseRecordJpaEntity {
     private int volume;
     private int exerciseSet;
     private boolean isProgress;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daily_record_id")
     private DailyRecordJpaEntity dailyRecord;
 
     @Getter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     private ExerciseJpaEntity exercise;
 

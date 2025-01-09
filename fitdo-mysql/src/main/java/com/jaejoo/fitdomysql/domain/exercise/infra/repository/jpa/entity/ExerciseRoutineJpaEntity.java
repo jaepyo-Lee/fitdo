@@ -15,11 +15,11 @@ public class ExerciseRoutineJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private RoutineJpaEntity routine;
 
     @Getter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ExerciseJpaEntity exercise;
 
     public ExerciseRoutineJpaEntity(RoutineJpaEntity routine, ExerciseJpaEntity exercise) {

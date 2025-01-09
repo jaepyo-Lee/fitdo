@@ -22,7 +22,7 @@ public class RoutineJpaEntity {
     private String name;
 
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserJpaEntity user;
 
     public RoutineJpaEntity(String name, UserJpaEntity user) {
