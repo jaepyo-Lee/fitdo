@@ -19,11 +19,11 @@ public class ExerciseJpaEntity {
     @Enumerated(EnumType.STRING)
     private DeleteDelimiter deleteDelimiter;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserJpaEntity user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryJpaEntity category;
 

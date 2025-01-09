@@ -18,7 +18,7 @@ public class DailyRecordJpaEntity {
     @Column(name = "EXERCISE_DATE")
     @Getter
     private LocalDate date;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserJpaEntity user;
 

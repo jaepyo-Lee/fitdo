@@ -28,6 +28,14 @@ public class DailyExerciseRecordDslRepositoryImpl implements ExerciseRecordQuery
     public List<ProgressInDateDto> findAllProgress(Long userId, YearMonth yearMonth) {
         LocalDate endDate = yearMonth.atEndOfMonth();
         LocalDate startDate = yearMonth.atDay(1);
+        /*return queryFactory.select(Projections.constructor(ProgressInDateDto.class,
+                        dailyRecordJpaEntity.date,
+                        dailyExerciseRecordJpaEntity.isProgress))
+                .from(dailyExerciseRecordJpaEntity)
+                .join(dailyRecordJpaEntity)
+                .on(dailyRecordJpaEntity.date.between(startDate, endDate).and(dailyRecordJpaEntity.user.id.eq(userId)))
+                .where(dailyExerciseRecordJpaEntity.dailyRecord.eq(dailyRecordJpaEntity))
+                .fetch();*/
 
         return queryFactory.select(Projections.constructor(ProgressInDateDto.class,
                         dailyRecordJpaEntity.date,
