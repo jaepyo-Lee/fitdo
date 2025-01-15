@@ -1,12 +1,8 @@
 package com.jaejoo.fitdocore.exercise.service.application;
 
 import com.jaejoo.fitdocore.exercise.ExerciseRecordService;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordDto;
-import com.jaejoo.fitdocore.exercise.req.DailyExerciseRecordCreateCommand;
-import com.jaejoo.fitdocore.exercise.req.RecordExerciseRecords;
 import com.jaejoo.fitdocore.exercise.res.ProgressPercentage;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRecordQueryRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RecordCommandRepository;
+import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseSetQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.dto.ProgressInDateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +26,7 @@ class ExerciseRecordServiceUnitTest {
     @InjectMocks
     private ExerciseRecordService exerciseRecordService;
     @Mock
-    private ExerciseRecordQueryRepository exerciseRecordQueryRepository;
+    private ExerciseSetQueryRepository exerciseSetQueryRepository;
 
     @Nested
     @DisplayName("calculateProgressPercentageInMonthTest")
@@ -40,7 +35,7 @@ class ExerciseRecordServiceUnitTest {
         void 전체날이31일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseSetQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 12);
             int monthsize = yearMonth.lengthOfMonth();
             // when
@@ -57,7 +52,7 @@ class ExerciseRecordServiceUnitTest {
         void 전체날이30일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseSetQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 11);
             int monthsize = yearMonth.lengthOfMonth();
             // when
@@ -74,7 +69,7 @@ class ExerciseRecordServiceUnitTest {
         void 전체날이28일인경우() {
             // given
             List<ProgressInDateDto> returnValue = new ArrayList<>();
-            when(exerciseRecordQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
+            when(exerciseSetQueryRepository.findAllProgress(anyLong(), any())).thenReturn(returnValue);
             YearMonth yearMonth = YearMonth.of(2024, 2);
             // when
             System.out.println("=====Logic Start=====");

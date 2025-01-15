@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QDailyRecordJpaEntity is a Querydsl query type for DailyRecordJpaEntity
+ * QDailyJpaEntity is a Querydsl query type for DailyJpaEntity
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QDailyRecordJpaEntity extends EntityPathBase<DailyRecordJpaEntity> {
+public class QDailyJpaEntity extends EntityPathBase<DailyJpaEntity> {
 
-    private static final long serialVersionUID = -714475947L;
+    private static final long serialVersionUID = -923820634L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QDailyRecordJpaEntity dailyRecordJpaEntity = new QDailyRecordJpaEntity("dailyRecordJpaEntity");
+    public static final QDailyJpaEntity dailyJpaEntity = new QDailyJpaEntity("dailyJpaEntity");
 
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
@@ -28,23 +28,23 @@ public class QDailyRecordJpaEntity extends EntityPathBase<DailyRecordJpaEntity> 
 
     public final com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.QUserJpaEntity user;
 
-    public QDailyRecordJpaEntity(String variable) {
-        this(DailyRecordJpaEntity.class, forVariable(variable), INITS);
+    public QDailyJpaEntity(String variable) {
+        this(DailyJpaEntity.class, forVariable(variable), INITS);
     }
 
-    public QDailyRecordJpaEntity(Path<? extends DailyRecordJpaEntity> path) {
+    public QDailyJpaEntity(Path<? extends DailyJpaEntity> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QDailyRecordJpaEntity(PathMetadata metadata) {
+    public QDailyJpaEntity(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QDailyRecordJpaEntity(PathMetadata metadata, PathInits inits) {
-        this(DailyRecordJpaEntity.class, metadata, inits);
+    public QDailyJpaEntity(PathMetadata metadata, PathInits inits) {
+        this(DailyJpaEntity.class, metadata, inits);
     }
 
-    public QDailyRecordJpaEntity(Class<? extends DailyRecordJpaEntity> type, PathMetadata metadata, PathInits inits) {
+    public QDailyJpaEntity(Class<? extends DailyJpaEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.user = inits.isInitialized("user") ? new com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.QUserJpaEntity(forProperty("user")) : null;
     }

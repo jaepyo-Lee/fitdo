@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * 사용자의 매일 운동기록
 */
 @Entity
-public class DailyRecordJpaEntity {
+public class DailyJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,10 +22,10 @@ public class DailyRecordJpaEntity {
     @JoinColumn(name = "user_id")
     private UserJpaEntity user;
 
-    public DailyRecordJpaEntity() {
+    public DailyJpaEntity() {
     }
 
-    public DailyRecordJpaEntity(LocalDate date, UserJpaEntity user) {
+    public DailyJpaEntity(LocalDate date, UserJpaEntity user) {
         this.date = date;
         this.user = user;
     }

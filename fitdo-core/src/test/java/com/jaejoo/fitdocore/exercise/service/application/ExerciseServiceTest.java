@@ -33,15 +33,17 @@ class ExerciseServiceTest {
     @Autowired
     private ExerciseJpaRepository exerciseJpaRepository;
     @Autowired
-    private DailyRecordJpaRepository dailyRecordJpaRepository;
+    private DailyJpaRepository dailyJpaRepository;
     @Autowired
-    private DailyExerciseRecordJpaRepository dailyExerciseRecordJpaRepository;
+    private DailyExerciseJpaRepository dailyExerciseJpaRepository;
     @Autowired
     private RecordQueryRepository recordQueryRepository;
     @Autowired
     private RoutineJpaRepository routineJpaRepository;
     @Autowired
     private ExerciseRoutineJpaRepository exerciseRoutineJpaRepository;
+    @Autowired
+    private ExerciseSetJpaRepository exerciseSetJpaRepository;
 /*    @AfterEach
     void init(){
         exerciseJpaRepository.deleteAll();
@@ -168,11 +170,13 @@ class ExerciseServiceTest {
         ExerciseJpaEntity exercise3 = exerciseJpaRepository.save(deadlift1);
 
         LocalDate saveDate = LocalDate.of(2024, 11, 25);
-        DailyRecordJpaEntity dailyRecordJpaEntity = new DailyRecordJpaEntity(saveDate, saveUser);
-        DailyRecordJpaEntity saveDailyRecordJpaEntity = dailyRecordJpaRepository.save(dailyRecordJpaEntity);
+        DailyJpaEntity dailyJpaEntity = new DailyJpaEntity(saveDate, saveUser);
+        DailyJpaEntity saveDailyJpaEntity = dailyJpaRepository.save(dailyJpaEntity);
 
-        DailyExerciseRecordJpaEntity dailyExerciseRecordJpaEntity = DailyExerciseRecordJpaEntity.builder().exercise(benchpress1).exerciseSet(1).volume(10).isProgress(false).weight(50).dailyRecord(saveDailyRecordJpaEntity).build();
-        dailyExerciseRecordJpaRepository.save(dailyExerciseRecordJpaEntity);
+        DailyExerciseJpaEntity dailyExerciseJpaEntity = DailyExerciseJpaEntity.builder().exercise(benchpress1).daily(saveDailyJpaEntity).build();
+        DailyExerciseJpaEntity save = dailyExerciseJpaRepository.save(dailyExerciseJpaEntity);
+        exerciseSetJpaRepository.save(ExerciseSetJpaEntity.builder().number(1).volume(10).done(false).weight(50).dailyExercise(save).build());
+
         // when
         System.out.println("=====Logic Start=====");
 
@@ -180,7 +184,7 @@ class ExerciseServiceTest {
 
         System.out.println("=====Logic End=====");
         // then
-        List<DailyExerciseRecordJpaEntity> exerciseRecordsInDailyRecordDividedBy = recordQueryRepository.findExerciseRecordsInDailyRecordDividedBy(benchpress1, saveDailyRecordJpaEntity);
+        List<DailyExerciseJpaEntity> exerciseRecordsInDailyRecordDividedBy = recordQueryRepository.findExerciseRecordsInDailyRecordDividedBy(benchpress1, saveDailyJpaEntity);
         assertThat(exerciseRecordsInDailyRecordDividedBy.size()).isOne();
     }
 
@@ -206,8 +210,8 @@ class ExerciseServiceTest {
         ExerciseJpaEntity exercise3 = exerciseJpaRepository.save(deadlift1);
 
         LocalDate saveDate = LocalDate.of(2024, 11, 25);
-        DailyRecordJpaEntity dailyRecordJpaEntity = new DailyRecordJpaEntity(saveDate, saveUser);
-        DailyRecordJpaEntity saveDailyRecordJpaEntity = dailyRecordJpaRepository.save(dailyRecordJpaEntity);
+        DailyJpaEntity dailyJpaEntity = new DailyJpaEntity(saveDate, saveUser);
+        DailyJpaEntity saveDailyJpaEntity = dailyJpaRepository.save(dailyJpaEntity);
         RoutineJpaEntity saveRoutine = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
         RoutineJpaEntity saveRoutine2 = routineJpaRepository.save(new RoutineJpaEntity("name", saveUser));
 
