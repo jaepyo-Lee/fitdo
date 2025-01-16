@@ -16,10 +16,8 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
-import org.springframework.batch.item.redis.RedisItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -131,30 +129,27 @@ public class ScoreJobConfiguration {
 
         // SELECT 절
         queryProvider.setSelectClause("""
-                        user_jpa_entity.id as userId, 
-                        user_jpa_entity.weight AS userWeight, 
-                        user_jpa_entity.height AS userHeight,
-                        der.weight AS recordWeight, 
-                        der.volume AS recordVolume,
-                        der.is_progress AS isProgress, 
+                        u.id as userId,
+                        u.weight AS userWeight,
+                        u.height AS userHeight,
+                        es.weight AS recordWeight,
+                        es.volume AS recordVolume,
+                        es.done AS isProgress,
                         c.part AS bodyPart
                 """);
 
         // FROM 절
         queryProvider.setFromClause("""
-                        daily_exercise_record_jpa_entity AS der
-                    JOIN 
-                        daily_record_jpa_entity AS dr ON dr.id = der.daily_record_id
-                    JOIN 
-                        user_jpa_entity  ON dr.user_id = user_jpa_entity.id
-                    JOIN 
-                        exercise_jpa_entity AS e ON der.exercise_id = e.id
-                    JOIN 
-                        category_jpa_entity AS c ON e.category_id = c.id
+                    daily_exercise_jpa_entity AS de
+                    JOIN daily_jpa_entity AS d ON d.id = de.daily_id
+                    JOIN exercise_jpa_entity AS e ON de.exercise_id = e.id
+                    JOIN exercise_set_jpa_entity AS es ON de.id = es.daily_exercise_id
+                    JOIN category_jpa_entity AS c ON e.category_id=c.id
+                    JOIN user_jpa_entity as u on u.id=e.user_id
                 """);
 
         // WHERE 절
-        queryProvider.setWhereClause("WHERE dr.exercise_date = :date");
+        queryProvider.setWhereClause("WHERE d.exercise_date = :date");
         queryProvider.setSortKey("userId");
 
         return queryProvider.getObject();
