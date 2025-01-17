@@ -26,30 +26,37 @@ public class ExerciseRecordService {
     public List<ProgressPercentage> readProgressPercentage(Long userId, YearMonth yearMonth) {
         List<ProgressInDateDto> progressesInMonth = exerciseSetQueryRepository.findAllProgress(userId, yearMonth);
 
-        Map<LocalDate, List<Boolean>> map = new HashMap<>();
-        for (ProgressInDateDto dateProgress : progressesInMonth) {
-            LocalDate date = dateProgress.getDate();
-            map.computeIfAbsent(date, (k) -> new ArrayList<>()).add(dateProgress.getIsProgress());
-        }
+        Map<LocalDate, List<Boolean>> progressMap = new HashMap<>();
 
-        return getPercentagesIn(yearMonth, map);
+        progressesInMonth.forEach(progress ->
+                progressMap.computeIfAbsent(progress.getDate(),
+                        (element) -> new ArrayList<>()).add(progress.getIsProgress())
+        );
+
+        return getPercentagesIn(yearMonth, progressMap);
     }
 
     private static List<ProgressPercentage> getPercentagesIn(YearMonth yearMonth, Map<LocalDate, List<Boolean>> map) {
         final int INIT_DAY = 1;
+        final int END_DAY = yearMonth.lengthOfMonth();
         List<ProgressPercentage> answer = new ArrayList<>();
 
-        for (int day = INIT_DAY; day <= yearMonth.lengthOfMonth(); day++) {
-            Double percentage = calculatePercentOfEachDay(yearMonth, map, day);
-            answer.add(new ProgressPercentage(yearMonth.atDay(day), percentage));
+        for (int day = INIT_DAY; day <= END_DAY; day++) {
+            LocalDate date = yearMonth.atDay(day);
+            Double percent = calculatePercentOfEachDay(map.getOrDefault(date, null));
+            answer.add(new ProgressPercentage(date, percent));
         }
+
         return answer;
     }
 
-    private static Double calculatePercentOfEachDay(YearMonth yearMonth, Map<LocalDate, List<Boolean>> map, int day) {
-        List<Boolean> progresses = map.getOrDefault(yearMonth.atDay(day), new ArrayList<>());
+
+    private static Double calculatePercentOfEachDay(List<Boolean> progresses) {
+        if (progresses == null) {
+            return null;
+        }
         long trueCount = progresses.stream().filter(value -> value.equals(Boolean.TRUE)).count();
-        return progresses.isEmpty() ? null : ((double) trueCount / progresses.size()) * 100;
+        return progresses.isEmpty() ? 0 : ((double) trueCount / progresses.size()) * 100;
     }
 
 
