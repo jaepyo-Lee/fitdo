@@ -1,6 +1,6 @@
 package com.jaejoo.fitdomysql.config;
 
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.DailyExerciseRecordDslRepositoryImpl;
+import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.DailyExerciseSetDslRepositoryImpl;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.impl.DailyRecordDslRepositoryImpl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -24,7 +24,7 @@ public class QuerydslTestConfig {
     }
 
     @Bean
-    public DailyExerciseRecordDslRepositoryImpl dailyExerciseRecordDslRepository(){
-        return new DailyExerciseRecordDslRepositoryImpl(jpaQueryFactory());
+    public DailyExerciseSetDslRepositoryImpl dailyExerciseRecordDslRepository(){
+        return new DailyExerciseSetDslRepositoryImpl(jpaQueryFactory());
     }
 }
