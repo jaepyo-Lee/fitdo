@@ -62,37 +62,56 @@ public class ExerciseRecordService {
 
     @Transactional(readOnly = true)
     public FindMonthExerciseRecords findExerciseRecordsOfUserAtDate(Long userId, LocalDate date) {
-        List<DailyExerciseJpaEntity> dailyExerciseJpaEntities = exerciseSetQueryRepository.findExerciseAndRecord(userId, date);
-        Map<Long, FindDateExerciseRecords> groupedRecords = new LinkedHashMap<>();
-        for (DailyExerciseJpaEntity dailyExerciseJpaEntity : dailyExerciseJpaEntities) {
-            ExerciseJpaEntity exercise = dailyExerciseJpaEntity.getExercise();
-            List<ExerciseSetJpaEntity> exerciseSets = exerciseSetQueryRepository.findAllByDailyExercise(dailyExerciseJpaEntity);
-            // 그룹화된 데이터가 없으면 새로 생성
-            groupedRecords.computeIfAbsent(exercise.getId(), id -> new FindDateExerciseRecords(
-                    exercise.getId(),
-                    exercise.getName(),
-                    exercise.getCategory().getPartName(),
-                    new ArrayList<>()
-            ));
+        List<DailyExerciseJpaEntity> dailyExercises = exerciseSetQueryRepository.findExerciseAndRecord(userId, date);
 
-            // 기존 그룹에 데이터 추가
-            FindDateExerciseRecords findDateExerciseRecord = groupedRecords.get(exercise.getId());
-            exerciseSets.forEach(s -> {
-                List<FindExerciseRecords> sets = findDateExerciseRecord.getSets();
-                sets.add(new FindExerciseRecords(
-                        s.getWeight(),
-                        s.getVolume(),
-                        s.getNumber(),
-                        s.isDone()
-                ));
-            });
-        }
+        Map<Long, FindDateExerciseRecords> exerciseRecordsMap = mapDailyExercisesToRecords(dailyExercises);
 
-        List<FindDateExerciseRecords> records = new ArrayList<>(groupedRecords.values());
+        List<FindDateExerciseRecords> exerciseRecords = new ArrayList<>(exerciseRecordsMap.values());
 
         return FindMonthExerciseRecords.builder()
-                .records(records)
+                .records(exerciseRecords)
                 .date(date)
                 .build();
     }
+
+    private Map<Long, FindDateExerciseRecords> mapDailyExercisesToRecords(List<DailyExerciseJpaEntity> dailyExercises) {
+        Map<Long, FindDateExerciseRecords> exerciseRecordsMap = new LinkedHashMap<>();
+
+        for (DailyExerciseJpaEntity dailyExercise : dailyExercises) {
+            ExerciseJpaEntity exercise = dailyExercise.getExercise();
+            Long exerciseId = exercise.getId();
+
+            // 그룹화된 데이터가 없으면 초기화
+            exerciseRecordsMap.computeIfAbsent(exerciseId, id -> createExerciseRecord(exercise));
+
+            // 그룹화된 데이터에 세트 추가
+            List<ExerciseSetJpaEntity> exerciseSets = exerciseSetQueryRepository.findAllByDailyExercise(dailyExercise);
+            appendExerciseSetsToRecord(exerciseRecordsMap.get(exerciseId), exerciseSets);
+        }
+
+        return exerciseRecordsMap;
+    }
+
+    private FindDateExerciseRecords createExerciseRecord(ExerciseJpaEntity exercise) {
+        return new FindDateExerciseRecords(
+                exercise.getId(),
+                exercise.getName(),
+                exercise.getCategory().getPartName(),
+                new ArrayList<>()
+        );
+    }
+
+    private void appendExerciseSetsToRecord(FindDateExerciseRecords exerciseRecord, List<ExerciseSetJpaEntity> exerciseSets) {
+        List<FindExerciseRecords> setRecords = exerciseRecord.getSets();
+
+        exerciseSets.forEach(set ->
+                setRecords.add(new FindExerciseRecords(
+                        set.getWeight(),
+                        set.getVolume(),
+                        set.getNumber(),
+                        set.isDone()
+                ))
+        );
+    }
+
 }
