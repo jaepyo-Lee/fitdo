@@ -163,7 +163,9 @@ class ExerciseRecordServiceTest {
             createDailyExercise(dailyRecord, exercise2);
 
             // when
+            System.out.println("============");
             FindMonthExerciseRecords result = exerciseRecordService.findExerciseRecordsOfUserAtDate(user.getId(), today);
+            System.out.println("============");
 
             // then
             assertAll(
