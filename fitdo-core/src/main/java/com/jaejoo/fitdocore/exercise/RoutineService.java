@@ -1,13 +1,9 @@
 package com.jaejoo.fitdocore.exercise;
 
 import com.jaejoo.fitdocore.exercise.req.RoutineCreateCommand;
-import com.jaejoo.fitdocore.exercise.res.CategoryAndExerciseWithinRoutine;
-import com.jaejoo.fitdocore.exercise.res.ReadRoutineOfUser;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRoutineCommandRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.ExerciseRoutineQueryRepository;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.RoutineRepository;
-import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.CategoryJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.ExerciseRoutineJpaEntity;
 import com.jaejoo.fitdomysql.domain.exercise.infra.repository.jpa.entity.RoutineJpaEntity;
@@ -16,6 +12,7 @@ import com.jaejoo.fitdomysql.domain.user.repository.UserRepository;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +37,7 @@ public class RoutineService {
         exerciseRoutineCommandRepository.saveAll(exerciseRoutines);
     }
 
+    @Transactional
     public void deleteRoutine(Long routineId){
         RoutineJpaEntity routine = routineRepository.findById(routineId);
         exerciseRoutineCommandRepository.deleteAllByRoutine(routine);
