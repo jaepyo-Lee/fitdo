@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ExerciseJpaRepository extends JpaRepository<ExerciseJpaEntity,Long> {
-    List<ExerciseJpaEntity> findAllByCategoryAndAndUserId(CategoryJpaEntity category, Long userId);
+    List<ExerciseJpaEntity> findAllByCategoryAndUserId(CategoryJpaEntity category, Long userId);
 }
