@@ -27,6 +27,9 @@ public class ExerciseJpaEntity {
     @JoinColumn(name = "category_id")
     private CategoryJpaEntity category;
 
+    public boolean isDelete(){
+        return deleteDelimiter.equals(DeleteDelimiter.DELETE);
+    }
     @Builder
     public ExerciseJpaEntity(UserJpaEntity user, Long id, String name, DeleteDelimiter deleteDelimiter, CategoryJpaEntity category) {
         this.id = id;

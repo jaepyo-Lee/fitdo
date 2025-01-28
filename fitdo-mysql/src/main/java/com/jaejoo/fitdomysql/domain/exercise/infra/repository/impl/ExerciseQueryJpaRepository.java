@@ -16,7 +16,7 @@ public class ExerciseQueryJpaRepository implements ExerciseQueryRepository {
 
     @Override
     public List<ExerciseJpaEntity> findExercisesByCategoryAndUserId(CategoryJpaEntity category, Long userId) {
-        return repository.findAllByCategoryAndAndUserId(category, userId);
+        return repository.findAllByCategoryAndUserId(category, userId);
     }
 
     @Override
