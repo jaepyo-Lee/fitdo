@@ -66,7 +66,7 @@ class FriendServiceTest {
         UserJpaEntity friend = UserJpaEntity.from("authId", AuthType.KAKAO, "name", true, GrantRole.ROLE_ADMIN);
         UserJpaEntity saveFriend = userJpaRepository.save(friend);
         redisTemplate.opsForValue().set("total", "2");
-        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend, FriendStatus.APPLY));
+        FriendJpaEntity saveFriendJpaEntity = friendJpaRepository.save(new FriendJpaEntity(saveUser, saveFriend));
 
         ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
         zSet.add("userScore", String.valueOf(saveFriend.getId()), 1);
