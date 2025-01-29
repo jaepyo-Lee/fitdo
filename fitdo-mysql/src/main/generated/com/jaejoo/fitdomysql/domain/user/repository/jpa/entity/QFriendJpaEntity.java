@@ -22,8 +22,6 @@ public class QFriendJpaEntity extends EntityPathBase<FriendJpaEntity> {
 
     public static final QFriendJpaEntity friendJpaEntity = new QFriendJpaEntity("friendJpaEntity");
 
-    public final EnumPath<FriendStatus> friendStatus = createEnum("friendStatus", FriendStatus.class);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QUserJpaEntity receiver;

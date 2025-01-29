@@ -19,17 +19,6 @@ public class FriendRepositoryImpl implements FriendRepository {
     }
 
     @Override
-    public FriendJpaEntity findBySenderAndReceiver(Long senderId, Long receiverId) {
-        return friendJpaRepository.findBySenderAndReceiver(senderId, receiverId)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
-    }
-
-    @Override
-    public List<FriendJpaEntity> findAllByReceiverId(Long receiverId) {
-        return friendJpaRepository.findAllByToId(receiverId);
-    }
-
-    @Override
     public List<FriendJpaEntity> findAllBySenderId(Long senderId) {
         return friendJpaRepository.findAllBySenderId(senderId);
     }

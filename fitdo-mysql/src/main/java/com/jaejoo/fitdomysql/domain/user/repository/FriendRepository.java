@@ -7,10 +7,5 @@ import java.util.List;
 public interface FriendRepository {
     FriendJpaEntity save(FriendJpaEntity friend);
 
-    FriendJpaEntity findBySenderAndReceiver(Long senderId, Long receiverId);
-
-
-    List<FriendJpaEntity> findAllByReceiverId(Long receiverId);
-
     List<FriendJpaEntity> findAllBySenderId(Long senderId);
 }
