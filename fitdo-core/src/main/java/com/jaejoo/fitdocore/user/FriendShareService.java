@@ -8,6 +8,7 @@ import com.jaejoo.fitdomysql.domain.user.repository.UserRepository;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.FriendJpaEntity;
 import com.jaejoo.fitdomysql.domain.user.repository.jpa.entity.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,12 @@ public class FriendShareService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
+    @Value("${deeplink.url}")
+    private String DEEP_LINK_URL;
+
     public String generateDeepLink(Long userId) throws Exception {
         String serializeUserId = aesConverter.serialize(String.valueOf(userId));
-        return "superfitdo://fitdo/friend?userId=" + serializeUserId;
+        return DEEP_LINK_URL + serializeUserId;
     }
 
     @Transactional(readOnly = true)

@@ -5,3 +5,4 @@ app:
     refreshExpired: 23131231313
 deeplink:
   key: asdasdasdasdaasdasdasdadadasdasa
+  url: superfitdo://fitdo?userId=
