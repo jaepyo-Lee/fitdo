@@ -6,3 +6,4 @@ app:
 
 deeplink:
   key: ${DEEP_LINK_KEY}
+  url: ${DEEP_LINK_URL}
