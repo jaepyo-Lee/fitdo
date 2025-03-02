@@ -10,6 +10,8 @@ import com.jaejoo.fitdoweb.docs.RestDocsSupport;
 import com.jaejoo.fitdoweb.user.web.FriendController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -168,7 +170,7 @@ class FriendControllerTest extends RestDocsSupport {
     @Test
     void 친구추가_딥링크_조회() throws Exception {
         // given
-        String deepLink = "superfitdo://fitdo/friend?userId=" + "암호화된 유저아이디";
+        String deepLink = "fitdo://friend/add?token=" + "암호화된 유저아이디";
         // when
         when(shareService.generateDeepLink(any())).thenReturn(deepLink);
 
