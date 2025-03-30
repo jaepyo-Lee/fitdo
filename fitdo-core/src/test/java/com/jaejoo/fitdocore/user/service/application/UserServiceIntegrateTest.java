@@ -1,7 +1,6 @@
 package com.jaejoo.fitdocore.user.service.application;
 
 
-import com.jaejoo.fitdocore.config.TestConfiguration;
 import com.jaejoo.fitdocore.user.UserService;
 import com.jaejoo.fitdocore.user.req.CompleteSignUpCommand;
 import com.jaejoo.fitdocore.user.req.NickNameIsDuplicateCommand;
@@ -18,12 +17,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -60,7 +56,7 @@ class UserServiceIntegrateTest {
         void 중복된닉네임이들어왔을때() {
             // given
             String nickname = "nickname";
-            User save = userRepository.save(new User(new Account("authId", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO), 180, 80, nickname));
+            User save = userRepository.save(new User(new Account("authId", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, true), 180, 80, nickname));
             System.out.println(save.getNickname());
             // when
             System.out.println("=====Logic Start=====");
@@ -76,7 +72,7 @@ class UserServiceIntegrateTest {
         void 닉네임이중복되지않았을때() {
             // given
             String nickname = "nickname";
-            User save = userRepository.save(new User(new Account("authId", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO), 180, 80, nickname));
+            User save = userRepository.save(new User(new Account("authId", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, true), 180, 80, nickname));
 
             // when
             System.out.println("=====Logic Start=====");

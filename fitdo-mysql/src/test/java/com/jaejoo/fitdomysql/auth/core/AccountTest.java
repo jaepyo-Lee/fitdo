@@ -17,7 +17,7 @@ class AccountTest {
         @Test
         void isTrue() {
             // given
-            Account account = new Account("#12313", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO);
+            Account account = new Account("#12313", true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, );
             // when
             // then
             assertThat(account.isNewUser()).isTrue();
@@ -26,7 +26,7 @@ class AccountTest {
         @Test
         void isFail() {
             // given
-            Account account = new Account("#12313", false,  1L, GrantRole.ROLE_USER,  AuthType.KAKAO);
+            Account account = new Account("#12313", false,  1L, GrantRole.ROLE_USER,  AuthType.KAKAO, );
             // when
             // then
             assertThat(account.isNewUser()).isFalse();
@@ -40,7 +40,7 @@ class AccountTest {
         void success() {
             // given
             String authId = "#12313";
-            Account account = new Account(authId, false,  1L, GrantRole.ROLE_USER, AuthType.KAKAO );
+            Account account = new Account(authId, false,  1L, GrantRole.ROLE_USER, AuthType.KAKAO, );
 
             // when
             System.out.println("=====Logic Start=====");
@@ -49,7 +49,7 @@ class AccountTest {
 
             System.out.println("=====Logic End=====");
             // then
-            assertThat(actual).isEqualTo(new Account(authId, true,  1L, GrantRole.ROLE_USER,  AuthType.KAKAO));
+            assertThat(actual).isEqualTo(new Account(authId, true,  1L, GrantRole.ROLE_USER,  AuthType.KAKAO, ));
         }
     }
 }

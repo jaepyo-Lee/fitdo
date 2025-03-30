@@ -20,3 +20,13 @@ include::{snippets}/user-login/response-fields.adoc[]
 
 Response HTTP Example:
 include::{snippets}/user-login/http-response.adoc[]
+
+== 1.2 SignOut
+=== Request
+
+Request Header:
+include::{snippets}/sign-out-user/request-headers.adoc[]
+
+Request HTTP Example:
+
+include::{snippets}/sign-out-user/http-request.adoc[]

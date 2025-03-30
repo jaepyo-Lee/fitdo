@@ -5,11 +5,14 @@ import com.jaejoo.fitdomysql.domain.user.core.Account;
 import com.jaejoo.fitdomysql.domain.user.core.GrantRole;
 import com.jaejoo.fitdomysql.domain.user.core.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class UserJpaEntity {
     @Id
@@ -27,6 +30,8 @@ public class UserJpaEntity {
     private AuthType authType;
     @Enumerated(EnumType.STRING)
     private GrantRole role;
+    @Builder.Default
+    private Boolean active=Boolean.TRUE;
 
     public UserJpaEntity(String authId, AuthType platformType, String username, Boolean newFlag, GrantRole role) {
         this.authId = authId;
@@ -42,10 +47,10 @@ public class UserJpaEntity {
 
     public static UserJpaEntity from(User user) {
         Account account = user.getAccount();
-        return new UserJpaEntity(account.getUserId(), user.getName(), account.getAuthId(), account.isNewUser(), user.getHeight(), user.getWeight(), account.getAuthType(), account.getRole(), user.getNickname());
+        return new UserJpaEntity(account.getUserId(), user.getName(), account.getAuthId(), account.isNewUser(), user.getHeight(), user.getWeight(), account.getAuthType(), account.getRole(), user.getNickname(),account.getActive());
     }
 
-    public UserJpaEntity(Long id, String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role, String nickname) {
+    public UserJpaEntity(Long id, String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role, String nickname,Boolean active) {
         this.id = id;
         this.username = username;
         this.authId = authId;
@@ -55,24 +60,14 @@ public class UserJpaEntity {
         this.authType = authType;
         this.role = role;
         this.nickname = nickname;
-    }
-
-    @Builder
-    public UserJpaEntity(String username, String authId, boolean newFlag, int height, int weight, AuthType authType, GrantRole role) {
-        this.username = username;
-        this.authId = authId;
-        this.newFlag = newFlag;
-        this.height = height;
-        this.weight = weight;
-        this.authType = authType;
-        this.role = role;
+        this.active = active;
     }
 
     public Account toAccountModel() {
-        return new Account(authId, newFlag, id, role, authType);
+        return new Account(authId, newFlag, id, role, authType, active);
     }
 
     public User toUserModel() {
-        return new User(new Account(authId, newFlag, id, role, authType), height, weight, nickname);
+        return new User(new Account(authId, newFlag, id, role, authType, active), height, weight, nickname);
     }
 }

@@ -15,7 +15,7 @@ endif::[]
 API에 관계없이 아래 사항을 지켜주셔야 합니다.
 
 === 1. Domain
-- 도메인에 대한 구체적인 설명
+- www.fitdo-server.shop
 
 === 2. Common Response
 - 공통 응답에 대한 설명
