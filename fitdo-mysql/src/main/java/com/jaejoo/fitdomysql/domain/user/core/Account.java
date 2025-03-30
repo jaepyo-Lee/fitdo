@@ -12,13 +12,15 @@ public class Account {
     private final Long userId;
     private final GrantRole role;
     private final AuthType authType;
+    private final Boolean active;
 
-    public Account(String authId, Boolean isNewFlag, Long userId, GrantRole role, AuthType authType) {
+    public Account(String authId, Boolean isNewFlag, Long userId, GrantRole role, AuthType authType, Boolean active) {
         this.authId = authId;
         this.newFlag = isNewFlag;
         this.userId = userId;
         this.role = role;
         this.authType = authType;
+        this.active = active;
     }
 
     public Boolean isNewUser() {
@@ -26,7 +28,7 @@ public class Account {
     }
 
     public Account complete() {
-        return new Account(authId, true, userId, role, authType);
+        return new Account(authId, true, userId, role, authType, active);
     }
 
     @Override

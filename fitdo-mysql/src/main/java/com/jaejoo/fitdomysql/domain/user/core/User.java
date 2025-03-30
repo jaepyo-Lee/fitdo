@@ -6,14 +6,20 @@ import java.util.Objects;
 
 @Getter
 public class User {
-    private final Account account;
+    private Account account;
     private int height;
     private int weight;
     private String nickname;
     private String name;
 
+
     public Long getUserId() {
         return account.getUserId();
+    }
+
+    public User changeActive(Boolean activeStatus) {
+        this.account = new Account(account.getAuthId(), account.getNewFlag(), account.getUserId(), account.getRole(), account.getAuthType(), activeStatus);
+        return this;
     }
 
     public User(Account account) {

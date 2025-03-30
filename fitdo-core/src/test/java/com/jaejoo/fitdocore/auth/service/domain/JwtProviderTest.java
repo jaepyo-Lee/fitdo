@@ -1,6 +1,5 @@
 package com.jaejoo.fitdocore.auth.service.domain;
 
-import com.jaejoo.fitdocore.auth.jwt.AuthToken;
 import com.jaejoo.fitdocore.auth.jwt.JwtProvider;
 import com.jaejoo.fitdocore.auth.jwt.dto.TokenSet;
 import com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType;
@@ -29,7 +28,7 @@ class JwtProviderTest {
     private String account = "123";
     private AuthType loginType = AuthType.KAKAO;
 
-    private Account mockAccount = new Account(account, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO ); // Mock user
+    private Account mockAccount = new Account(account, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, true); // Mock user
 
 
     @BeforeEach

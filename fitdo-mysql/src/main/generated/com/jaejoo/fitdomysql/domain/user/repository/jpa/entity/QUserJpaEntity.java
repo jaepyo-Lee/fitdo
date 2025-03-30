@@ -19,6 +19,8 @@ public class QUserJpaEntity extends EntityPathBase<UserJpaEntity> {
 
     public static final QUserJpaEntity userJpaEntity = new QUserJpaEntity("userJpaEntity");
 
+    public final BooleanPath active = createBoolean("active");
+
     public final StringPath authId = createString("authId");
 
     public final EnumPath<com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType> authType = createEnum("authType", com.jaejoo.fitdomysql.domain.auth.enumerate.AuthType.class);

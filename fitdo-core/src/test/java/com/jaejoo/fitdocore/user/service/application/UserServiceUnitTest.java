@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @Transactional
@@ -45,7 +43,7 @@ class UserServiceUnitTest {
             boolean isNewFlag = false;
 
             GrantRole roleUser = GrantRole.ROLE_USER;
-            User mockuser = new User(new Account(authId, isNewFlag, id, roleUser, AuthType.KAKAO));
+            User mockuser = new User(new Account(authId, isNewFlag, id, roleUser, AuthType.KAKAO, true));
             User registerUser = mockuser.register(height, weight, nickname);
 
             when(userRepository.findById(id)).thenReturn(mockuser);

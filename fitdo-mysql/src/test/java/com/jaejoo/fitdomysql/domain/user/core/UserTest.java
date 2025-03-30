@@ -19,7 +19,7 @@ class UserTest {
             int height = 180;
             boolean isNewFlag = false;
             String nickname = "nickname";
-            User user = new User(new Account(authId, isNewFlag, 1L, GrantRole.ROLE_USER, AuthType.KAKAO));
+            User user = new User(new Account(authId, isNewFlag, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, ));
 
             // when
             System.out.println("=====Logic Start=====");
@@ -29,7 +29,7 @@ class UserTest {
             System.out.println("=====Logic End=====");
 
             // then
-            assertEquals(new User(new Account(authId, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO), height, weight, nickname), actual);
+            assertEquals(new User(new Account(authId, true, 1L, GrantRole.ROLE_USER, AuthType.KAKAO, ), height, weight, nickname), actual);
         }
     }
 }

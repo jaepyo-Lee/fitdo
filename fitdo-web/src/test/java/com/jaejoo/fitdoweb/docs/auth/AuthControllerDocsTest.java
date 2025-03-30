@@ -13,10 +13,13 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -31,6 +34,28 @@ class AuthControllerDocsTest extends RestDocsSupport {
     @Override
     protected Object initController() {
         return new AuthController(authService);
+    }
+
+    @DisplayName("회원탈퇴 진행")
+    @Test
+    void signoutTest() throws Exception {
+        // given
+
+        // when
+        doNothing().when(authService).out(any());
+        // then
+        mvc.perform(delete("/auth/out")
+                        .header("Authorization", "Bearer Token")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("sign-out-user",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("로그인후 받은 Bearer 토큰(accessToken)\n Bearer {Authorization Code}형식으로 요청")
+                        ))
+                );
     }
 
     @DisplayName("OAuth회원가입 진행[신규회원]")

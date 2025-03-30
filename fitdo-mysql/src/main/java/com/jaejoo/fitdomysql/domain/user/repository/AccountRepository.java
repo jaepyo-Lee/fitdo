@@ -8,4 +8,6 @@ public interface AccountRepository {
     Account findOrSaveByAuthId(String authId, AuthType platformType, String username);
 
     Account findByUserId(Long userId);
+
+
 }
