@@ -37,5 +37,7 @@ include::{docfile}/../routine.adoc[]
 = 5.친구
 include::{docfile}/../friend.adoc[]
 
+include::{docfile}/../error.adoc[]
+
 ---
 link:https://github.com/jaepyo-Lee/fitdo[Git Repository]
