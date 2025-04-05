@@ -8,6 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.valueOf;
+
 @Component
 public class KakaoImporter implements OAuthDateImporter {
     private final static String AUTH_SERVER_URI = "https://kapi.kakao.com/v2/user/me";
@@ -26,7 +29,7 @@ public class KakaoImporter implements OAuthDateImporter {
         return webClient.post()
                 .uri(AUTH_SERVER_URI)
                 .headers(httpHeaders -> httpHeaders.set("Authorization", "Bearer " + token))
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(valueOf(APPLICATION_FORM_URLENCODED_VALUE))
                 .retrieve()
                 .bodyToMono(KakaoUserResponseDto.class)
                 .block().toCommonDto();
